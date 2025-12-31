@@ -48,8 +48,10 @@ async def login(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password"
         )
+
     access_token = create_access_token({"sub": user.email})
     refresh_token = create_refresh_token({"sub": user.email})
+
     return {
         "access_token": access_token,
         "refresh_token": refresh_token,

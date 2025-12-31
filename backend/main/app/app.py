@@ -11,13 +11,12 @@ from auth.dependancy import get_current_user
 app = FastAPI(title="Exam Prep API")
 
 
-@app.on_event("startup")
-async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+
+
+
 
 @app.get('/health')
 def health(current_user: User = Depends(get_current_user)):
     return {'status': 'ok'}
 
-app.include_router(auth_router)
+app.include_router(auth_router)     
