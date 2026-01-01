@@ -7,6 +7,8 @@ from db.deps import get_db
 from db.models.user import User
 from auth.security import verify_password
 from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 

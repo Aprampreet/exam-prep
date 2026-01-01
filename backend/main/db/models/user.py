@@ -11,5 +11,9 @@ class User(Base):
     hashed_password: Mapped[str] = mapped_column(String)
 
     profile: Mapped["Profile"] = relationship(
-        "Profile", back_populates="user", uselist=False
+        "Profile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan"
     )
+
