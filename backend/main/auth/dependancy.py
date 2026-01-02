@@ -8,21 +8,27 @@ from db.models.user import User
 from auth.security import verify_password
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
+from sqlalchemy.orm import selectinload
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
-async def get_current_user(db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)):
-    try:
-        payload = decode_token(token)
-        if payload is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
-        user = await db.execute(select(User).where(User.email == payload["sub"]))
-        user = user.scalar_one_or_none()
-        if user is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
-        return user
-    except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication credentials")
+async def get_current_user(
+    db: AsyncSession = Depends(get_db),
+    token: str = Depends(oauth2_scheme)
+):
+    payload = decode_token(token)
+    if payload is None:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
+    result = await db.execute(
+        select(User)
+        .options(selectinload(User.profile))  # ✅ IMPORTANT
+        .where(User.email == payload["sub"])
+    )
 
+    user = result.scalar_one_or_none()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+
+    return user

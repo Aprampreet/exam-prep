@@ -12,12 +12,12 @@ class Profile(Base):
         nullable=False
     )
 
-    full_name: Mapped[str] = mapped_column(String)
+    full_name: Mapped[str] = mapped_column(String, nullable=True)
     avatar_url: Mapped[str] = mapped_column(String, nullable=True)
     bio: Mapped[str] = mapped_column(String, nullable=True)
     college: Mapped[str] = mapped_column(String, nullable=True)
     location: Mapped[str] = mapped_column(String, nullable=True)
     degree: Mapped[str] = mapped_column(String, nullable=True)
     passing_year: Mapped[int] = mapped_column(Integer, nullable=True)
-    
+
     user: Mapped["User"] = relationship("User", back_populates="profile")
