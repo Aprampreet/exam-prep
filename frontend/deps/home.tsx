@@ -8,8 +8,10 @@ import { Input } from "@/components/ui/input"
 import { ArrowRight, BookOpen, CheckCircle2, GraduationCap, Layout, Library, Trophy, Zap, Star, Quote } from "lucide-react"
 import Link from "next/link"
 import React from "react"
+import { useAuth } from "@/lib/context/AuthContext"
 
 export default function HomePage() {
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col font-sans selection:bg-primary selection:text-primary-foreground">
       

@@ -23,7 +23,7 @@ async def get_current_user(
 
     result = await db.execute(
         select(User)
-        .options(selectinload(User.profile))  # ✅ IMPORTANT
+        .options(selectinload(User.profile)) 
         .where(User.email == payload["sub"])
     )
 
