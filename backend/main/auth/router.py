@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends,HTTPException,status,Request,File,UploadFile,Request
+from fastapi import APIRouter,Depends,HTTPException,status,Request,File,UploadFile,Request,Form
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from fastapi.security import OAuth2PasswordRequestForm
@@ -63,28 +63,57 @@ async def login(
     }
 
 
-@auth_router.put('/update/profile', response_model=ProfileOut)
+@auth_router.get("/profile", response_model=ProfileOut)
 @limiter.limit("5/minute")
-async def update_profile(request:Request,data:ProfileCreate=Depends(),user:User=Depends(get_current_user),db:AsyncSession = Depends(get_db),avatar: UploadFile | None = File(None)):
-    try:
-        profile = user.profile
+async def get_profile(
+    request: Request,
+    user: User = Depends(get_current_user)
+):
+    return user.profile
 
-        if not profile:
-            raise HTTPException(status_code=404, detail="Profile not found")
-        for key,value in data.dict().items():
-            setattr(profile,key,value)
-        if avatar:
-            result = upload(
-                avatar.file,
-                folder="profiles",
-                public_id=f"user_{user.id}",
-                overwrite=True
-            )
+
+@auth_router.put("/update/profile", response_model=ProfileOut)
+@limiter.limit("5/minute")
+async def update_profile(
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+
+    full_name: str | None = Form(None),
+    bio: str | None = Form(None),
+    college: str | None = Form(None),
+    location: str | None = Form(None),
+    degree: str | None = Form(None),
+    passing_year: int | None = Form(None),
+
+    avatar: UploadFile | None = File(None),
+):
+    profile = user.profile
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+
+    if full_name is not None:
+        profile.full_name = full_name
+    if bio is not None:
+        profile.bio = bio
+    if college is not None:
+        profile.college = college
+    if location is not None:
+        profile.location = location
+    if degree is not None:
+        profile.degree = degree
+    if passing_year is not None:
+        profile.passing_year = passing_year
+
+    if avatar:
+        result = upload(
+            avatar.file,
+            folder="profiles",
+            public_id=f"user_{user.id}",
+            overwrite=True
+        )
         profile.avatar_url = result["secure_url"]
-        await db.commit()
-        await db.refresh(user)
-        return profile 
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+    await db.commit()
+    await db.refresh(profile)
+    return profile

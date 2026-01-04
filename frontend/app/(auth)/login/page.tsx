@@ -30,6 +30,8 @@ export default function LoginPage() {
       
       if (data?.access_token) {
         login(data.access_token);
+        // Set cookie for SSR
+        document.cookie = `access_token=${data.access_token}; path=/; max-age=86400; SameSite=Lax`;
         setTimeout(() => {
              router.push("/");
         }, 500);
