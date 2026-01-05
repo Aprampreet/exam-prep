@@ -38,8 +38,8 @@ export default function CreateSessionPage() {
       formData.append("title", title);
       formData.append("file", file);
 
-      await createSession(formData);
-      router.push("/dashboard"); 
+      const res = await createSession(formData);
+      router.push(`/session/${res.id}`); 
     } catch (err: any) {
       console.error(err);
       setError("Failed to create session. Please try again.");

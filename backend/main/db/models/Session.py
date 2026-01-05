@@ -17,3 +17,5 @@ class Session(Base):
     created_at : Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow)
     updated_at : Mapped[datetime] = mapped_column(DateTime,default=datetime.utcnow,onupdate=datetime.utcnow)
     user : Mapped["User"] = relationship("User",back_populates="sessions")
+    mcq_attempts : Mapped[list["MCQAttempt"]] = relationship("MCQAttempt",back_populates="session",cascade="all, delete-orphan")
+    short_answer_attempts : Mapped[list["ShortAnswerAttempt"]] = relationship("ShortAnswerAttempt",back_populates="session",cascade="all, delete-orphan")

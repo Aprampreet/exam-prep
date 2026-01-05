@@ -41,4 +41,15 @@ export const getProfile = async () => {
 export const createSession = async (data:any)=>{
   const res = await api.post("/session/create",data)
   return res.data;
+} 
+
+export const createMCQ = async (sessionId: number, data?: any) => {
+  const res = await api.post(`/session/${sessionId}/mcq`, data || {});
+  return res.data;
 }
+
+export const createShortAnswer = async (sessionId: number, data?: any) => {
+  const res = await api.post(`/session/${sessionId}/short`, data || {});
+  return res.data;
+}
+

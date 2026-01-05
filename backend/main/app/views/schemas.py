@@ -11,3 +11,28 @@ class SessionOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+
+class MCQAttemptOut(BaseModel):
+    id: int
+    session_id: int
+    total_questions: int
+    score: int | None
+    questions: list[dict]
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ShortAnswerAttemptOut(BaseModel):
+    id: int
+    session_id: int
+    total_questions: int
+    total_score: int | None
+    answers: list[dict]
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

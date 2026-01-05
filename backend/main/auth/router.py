@@ -13,6 +13,7 @@ from cloudinary.uploader import upload
 from .dependancy import get_current_user
 
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
+
 @auth_router.post("/register", response_model=UserOut)
 @limiter.limit("5/minute")
 async def register(
