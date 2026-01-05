@@ -62,3 +62,8 @@ export const getShortAnswerAttempt = async (sessionId: number) => {
   const res = await api.get(`/session/${sessionId}/short`);
   return res.data;
 }
+
+export const getAllSessions = async () => {
+  const res = await api.get("/session/all");
+  return res.data;
+}

@@ -56,6 +56,23 @@ async def create_session(
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@session_router.get("/all", response_model=list[SessionOut])
+@limiter.limit("10/minute")
+async def get_all_sessions(
+    request: Request,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(Session).where(
+            Session.user_id == user.id
+        )
+    )
+    sessions = result.scalars().all()
+
+    return sessions
+
+
 @session_router.post("/{session_id}/mcq", response_model=MCQAttemptOut)
 @limiter.limit("10/minute")
 async def create_mcq(
