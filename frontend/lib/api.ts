@@ -53,3 +53,12 @@ export const createShortAnswer = async (sessionId: number, data?: any) => {
   return res.data;
 }
 
+export const getMCQAttempt = async (sessionId: number) => {
+  const res = await api.get(`/session/${sessionId}/mcq`);
+  return res.data;
+}
+
+export const getShortAnswerAttempt = async (sessionId: number) => {
+  const res = await api.get(`/session/${sessionId}/short`);
+  return res.data;
+}

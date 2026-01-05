@@ -75,6 +75,12 @@ async def create_mcq(
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
+    # Check existing
+    existing = await db.execute(select(MCQAttempt).where(MCQAttempt.session_id == session_id))
+    existing_attempt = existing.scalar_one_or_none()
+    if existing_attempt:
+        return existing_attempt
+
     dummy_questions = [
         {
             "question": "What is an OS?",
@@ -118,6 +124,11 @@ async def create_short_answers(
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
+    existing = await db.execute(select(ShortAnswerAttempt).where(ShortAnswerAttempt.session_id == session_id))
+    existing_attempt = existing.scalar_one_or_none()
+    if existing_attempt:
+        return existing_attempt
+
     dummy_answers = [
         {
             "question": "Explain CPU scheduling",
@@ -150,9 +161,11 @@ async def get_mcq_attempt(
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
-        select(MCQAttempt).where(
+        select(MCQAttempt)
+        .join(Session)
+        .where(
             MCQAttempt.session_id == session_id,
-            MCQAttempt.user_id == user.id
+            Session.user_id == user.id
         )
     )
     attempt = result.scalar_one_or_none()
@@ -171,9 +184,11 @@ async def get_short_attempt(
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
-        select(ShortAnswerAttempt).where(
+        select(ShortAnswerAttempt)
+        .join(Session)
+        .where(
             ShortAnswerAttempt.session_id == session_id,
-            ShortAnswerAttempt.user_id == user.id
+            Session.user_id == user.id
         )
     )
     attempt = result.scalar_one_or_none()
