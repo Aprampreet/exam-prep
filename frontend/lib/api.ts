@@ -36,3 +36,9 @@ export const getProfile = async () => {
   const res = await api.get("/auth/profile");
   return res.data;
 };
+
+
+export const createSession = async (data:any)=>{
+  const res = await api.post("/session/create",data)
+  return res.data;
+}

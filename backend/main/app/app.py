@@ -9,6 +9,7 @@ from db.models.user import User
 from auth.router import auth_router
 from auth.dependancy import get_current_user
 from auth.schemas import UserOut
+from app.views.session import session_router
 app = FastAPI(title="Exam Prep API")
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -39,3 +40,4 @@ async def get_me(
 
 
 app.include_router(auth_router)     
+app.include_router(session_router)     
