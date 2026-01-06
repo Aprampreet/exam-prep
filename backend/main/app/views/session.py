@@ -15,11 +15,9 @@ from app.views.schemas import ShortAnswerAttemptOut
 from app.views.schemas import MCQAttemptOut
 from datetime import datetime
 from sqlalchemy import select
-from app.servce.document import DocumentService
 
 session_router = APIRouter(prefix="/session", tags=["session"])
 
-document_service = DocumentService()
 
 @session_router.post("/create", response_model=SessionOut)
 @limiter.limit("10/minute")
