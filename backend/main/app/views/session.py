@@ -15,9 +15,11 @@ from app.views.schemas import ShortAnswerAttemptOut
 from app.views.schemas import MCQAttemptOut
 from datetime import datetime
 from sqlalchemy import select
+from app.servce.document import DocumentService
 
 session_router = APIRouter(prefix="/session", tags=["session"])
 
+document_service = DocumentService()
 
 @session_router.post("/create", response_model=SessionOut)
 @limiter.limit("10/minute")
@@ -92,7 +94,6 @@ async def create_mcq(
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    # Check existing
     existing = await db.execute(select(MCQAttempt).where(MCQAttempt.session_id == session_id))
     existing_attempt = existing.scalar_one_or_none()
     if existing_attempt:
