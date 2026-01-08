@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends,HTTPException,Form,Request
+from fastapi import APIRouter,Depends,HTTPException,Form,Request,BackgroundTasks,Depends
 from app.views.schemas import SessionOut
 from fastapi import File
 from auth.dependancy import get_current_user
@@ -15,45 +15,52 @@ from app.views.schemas import ShortAnswerAttemptOut
 from app.views.schemas import MCQAttemptOut
 from datetime import datetime
 from sqlalchemy import select
+from app.services.tasks import process_document_from_cloudinary
 
 session_router = APIRouter(prefix="/session", tags=["session"])
 
+
+from fastapi import BackgroundTasks
 
 @session_router.post("/create", response_model=SessionOut)
 @limiter.limit("10/minute")
 async def create_session(
     request: Request,
-    title: str | None = Form(None),
-    file: UploadFile | None = File(None),
+    background_tasks: BackgroundTasks,
+    title: str = Form(...),
+    file: UploadFile = File(...),
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     try:
-        file_url = None
-
-        if file:
-            result = upload(
-                file.file,
-                folder="study_sessions",
-                resource_type="raw"
-            )
-            file_url = result["secure_url"]
+        result = upload(
+            file.file,
+            folder="study_sessions",
+            resource_type="raw"
+        )
 
         session = Session(
             title=title,
             user_id=user.id,
-            original_file_url=file_url,
-            status="created"
+            original_file_url=result["secure_url"],
+            status="processing"
         )
 
         db.add(session)
         await db.commit()
-        await db.refresh(session)
+        await db.refresh(session) 
+
+        background_tasks.add_task(
+            process_document_from_cloudinary,
+            session.id,
+            session.original_file_url
+        )
 
         return session
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 
 @session_router.get("/all", response_model=list[SessionOut])

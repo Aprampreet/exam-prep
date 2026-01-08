@@ -1,12 +1,14 @@
-
+'use client';
 import { Button } from "@/components/ui/button"
 import { GraduationCap, Menu, X } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 import { AuthNav } from "./NavAuth"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@/components/ui/sheet"
+import { useAuth } from "@/lib/context/AuthContext"
 
 export function Navbar() {
+  const { user } = useAuth();
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -22,7 +24,9 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
-          <Link href="/session-create" className="hover:text-foreground transition-colors">Create Session</Link>
+          {user && (
+            <Link href="/session-create" className="hover:text-foreground transition-colors">Create Session</Link>
+          )}
           <Link href="#" className="hover:text-foreground transition-colors">Features</Link>
           <Link href="#" className="hover:text-foreground transition-colors">Pricing</Link>
         </nav>
@@ -56,9 +60,11 @@ export function Navbar() {
                              <Link href="/" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
                                 Home
                              </Link>
-                             <Link href="/session-create" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
-                                Create Session
-                             </Link>
+                             {user && (
+                               <Link href="/session-create" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                                  Create Session
+                               </Link>
+                             )}
                              <Link href="#" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
                                 Features
                              </Link>
@@ -68,7 +74,6 @@ export function Navbar() {
                         </nav>
                         
                         <div className="mt-auto border-t pt-6">
-                             {/* AuthNav usually renders flex-row, which is fine here */}
                              <div className="flex flex-col gap-4">
                                 <AuthNav />
                              </div>

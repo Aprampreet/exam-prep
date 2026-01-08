@@ -6,6 +6,7 @@ from sqlalchemy import DateTime
 from sqlalchemy import func
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from db.models.DocumentChunk import DocumentChunk
 class Session(Base):
     __tablename__ = "sessions"
 
@@ -19,3 +20,9 @@ class Session(Base):
     user : Mapped["User"] = relationship("User",back_populates="sessions")
     mcq_attempts : Mapped[list["MCQAttempt"]] = relationship("MCQAttempt",back_populates="session",cascade="all, delete-orphan")
     short_answer_attempts : Mapped[list["ShortAnswerAttempt"]] = relationship("ShortAnswerAttempt",back_populates="session",cascade="all, delete-orphan")
+    chunks: Mapped[list["DocumentChunk"]] = relationship(
+    "DocumentChunk",
+    back_populates="session",
+    cascade="all, delete-orphan",
+    order_by="DocumentChunk.order"
+)
