@@ -1,7 +1,8 @@
 from sqlalchemy import ForeignKey, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from db.base import Base
-
+from pgvector.sqlalchemy import Vector
+from typing import List
 
 class DocumentChunk(Base):
     __tablename__ = "document_chunks"
@@ -22,6 +23,11 @@ class DocumentChunk(Base):
     content: Mapped[str] = mapped_column(
         Text,
         nullable=False
+    )
+
+    embedding: Mapped[List[float]] = mapped_column(
+        Vector(1536),
+        nullable=True
     )
 
     session: Mapped["Session"] = relationship(
