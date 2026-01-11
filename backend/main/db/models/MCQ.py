@@ -11,29 +11,22 @@ class MCQAttempt(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     session_id: Mapped[int] = mapped_column(
-        ForeignKey("sessions.id"),
+        ForeignKey("sessions.id", ondelete="CASCADE"),
         nullable=False,
         unique=True
     )
 
-    total_questions: Mapped[int] = mapped_column(
-        Integer,
-        default=20
-    )
+    total_questions: Mapped[int] = mapped_column(default=20)
+    score: Mapped[int | None] = mapped_column(nullable=True)
 
-    score: Mapped[int | None] = mapped_column(
-        Integer,
-        nullable=True
-    )
-
-    questions: Mapped[list[dict]] = mapped_column(
-        JSON,
-        nullable=False
-    )
+    questions: Mapped[list[dict]] = mapped_column(JSON, nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         server_default=func.now()
     )
 
-    session: Mapped["Session"] = relationship("Session")
+    session: Mapped["Session"] = relationship(
+        "Session",
+        back_populates="mcq_attempt"
+    )
