@@ -16,6 +16,7 @@ from app.views.schemas import MCQAttemptOut
 from datetime import datetime
 from sqlalchemy import select
 from app.services.tasks import process_document_from_cloudinary
+from db.models.DocumentChunk import DocumentChunk
 
 session_router = APIRouter(prefix="/session", tags=["session"])
 
@@ -55,6 +56,7 @@ async def create_session(
             session.id,
             session.original_file_url
         )
+        
 
         return session
 

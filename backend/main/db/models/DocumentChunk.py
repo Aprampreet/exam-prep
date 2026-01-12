@@ -15,22 +15,14 @@ class DocumentChunk(Base):
         index=True
     )
 
-    order: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False
-    )
+    chunk_index: Mapped[int] = mapped_column(nullable=False)
 
-    content: Mapped[str] = mapped_column(
-        Text,
-        nullable=False
-    )
+    content: Mapped[str] = mapped_column(Text, nullable=False)
 
-    embedding: Mapped[List[float]] = mapped_column(
+    embedding: Mapped[list[float] | None] = mapped_column(
         Vector(1536),
         nullable=True
     )
 
-    session: Mapped["Session"] = relationship(
-        "Session",
-        back_populates="chunks"
-    )
+    session = relationship("Session", back_populates="chunks")
+
