@@ -20,7 +20,7 @@ class DocumentChunk(Base):
     content: Mapped[str] = mapped_column(Text, nullable=False)
 
     embedding: Mapped[list[float] | None] = mapped_column(
-        Vector(1536),
+        Vector(3072),
         nullable=True
     )
 
