@@ -82,53 +82,53 @@ async def get_all_sessions(
     return sessions
 
 
-@session_router.post("/{session_id}/mcq", response_model=MCQAttemptOut)
-@limiter.limit("10/minute")
-async def create_mcq(
-    request: Request,
-    session_id: int,
-    user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-):
-    result = await db.execute(
-        select(Session).where(
-            Session.id == session_id,
-            Session.user_id == user.id
-        )
-    )
-    session = result.scalar_one_or_none()
+# @session_router.post("/{session_id}/mcq", response_model=MCQAttemptOut)
+# @limiter.limit("10/minute")
+# async def create_mcq(
+#     request: Request,
+#     session_id: int,
+#     user: User = Depends(get_current_user),
+#     db: AsyncSession = Depends(get_db),
+# ):
+#     result = await db.execute(
+#         select(Session).where(
+#             Session.id == session_id,
+#             Session.user_id == user.id
+#         )
+#     )
+#     session = result.scalar_one_or_none()
 
-    if not session:
-        raise HTTPException(status_code=404, detail="Session not found")
+#     if not session:
+#         raise HTTPException(status_code=404, detail="Session not found")
 
-    existing = await db.execute(select(MCQAttempt).where(MCQAttempt.session_id == session_id))
-    existing_attempt = existing.scalar_one_or_none()
-    if existing_attempt:
-        return existing_attempt
+#     existing = await db.execute(select(MCQAttempt).where(MCQAttempt.session_id == session_id))
+#     existing_attempt = existing.scalar_one_or_none()
+#     if existing_attempt:
+#         return existing_attempt
 
-    dummy_questions = [
-        {
-            "question": "What is an OS?",
-            "options": ["A", "B", "C", "D"],
-            "correct_answer": "B",
-            "user_answer": None,
-            "is_correct": None
-        }
-        for _ in range(20)
-    ]
+#     dummy_questions = [
+#         {
+#             "question": "What is an OS?",
+#             "options": ["A", "B", "C", "D"],
+#             "correct_answer": "B",
+#             "user_answer": None,
+#             "is_correct": None
+#         }
+#         for _ in range(20)
+#     ]
 
-    mcq_attempt = MCQAttempt(
-        session_id=session_id,
-        questions=dummy_questions,
-        total_questions=20,
-        score=None
-    )
+#     mcq_attempt = MCQAttempt(
+#         session_id=session_id,
+#         questions=dummy_questions,
+#         total_questions=20,
+#         score=None
+#     )
 
-    db.add(mcq_attempt)
-    await db.commit()
-    await db.refresh(mcq_attempt)
+#     db.add(mcq_attempt)
+#     await db.commit()
+#     await db.refresh(mcq_attempt)
 
-    return mcq_attempt
+#     return mcq_attempt
 
 @session_router.post("/{session_id}/short", response_model=ShortAnswerAttemptOut)
 @limiter.limit("10/minute")
