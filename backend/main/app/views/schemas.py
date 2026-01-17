@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
-
+from typing import Optional, List
+from pydantic.config import ConfigDict
 
 class SessionOut(BaseModel):
     id: int
@@ -25,14 +26,25 @@ class MCQAttemptOut(BaseModel):
     class Config:
         from_attributes = True
 
+class ShortAnswerOut(BaseModel):
+    id: int
+    question: str
+    correct_answer: str
+    user_answer: Optional[str]
+    score: Optional[int]
+    feedback: Optional[str]
 
+    model_config = ConfigDict(from_attributes=True)
+    
 class ShortAnswerAttemptOut(BaseModel):
     id: int
     session_id: int
     total_questions: int
-    total_score: int | None
-    answers: list[dict]
+    total_score: Optional[int]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    answers: List[ShortAnswerOut]
+
+    model_config = ConfigDict(from_attributes=True)
+
+

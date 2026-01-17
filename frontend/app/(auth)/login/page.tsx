@@ -108,15 +108,10 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <div className="relative py-6">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
-        </div>
+      <div className="flex items-center gap-4 py-6">
+        <div className="h-px flex-1 bg-border/50" />
+        <span className="text-xs uppercase text-muted-foreground">Or continue with</span>
+        <div className="h-px flex-1 bg-border/50" />
       </div>
 
        <Button variant="outline" type="button" disabled={isLoading} className="h-11 w-full relative">

@@ -11,14 +11,17 @@ from db.models.Session import Session
 from db.models.MCQ import MCQAttempt
 from db.models.Short import ShortAnswerAttempt
 from app.core.ratelimiter import limiter
-from app.views.schemas import ShortAnswerAttemptOut
-from app.views.schemas import MCQAttemptOut
+from app.views.schemas import ShortAnswerAttemptOut, MCQAttemptOut, ShortAnswerOut
 from datetime import datetime
 from sqlalchemy import select
 from app.services.tasks import process_document_from_cloudinary
 from db.models.DocumentChunk import DocumentChunk
+from app.services.llm import generate_mcq, generate_short_answer
+from db.models.ShortAnswer import ShortAnswer
+from sqlalchemy.orm import selectinload
 
 session_router = APIRouter(prefix="/session", tags=["session"])
+
 
 
 from fastapi import BackgroundTasks
@@ -101,49 +104,51 @@ async def create_mcq(
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    existing = await db.execute(select(MCQAttempt).where(MCQAttempt.session_id == session_id))
+    existing = await db.execute(
+        select(MCQAttempt).where(MCQAttempt.session_id == session_id)
+    )
     existing_attempt = existing.scalar_one_or_none()
     if existing_attempt:
         return existing_attempt
 
-    result = await db.execute(select(DocumentChunk).where(DocumentChunk.session_id==session_id)).order_by(DocumentChunk.chunk_index).limit(20)
+    stmt = (
+        select(DocumentChunk)
+        .where(DocumentChunk.session_id == session_id)
+        .order_by(DocumentChunk.chunk_index)
+        .limit(12)
+    )
+    result = await db.execute(stmt)
     chunks = result.scalars().all()
+
     if not chunks:
         raise HTTPException(status_code=404, detail="No chunks found for this session")
-    
+
     context = "\n".join(chunk.content for chunk in chunks)
+
     try:
-        mcqs = await generate_mcq(context)
+        mcqs = await generate_mcq(context, count=2)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    if len(mcqs) != 20:
+
+    if len(mcqs) != 2:
         raise HTTPException(
             status_code=500,
-            detail="LLM did not generate exactly 20 MCQs"
+            detail="LLM did not generate exactly 2 MCQs"
         )
-    questions = [
-        {
-            "question": q["question"],
-            "options": q["options"],
-            "correct_answer": q["correct_answer"],
-            "user_answer": None,
-            "is_correct": None
-        }
-        for q in mcqs
-    ]
 
     mcq_attempt = MCQAttempt(
         session_id=session_id,
-        questions=questions,
-        total_questions=20,
+        questions=mcqs,
+        total_questions=2,
         score=None
     )
 
     db.add(mcq_attempt)
     await db.commit()
     await db.refresh(mcq_attempt)
-
     return mcq_attempt
+
+
 
 @session_router.post("/{session_id}/short", response_model=ShortAnswerAttemptOut)
 @limiter.limit("10/minute")
@@ -160,36 +165,60 @@ async def create_short_answers(
         )
     )
     session = result.scalar_one_or_none()
-
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
-    existing = await db.execute(select(ShortAnswerAttempt).where(ShortAnswerAttempt.session_id == session_id))
-    existing_attempt = existing.scalar_one_or_none()
+    result = await db.execute(
+        select(ShortAnswerAttempt)
+        .options(selectinload(ShortAnswerAttempt.answers))
+        .where(ShortAnswerAttempt.session_id == session_id)
+    )
+    existing_attempt = result.scalar_one_or_none()
     if existing_attempt:
         return existing_attempt
 
-    dummy_answers = [
-        {
-            "question": "Explain CPU scheduling",
-            "ideal_answer": "CPU scheduling is...",
-            "user_answer": None,
-            "score": None,
-            "betterment": None
-        }
-        for _ in range(10)
-    ]
+    result = await db.execute(
+        select(DocumentChunk)
+        .where(DocumentChunk.session_id == session_id)
+        .order_by(DocumentChunk.chunk_index)
+        .limit(12)
+    )
+    chunks = result.scalars().all()
+    if not chunks:
+        raise HTTPException(status_code=404, detail="No chunks found")
 
+    context = "\n".join(c.content for c in chunks)
+    short_answers = await generate_short_answer(context, count=2)
     attempt = ShortAnswerAttempt(
         session_id=session_id,
-        answers=dummy_answers
+        total_questions=len(short_answers),
+        total_score=None,
     )
-
     db.add(attempt)
-    await db.commit()
-    await db.refresh(attempt)
+    await db.flush()
 
-    return attempt
+    db.add_all([
+        ShortAnswer(
+            attempt_id=attempt.id,
+            question=a["question"],
+            correct_answer=a["answer"],
+            user_answer=None,
+            score=None,
+            feedback=None,
+        )
+        for a in short_answers
+    ])
+
+    await db.commit()
+
+    result = await db.execute(
+        select(ShortAnswerAttempt)
+        .options(selectinload(ShortAnswerAttempt.answers))
+        .where(ShortAnswerAttempt.id == attempt.id)
+    )
+    return result.scalar_one()
+
+
 
 
 @session_router.get("/{session_id}/mcq", response_model=MCQAttemptOut)
@@ -225,6 +254,7 @@ async def get_short_attempt(
 ):
     result = await db.execute(
         select(ShortAnswerAttempt)
+        .options(selectinload(ShortAnswerAttempt.answers))  
         .join(Session)
         .where(
             ShortAnswerAttempt.session_id == session_id,

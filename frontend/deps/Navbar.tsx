@@ -25,7 +25,10 @@ export function Navbar() {
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           {user && (
-            <Link href="/session-create" className="hover:text-foreground transition-colors">Create Session</Link>
+            <>
+              <Link href="/sessions" className="hover:text-foreground transition-colors">Sessions</Link>
+              <Link href="/session-create" className="hover:text-foreground transition-colors">Create Session</Link>
+            </>
           )}
           <Link href="#" className="hover:text-foreground transition-colors">Features</Link>
           <Link href="#" className="hover:text-foreground transition-colors">Pricing</Link>
@@ -61,9 +64,14 @@ export function Navbar() {
                                 Home
                              </Link>
                              {user && (
-                               <Link href="/session-create" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
-                                  Create Session
-                               </Link>
+                               <>
+                                 <Link href="/sessions" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                                    Sessions
+                                 </Link>
+                                 <Link href="/session-create" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                                    Create Session
+                                 </Link>
+                               </>
                              )}
                              <Link href="#" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
                                 Features

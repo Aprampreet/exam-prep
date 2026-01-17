@@ -76,7 +76,7 @@ export default function ShortAnswerPage() {
 
       <div className="space-y-10">
         {attemptData.answers.map((q: any, idx: number) => (
-          <Card key={idx} className="overflow-hidden">
+          <Card key={idx} className="overflow-hidden bg-card/50 backdrop-blur-md border-primary/5">
             <CardHeader className="bg-muted/30">
               <CardTitle className="text-lg flex gap-3">
                 <span className="text-primary font-mono min-w-[1.5rem]">{idx + 1}.</span>
@@ -108,7 +108,7 @@ export default function ShortAnswerPage() {
                   {revealed[idx] && (
                     <div className="mt-4 p-4 bg-green-500/10 border border-green-500/20 rounded-md animate-in slide-in-from-top-2 duration-300">
                         <p className="text-xs font-semibold text-green-700 dark:text-green-400 mb-1">Ideal Answer:</p>
-                        <p className="text-sm text-foreground/90 leading-relaxed">{q.ideal_answer}</p>
+                        <p className="text-sm text-foreground/90 leading-relaxed">{q.correct_answer}</p>
                     </div>
                   )}
               </div>

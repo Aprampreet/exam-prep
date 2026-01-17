@@ -16,16 +16,20 @@ class ShortAnswerAttempt(Base):
         unique=True
     )
 
-    total_questions: Mapped[int] = mapped_column(default=10)
-    total_score: Mapped[int | None] = mapped_column(nullable=True)
-
-    answers: Mapped[list[dict]] = mapped_column(JSON, nullable=False)
+    total_questions: Mapped[int]
+    total_score: Mapped[int | None]
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         server_default=func.now()
     )
+
+    # 🔹 REQUIRED
     session: Mapped["Session"] = relationship(
-        "Session",
         back_populates="short_answer_attempt"
+    )
+
+    answers: Mapped[list["ShortAnswer"]] = relationship(
+        back_populates="attempt",
+        cascade="all, delete-orphan"
     )

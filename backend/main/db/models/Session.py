@@ -7,6 +7,9 @@ from sqlalchemy import func
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from db.models.DocumentChunk import DocumentChunk
+from db.models.MCQ import MCQAttempt
+from db.models.Short import ShortAnswerAttempt
+
 class Session(Base):
     __tablename__ = "sessions"
 

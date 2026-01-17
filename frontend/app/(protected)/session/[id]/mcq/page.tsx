@@ -107,7 +107,7 @@ export default function MCQPage() {
             }
 
             return (
-              <Card key={idx} className={`transition-all duration-300 ${cardBorder}`}>
+              <Card key={idx} className={`transition-all duration-300 bg-card/50 backdrop-blur-md border-primary/5 ${cardBorder}`}>
                 <CardHeader>
                   <CardTitle className="text-lg flex gap-3">
                     <span className="text-muted-foreground min-w-[1.5rem]">{idx + 1}.</span>
