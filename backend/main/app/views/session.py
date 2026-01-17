@@ -106,20 +106,35 @@ async def create_mcq(
     if existing_attempt:
         return existing_attempt
 
-    dummy_questions = [
+    result = await db.execute(select(DocumentChunk).where(DocumentChunk.session_id==session_id)).order_by(DocumentChunk.chunk_index).limit(20)
+    chunks = result.scalars().all()
+    if not chunks:
+        raise HTTPException(status_code=404, detail="No chunks found for this session")
+    
+    context = "\n".join(chunk.content for chunk in chunks)
+    try:
+        mcqs = await generate_mcq(context)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    if len(mcqs) != 20:
+        raise HTTPException(
+            status_code=500,
+            detail="LLM did not generate exactly 20 MCQs"
+        )
+    questions = [
         {
-            "question": "What is an OS?",
-            "options": ["A", "B", "C", "D"],
-            "correct_answer": "B",
+            "question": q["question"],
+            "options": q["options"],
+            "correct_answer": q["correct_answer"],
             "user_answer": None,
             "is_correct": None
         }
-        for _ in range(20)
+        for q in mcqs
     ]
 
     mcq_attempt = MCQAttempt(
         session_id=session_id,
-        questions=dummy_questions,
+        questions=questions,
         total_questions=20,
         score=None
     )
