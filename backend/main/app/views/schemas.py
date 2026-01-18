@@ -13,6 +13,15 @@ class SessionOut(BaseModel):
     class Config:
         from_attributes = True
 
+class MCQQuestionOut(BaseModel):
+    id: int
+    question: str
+    options: list[str]
+    correct_answer: str
+    user_answer: str | None
+    is_correct: bool | None
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class MCQAttemptOut(BaseModel):
@@ -20,11 +29,12 @@ class MCQAttemptOut(BaseModel):
     session_id: int
     total_questions: int
     score: int | None
-    questions: list[dict]
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    questions: list[MCQQuestionOut]
+
+    model_config = ConfigDict(from_attributes=True)
+
 
 class ShortAnswerOut(BaseModel):
     id: int

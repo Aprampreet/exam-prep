@@ -1,4 +1,4 @@
-from sqlalchemy import Integer, ForeignKey, DateTime, JSON
+from sqlalchemy import ForeignKey, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import func
 from datetime import datetime
@@ -15,10 +15,8 @@ class MCQAttempt(Base):
         unique=True
     )
 
-    total_questions: Mapped[int] = mapped_column(default=20)
-    score: Mapped[int | None] = mapped_column(nullable=True)
-
-    questions: Mapped[list[dict]] = mapped_column(JSON, nullable=False)
+    total_questions: Mapped[int]
+    score: Mapped[int | None]
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
@@ -26,6 +24,10 @@ class MCQAttempt(Base):
     )
 
     session: Mapped["Session"] = relationship(
-        "Session",
         back_populates="mcq_attempt"
+    )
+
+    questions: Mapped[list["MCQQuestion"]] = relationship(
+        back_populates="attempt",
+        cascade="all, delete-orphan"
     )

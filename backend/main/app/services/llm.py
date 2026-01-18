@@ -2,8 +2,16 @@ import json
 from typing import List, Dict
 from langchain_google_genai import ChatGoogleGenerativeAI
 from app.core.config import settings
+from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
+from db.models.Session import Session
+from db.deps import get_db
+from db.models import MCQAttempt, ShortAnswerAttempt, DocumentChunk
+from db.models.MCQans import MCQQuestion
+from db.models.ShortAnswer import ShortAnswer
 
-
+    
 llm = ChatGoogleGenerativeAI(
     api_key=settings.GOOGLE_API_KEY,
     model="gemini-2.5-flash-lite",
@@ -12,127 +20,129 @@ llm = ChatGoogleGenerativeAI(
 )
 
 
-async def generate_mcq(context: str, count: int = 2) -> List[Dict]:
-    """
-    Generate MCQs in a format compatible with MCQAttempt.questions
-    """
-
+async def generate_assessment(context: str) -> dict:
     context = context[:3000]
 
     prompt = f"""
-Generate exactly {count} multiple choice questions from the content below.
+Generate:
+1) EXACTLY 2 MCQs
+2) EXACTLY 2 short-answer questions
 
-Rules:
-- Use ONLY the given content
-- Each question must have exactly 4 options
-- Only one option is correct
-- Return ONLY a JSON array
-- Do NOT use markdown
-- Do NOT add explanations
+Return ONLY JSON.
 
-JSON format:
-[
-  {{
-    "question": "Question text",
-    "options": ["A", "B", "C", "D"],
-    "answer": "A"
-  }}
-]
+FORMAT:
+{{
+  "mcq": [
+    {{
+      "question": "...",
+      "options": ["A", "B", "C", "D"],
+      "correct_answer": "A"
+    }}
+  ],
+  "short_answers": [
+    {{
+      "question": "...",
+      "answer": "..."
+    }}
+  ]
+}}
 
 CONTENT:
 {context}
 """
 
     response = await llm.ainvoke(prompt)
+    raw = str(response.content).strip()
 
-    if not response or not getattr(response, "content", None):
-        raise ValueError("LLM returned empty response")
+    if raw.startswith("```"):
+        raw = raw.replace("```json", "").replace("```", "").strip()
 
-    raw_text = str(response.content).strip()
+    data = json.loads(raw)
 
-    if raw_text.startswith("```"):
-        raw_text = raw_text.replace("```json", "").replace("```", "").strip()
+    if "mcq" not in data or "short_answers" not in data:
+        raise ValueError("Invalid AI response")
 
-    try:
-        raw_mcqs = json.loads(raw_text)
-    except json.JSONDecodeError as e:
-        raise ValueError(f"Invalid JSON from LLM: {e}")
-
-    if not isinstance(raw_mcqs, list):
-        raise ValueError("MCQ output is not a list")
-
-    if len(raw_mcqs) != count:
-        raise ValueError(f"Expected {count} MCQs, got {len(raw_mcqs)}")
-
-    normalized_mcqs: List[Dict] = []
-
-    for q in raw_mcqs:
-        if "question" not in q or "options" not in q:
-            raise ValueError("Invalid MCQ schema from LLM")
-
-        correct = q.get("correct_answer") or q.get("answer")
-        if not correct:
-            raise ValueError("Correct answer missing in MCQ")
-
-        if len(q["options"]) != 4:
-            raise ValueError("Each MCQ must have exactly 4 options")
-
-        normalized_mcqs.append({
-            "question": q["question"],
-            "options": q["options"],
-            "correct_answer": correct,
-            "user_answer": None,
-            "is_correct": None,
-        })
-
-    return normalized_mcqs
+    return data
 
 
-async def generate_short_answer(context: str, count: int = 2) -> list[dict]:
-    context = context[:3000]
+async def ensure_assessment_generated(
+    session: Session,
+    db: AsyncSession,
+):
+    # 1️⃣ Check if BOTH already exist
+    result = await db.execute(
+        select(MCQAttempt.id)
+        .where(MCQAttempt.session_id == session.id)
+    )
+    mcq_exists = result.scalar_one_or_none() is not None
 
-    prompt = f"""
-Generate exactly {count} short answer questions from the content below.
+    result = await db.execute(
+        select(ShortAnswerAttempt.id)
+        .where(ShortAnswerAttempt.session_id == session.id)
+    )
+    short_exists = result.scalar_one_or_none() is not None
 
-Rules:
-- Use ONLY the given content
-- Each answer must be a single sentence
-- Return ONLY a JSON array
-- Do NOT use markdown
-- Do NOT add explanations
+    if mcq_exists and short_exists:
+        return  # ✅ AI already ran
 
-JSON format:
-[
-  {{
-    "question": "Question text",
-    "answer": "Answer text"
-  }}
-]
+    # 2️⃣ Load context
+    result = await db.execute(
+        select(DocumentChunk)
+        .where(DocumentChunk.session_id == session.id)
+        .order_by(DocumentChunk.chunk_index)
+        .limit(12)
+    )
+    chunks = result.scalars().all()
+    if not chunks:
+        raise ValueError("No chunks found")
 
-CONTENT:
-{context}
-"""
+    context = "\n".join(c.content for c in chunks)
 
-    response = await llm.ainvoke(prompt)
+    # 🔥 ONE AI CALL
+    data = await generate_assessment(context)
 
-    if not response or not getattr(response, "content", None):
-        raise ValueError("LLM returned empty response")
+    # 3️⃣ Create MCQ (only if missing)
+    if not mcq_exists:
+        mcq_attempt = MCQAttempt(
+            session_id=session.id,
+            total_questions=len(data["mcq"]),
+            score=None,
+        )
+        db.add(mcq_attempt)
+        await db.flush()
 
-    raw_text = str(response.content).strip()
+        db.add_all([
+            MCQQuestion(
+                attempt_id=mcq_attempt.id,
+                question=q["question"],
+                options=q["options"],
+                correct_answer=q["correct_answer"],
+                user_answer=None,
+                is_correct=None,
+            )
+            for q in data["mcq"]
+        ])
 
-    if raw_text.startswith("```"):
-        raw_text = raw_text.replace("```json", "").replace("```", "").strip()
+    # 4️⃣ Create Short Answer (only if missing)
+    if not short_exists:
+        short_attempt = ShortAnswerAttempt(
+            session_id=session.id,
+            total_questions=len(data["short_answers"]),
+            total_score=None,
+        )
+        db.add(short_attempt)
+        await db.flush()
 
-    raw_answers = json.loads(raw_text)
+        db.add_all([
+            ShortAnswer(
+                attempt_id=short_attempt.id,
+                question=a["question"],
+                correct_answer=a["answer"],
+                user_answer=None,
+                score=None,
+                feedback=None,
+            )
+            for a in data["short_answers"]
+        ])
 
-    if not isinstance(raw_answers, list):
-        raise ValueError("Answer output is not a list")
-
-    if len(raw_answers) != count:
-        raise ValueError(f"Expected {count} answers, got {len(raw_answers)}")
-
-    for a in raw_answers:
-        if "question" not in a or "answer" not in a:
-            raise ValueError("Invalid short answer schema from LLM")
-
-    return raw_answers
+    await db.commit()
