@@ -67,3 +67,9 @@ export const getAllSessions = async () => {
   const res = await api.get("/session/all");
   return res.data;
 }
+
+
+export const chatWithAI = async (sessionId: number, data?: any) => {
+  const res = await api.post(`/session/${sessionId}/chat`, data || {});
+  return res.data;
+}

@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle, FileText, ChevronRight, Loader2, Search, BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-// Shared type for Session (can be moved to types.ts later)
 interface Session {
   id: number;
   title: string;

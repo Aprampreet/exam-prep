@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List,Literal
 from pydantic.config import ConfigDict
 
 class SessionOut(BaseModel):
@@ -58,3 +58,10 @@ class ShortAnswerAttemptOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ChatMessage(BaseModel):
+    role: Literal["user", "assistant"]
+    content: str
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[ChatMessage] = []

@@ -6,7 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { createMCQ, createShortAnswer } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, FileQuestion, ListChecks, BrainCircuit, ArrowLeft } from "lucide-react";
+import { Loader2, FileQuestion, ListChecks, BrainCircuit, ArrowLeft, Bot } from "lucide-react";
 
 export default function SessionSelectionPage() {
   const router = useRouter();
@@ -102,6 +102,49 @@ export default function SessionSelectionPage() {
           <CardContent className="pb-10 flex justify-center">
              <Button variant="default" className="w-40" disabled={loading !== null}>
                 {loading === "short" ? <Loader2 className="animate-spin" /> : "Start Theory"}
+             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Chat with AI Card */}
+        <Card 
+            className="group relative overflow-hidden border-2 hover:border-primary transition-all duration-300 cursor-pointer hover:shadow-2xl hover:-translate-y-1 bg-card/50"
+            onClick={() => router.push(`/session/${sessionId}/chat-ai`)}
+        >
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+          <CardHeader className="text-center pt-10">
+            <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <Bot className="h-10 w-10 text-primary" />
+            </div>
+            <CardTitle className="text-2xl mb-2">Chat with AI</CardTitle>
+            <CardDescription className="text-base">
+                Ask questions to your document and clear your doubts instantly.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pb-10 flex justify-center">
+             <Button variant="default" className="w-40" disabled={loading !== null}>
+                Start Chat
+             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Long Question Card (Disabled) */}
+        <Card 
+            className="group relative overflow-hidden border-2 border-dashed opacity-60 cursor-not-allowed bg-muted/20"
+        >
+          <CardHeader className="text-center pt-10">
+            <div className="mx-auto w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6">
+              <FileQuestion className="h-10 w-10 text-muted-foreground" />
+            </div>
+            <CardTitle className="text-2xl mb-2 text-muted-foreground">Long Questions</CardTitle>
+             <div className="absolute top-4 right-4 bg-muted px-2 py-1 rounded text-xs font-bold uppercase text-muted-foreground">Coming Soon</div>
+            <CardDescription className="text-base">
+                Practice detailed essay-type answers with comprehensive AI feedback.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pb-10 flex justify-center">
+             <Button variant="secondary" className="w-40" disabled>
+                Locked
              </Button>
           </CardContent>
         </Card>

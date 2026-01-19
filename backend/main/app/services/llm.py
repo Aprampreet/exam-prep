@@ -11,7 +11,7 @@ from db.models import MCQAttempt, ShortAnswerAttempt, DocumentChunk
 from db.models.MCQans import MCQQuestion
 from db.models.ShortAnswer import ShortAnswer
 
-    
+
 llm = ChatGoogleGenerativeAI(
     api_key=settings.GOOGLE_API_KEY,
     model="gemini-2.5-flash-lite",
@@ -69,7 +69,6 @@ async def ensure_assessment_generated(
     session: Session,
     db: AsyncSession,
 ):
-    # 1️⃣ Check if BOTH already exist
     result = await db.execute(
         select(MCQAttempt.id)
         .where(MCQAttempt.session_id == session.id)
@@ -83,9 +82,8 @@ async def ensure_assessment_generated(
     short_exists = result.scalar_one_or_none() is not None
 
     if mcq_exists and short_exists:
-        return  # ✅ AI already ran
+        return  
 
-    # 2️⃣ Load context
     result = await db.execute(
         select(DocumentChunk)
         .where(DocumentChunk.session_id == session.id)
@@ -98,10 +96,8 @@ async def ensure_assessment_generated(
 
     context = "\n".join(c.content for c in chunks)
 
-    # 🔥 ONE AI CALL
     data = await generate_assessment(context)
 
-    # 3️⃣ Create MCQ (only if missing)
     if not mcq_exists:
         mcq_attempt = MCQAttempt(
             session_id=session.id,
@@ -123,7 +119,6 @@ async def ensure_assessment_generated(
             for q in data["mcq"]
         ])
 
-    # 4️⃣ Create Short Answer (only if missing)
     if not short_exists:
         short_attempt = ShortAnswerAttempt(
             session_id=session.id,
@@ -146,3 +141,38 @@ async def ensure_assessment_generated(
         ])
 
     await db.commit()
+
+
+async def chat_rag_with_memory(
+    doc_context: str,
+    history: str,
+    question: str,
+) -> str:
+    doc_context = doc_context[:3500]
+
+    prompt = f"""
+You are a study assistant.
+
+Rules:
+- Use ONLY the document content
+- Use chat history ONLY for context
+- If the answer is not in the document, say:
+  "I cannot find this in the provided document."
+- Do NOT hallucinate
+
+DOCUMENT:
+{doc_context}
+
+CHAT HISTORY:
+{history}
+
+USER QUESTION:
+{question}
+"""
+
+    response = await llm.ainvoke(prompt)
+
+    if not response or not getattr(response, "content", None):
+        raise ValueError("Empty AI response")
+
+    return response.content.strip()

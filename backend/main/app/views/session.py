@@ -191,3 +191,42 @@ async def get_short_attempt(
         raise HTTPException(status_code=404, detail="Short Attempt not found")
 
     return attempt
+
+
+@session_router.post("/{session_id}/chat")
+@limiter.limit("10/minute")
+async def chat_with_ai(
+        request: Request,
+        session_id: int,
+        payload: ChatRequest,
+        user: User = Depends(get_current_user),
+        db: AsyncSession = Depends(get_db),
+    ):
+    session = await db.execute(
+        select(Session)
+        .where(
+            Session.id == session_id,
+            Session.user_id == user.id
+        )
+    )
+    session = session.scalar_one_or_none()
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+    chunks = await db.execute(
+        select(DocumentChunk)
+        .where(DocumentChunk.session_id == session_id)
+        .order_by(DocumentChunk.chunk_index)
+        .limit(12)
+    )
+    chunks = chunks.scalars().all()
+    context = "\n".join(c.content for c in chunks)
+    history_text=""
+    for msg in payload.history[-6:]:  
+        history_text += f"{msg.role.upper()}: {msg.content}\n"
+    answer = await chat_rag_with_memory(
+        doc_context=context,
+        history=history_text,
+        question=payload.message
+    )
+    return {"answer": answer}
+    
