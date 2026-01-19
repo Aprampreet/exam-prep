@@ -91,39 +91,41 @@ export default function SessionsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredSessions.map((session) => (
                 <Link href={`/session/${session.id}`} key={session.id} className="group">
-                    <Card className="h-full border-border/40 bg-card/40 backdrop-blur-md hover:bg-card/60 transition-all hover:shadow-xl hover:-translate-y-1 duration-300 overflow-hidden">
-                        <div className="h-2 w-full bg-gradient-to-r from-primary/20 to-primary/60" />
-                        <CardHeader className="pb-3 pt-5">
+                    <Card className="h-full border hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-card">
+                        <CardHeader className="pb-3 pt-6">
                             <div className="flex justify-between items-start gap-4">
-                                <CardTitle className="text-lg font-bold line-clamp-1 leading-tight" title={session.title}>
+                                <CardTitle className="text-xl font-bold line-clamp-1 leading-tight" title={session.title}>
                                     {session.title || "Untitled Session"}
                                 </CardTitle>
-                                <span className={`shrink-0 text-[10px] uppercase font-bold px-2 py-1 rounded-md border ${
-                                    session.status === 'completed' ? 'bg-green-500/10 text-green-600 border-green-500/20' : 'bg-blue-500/10 text-blue-600 border-blue-500/20'
+                                <span className={`shrink-0 text-[10px] uppercase font-bold px-2 py-1 rounded-full border ${
+                                    session.status === 'completed' ? 'bg-green-500/10 text-green-600 border-green-200 dark:border-green-800' : 'bg-blue-500/10 text-blue-600 border-blue-200 dark:border-blue-800'
                                 }`}>
                                     {session.status || "In Progress"}
                                 </span>
                             </div>
-                            <CardDescription className="text-xs font-medium opacity-70">
-                                Created {new Date(session.created_at).toLocaleDateString()}
+                            <CardDescription className="text-xs font-medium text-muted-foreground flex items-center mt-1">
+                                <span>Created on {new Date(session.created_at).toLocaleDateString()}</span>
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                             <div className="h-24 bg-muted/40 rounded-lg p-3 mb-4 flex flex-col items-center justify-center group-hover:bg-primary/5 transition-colors border border-dashed border-border/50">
+                             <div className="h-20 bg-muted/30 rounded-lg p-3 mb-4 flex items-center gap-3 border border-border/40">
                                  {session.original_file_url ? (
                                     <>
-                                        <FileText className="h-8 w-8 text-primary/60 mb-2 group-hover:scale-110 transition-transform duration-300" />
-                                        <span className="text-xs text-muted-foreground font-medium">Document Attached</span>
+                                        <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                                            <FileText className="h-5 w-5 text-primary" />
+                                        </div>
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="text-sm font-medium truncate">Document Attached</span>
+                                            <span className="text-xs text-muted-foreground">Ready for analysis</span>
+                                        </div>
                                     </>
                                  ) : (
-                                     <span className="text-xs text-muted-foreground italic">No document</span>
+                                     <span className="text-xs text-muted-foreground italic pl-2">No document attached</span>
                                  )}
                              </div>
-                             <div className="flex items-center justify-between text-sm text-primary font-semibold mt-auto pt-2 border-t border-border/30">
-                                <span>Continue Studying</span>
-                                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                                    <ChevronRight className="h-3 w-3" />
-                                </div>
+                             <div className="flex items-center justify-between text-sm font-medium mt-auto pt-4 border-t border-border/50 group-hover:text-primary transition-colors">
+                                <span>Continue Session</span>
+                                <ChevronRight className="h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
                              </div>
                         </CardContent>
                     </Card>

@@ -83,7 +83,7 @@ export default function ChatAIPage() {
             </Button>
             <div>
                 <h1 className="text-2xl font-bold flex items-center gap-2">
-                    <Bot className="h-6 w-6 text-primary" />
+                    <Bot className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
                     AI Study Companion
                 </h1>
                 <p className="text-sm text-muted-foreground">Session #{sessionId}</p>
@@ -95,7 +95,7 @@ export default function ChatAIPage() {
       </div>
 
       {/* Chat Area */}
-      <Card className="flex-1 mb-4 overflow-hidden border-border/50 bg-card/60 backdrop-blur-md shadow-xl flex flex-col">
+      <Card className="flex-1 mb-4 overflow-hidden border bg-card shadow-sm flex flex-col">
         <ScrollArea className="flex-1 p-4 md:p-6">
             <div className="space-y-6">
                 {messages.map((msg, idx) => (
@@ -104,16 +104,16 @@ export default function ChatAIPage() {
                         className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
                         {msg.role === 'assistant' && (
-                            <Avatar className="h-8 w-8 mt-1 border border-primary/20 bg-primary/10">
-                                <AvatarFallback><Bot className="h-4 w-4 text-primary" /></AvatarFallback>
+                            <Avatar className="h-8 w-8 mt-1 border bg-emerald-500/10">
+                                <AvatarFallback><Bot className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /></AvatarFallback>
                             </Avatar>
                         )}
                         
                         <div 
-                            className={`max-w-[85%] md:max-w-[75%] rounded-2xl px-4 py-3 shadow-sm ${
+                            className={`max-w-[85%] md:max-w-[75%] rounded-3xl px-5 py-3 shadow-sm ${
                                 msg.role === 'user' 
-                                ? 'bg-primary text-primary-foreground rounded-tr-none' 
-                                : 'bg-muted/80 backdrop-blur-sm border border-border/50 rounded-tl-none'
+                                ? 'bg-primary text-primary-foreground rounded-tr-sm' 
+                                : 'bg-muted rounded-tl-sm'
                             }`}
                         >
                             {msg.role === 'assistant' ? (
@@ -135,15 +135,15 @@ export default function ChatAIPage() {
                 ))}
                 
                 {loading && (
-                    <div className="flex gap-3 justify-start animate-pulse">
-                         <Avatar className="h-8 w-8 mt-1 border border-primary/20 bg-primary/10">
-                             <AvatarFallback><Bot className="h-4 w-4 text-primary" /></AvatarFallback>
+                    <div className="flex gap-3 justify-start animate-fade-in">
+                         <Avatar className="h-8 w-8 mt-1 border bg-emerald-500/10">
+                             <AvatarFallback><Bot className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /></AvatarFallback>
                          </Avatar>
-                         <div className="bg-muted/50 rounded-2xl rounded-tl-none px-4 py-3 h-12 w-24 flex items-center justify-center">
-                             <div className="flex gap-1">
-                                <div className="h-2 w-2 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                                <div className="h-2 w-2 bg-primary/40 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                                <div className="h-2 w-2 bg-primary/40 rounded-full animate-bounce"></div>
+                         <div className="bg-muted rounded-3xl rounded-tl-sm px-5 py-4 h-12 w-24 flex items-center justify-center">
+                             <div className="flex gap-1.5">
+                                <div className="h-1.5 w-1.5 bg-foreground/30 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+                                <div className="h-1.5 w-1.5 bg-foreground/30 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+                                <div className="h-1.5 w-1.5 bg-foreground/30 rounded-full animate-bounce"></div>
                              </div>
                          </div>
                     </div>
@@ -160,7 +160,7 @@ export default function ChatAIPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about specific concepts, summary, or explanations..."
-                className="h-12 bg-card/60 backdrop-blur-md shadow-lg border-border/50 focus-visible:ring-primary/30 pl-4 pr-12 rounded-xl"
+                className="h-14 bg-card shadow-sm border focus-visible:ring-emerald-500/30 pl-5 pr-14 rounded-full text-base"
                 disabled={loading}
             />
             <Button 

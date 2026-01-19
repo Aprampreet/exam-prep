@@ -64,66 +64,63 @@ export default function SessionSelectionPage() {
         
         {/* MCQ Card */}
         <Card 
-            className="group relative overflow-hidden border-2 hover:border-primary transition-all duration-300 cursor-pointer hover:shadow-2xl hover:-translate-y-1 bg-card/50"
+            className="group relative overflow-hidden border hover:border-blue-500/50 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-1 bg-card"
             onClick={handleCreateMCQ}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="text-center pt-10">
-            <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <ListChecks className="h-10 w-10 text-primary" />
+          <CardHeader className="text-center pt-8 pb-4">
+            <div className="mx-auto w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+              <ListChecks className="h-8 w-8 text-blue-600 dark:text-blue-400" />
             </div>
-            <CardTitle className="text-2xl mb-2">Multiple Choice</CardTitle>
-            <CardDescription className="text-base">
-                Ideal for quick revision and testing factual recall. 20 Questions.
+            <CardTitle className="text-xl font-bold mb-2">Multiple Choice</CardTitle>
+            <CardDescription className="text-sm px-4">
+                Quick revision and testing factual recall. 20 Questions.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-10 flex justify-center">
-             <Button variant="default" className="w-40" disabled={loading !== null}>
-                {loading === "mcq" ? <Loader2 className="animate-spin" /> : "Start MCQ"}
+          <CardContent className="pb-8 flex justify-center">
+             <Button variant="secondary" className="w-32 group-hover:bg-blue-600 group-hover:text-white transition-colors" disabled={loading !== null}>
+                {loading === "mcq" ? <Loader2 className="animate-spin h-4 w-4" /> : "Start"}
              </Button>
           </CardContent>
         </Card>
 
         {/* Short Answer Card */}
         <Card 
-            className="group relative overflow-hidden border-2 hover:border-primary transition-all duration-300 cursor-pointer hover:shadow-2xl hover:-translate-y-1 bg-card/50"
+            className="group relative overflow-hidden border hover:border-purple-500/50 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-1 bg-card"
             onClick={handleCreateShortAnswer}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="text-center pt-10">
-            <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <BrainCircuit className="h-10 w-10 text-primary" />
+          <CardHeader className="text-center pt-8 pb-4">
+            <div className="mx-auto w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+              <BrainCircuit className="h-8 w-8 text-purple-600 dark:text-purple-400" />
             </div>
-            <CardTitle className="text-2xl mb-2">Short Answer</CardTitle>
-            <CardDescription className="text-base">
-                Deep dive into concepts. AI evaluates your logic and understanding. 10 Questions.
+            <CardTitle className="text-xl font-bold mb-2">Short Answer</CardTitle>
+            <CardDescription className="text-sm px-4">
+                Deep dive into concepts. AI evaluates your logic. 10 Questions.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-10 flex justify-center">
-             <Button variant="default" className="w-40" disabled={loading !== null}>
-                {loading === "short" ? <Loader2 className="animate-spin" /> : "Start Theory"}
+          <CardContent className="pb-8 flex justify-center">
+             <Button variant="secondary" className="w-32 group-hover:bg-purple-600 group-hover:text-white transition-colors" disabled={loading !== null}>
+                {loading === "short" ? <Loader2 className="animate-spin h-4 w-4" /> : "Start"}
              </Button>
           </CardContent>
         </Card>
 
         {/* Chat with AI Card */}
         <Card 
-            className="group relative overflow-hidden border-2 hover:border-primary transition-all duration-300 cursor-pointer hover:shadow-2xl hover:-translate-y-1 bg-card/50"
+            className="group relative overflow-hidden border hover:border-emerald-500/50 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-1 bg-card"
             onClick={() => router.push(`/session/${sessionId}/chat-ai`)}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          <CardHeader className="text-center pt-10">
-            <div className="mx-auto w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-              <Bot className="h-10 w-10 text-primary" />
+          <CardHeader className="text-center pt-8 pb-4">
+            <div className="mx-auto w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+              <Bot className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
             </div>
-            <CardTitle className="text-2xl mb-2">Chat with AI</CardTitle>
-            <CardDescription className="text-base">
+            <CardTitle className="text-xl font-bold mb-2">Chat with AI</CardTitle>
+            <CardDescription className="text-sm px-4">
                 Ask questions to your document and clear your doubts instantly.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-10 flex justify-center">
-             <Button variant="default" className="w-40" disabled={loading !== null}>
-                Start Chat
+          <CardContent className="pb-8 flex justify-center">
+             <Button variant="secondary" className="w-32 group-hover:bg-emerald-600 group-hover:text-white transition-colors" disabled={loading !== null}>
+                Start
              </Button>
           </CardContent>
         </Card>
@@ -132,13 +129,15 @@ export default function SessionSelectionPage() {
         <Card 
             className="group relative overflow-hidden border-2 border-dashed opacity-60 cursor-not-allowed bg-muted/20"
         >
-          <CardHeader className="text-center pt-10">
-            <div className="mx-auto w-20 h-20 bg-muted rounded-full flex items-center justify-center mb-6">
-              <FileQuestion className="h-10 w-10 text-muted-foreground" />
+            <CardHeader className="text-center pt-10">
+            <div className="mx-auto w-16 h-16 bg-muted/50 rounded-2xl flex items-center justify-center mb-6 border border-border/50">
+              <FileQuestion className="h-8 w-8 text-muted-foreground/50" />
             </div>
-            <CardTitle className="text-2xl mb-2 text-muted-foreground">Long Questions</CardTitle>
-             <div className="absolute top-4 right-4 bg-muted px-2 py-1 rounded text-xs font-bold uppercase text-muted-foreground">Coming Soon</div>
-            <CardDescription className="text-base">
+            <div className="flex items-center justify-center gap-2 mb-2">
+                <CardTitle className="text-xl text-muted-foreground">Long Questions</CardTitle>
+                <div className="px-2 py-0.5 rounded-full bg-muted text-[10px] font-bold uppercase tracking-wider text-muted-foreground border border-border">Coming Soon</div>
+            </div>
+            <CardDescription className="text-sm">
                 Practice detailed essay-type answers with comprehensive AI feedback.
             </CardDescription>
           </CardHeader>
