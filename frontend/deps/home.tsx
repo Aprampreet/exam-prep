@@ -16,24 +16,18 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="relative py-24 md:py-32 overflow-hidden flex flex-col items-center justify-center min-h-[90vh]">
-          {/* Background Effects */}
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#202020_1px,transparent_1px),linear-gradient(to_bottom,#202020_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10 animate-pulse duration-[5000ms]"></div>
+        <section className="relative py-24 md:py-32 flex flex-col items-center justify-center min-h-[80vh] border-b border-border">
           
           <div className="container mx-auto px-4 flex flex-col items-center text-center max-w-5xl z-10">
-            <div className="inline-flex items-center rounded-full border border-primary/20 bg-secondary/50 px-3 py-1 text-sm font-medium text-primary backdrop-blur-xl mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="inline-flex items-center rounded-full border border-primary/50 bg-background px-4 py-1.5 text-sm font-medium text-foreground mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <span className="flex h-2 w-2 rounded-full bg-primary mr-2 animate-pulse"></span>
               New: AI-Powered Study Plans 2.0
             </div>
             
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[1.1] animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight mb-8 leading-[1.1] animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both text-foreground">
               Master Your Exams <br />
-              <span className="text-muted-foreground relative">
+              <span className="text-muted-foreground">
                 With Precision.
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-primary opacity-50" viewBox="0 0 100 10" preserveAspectRatio="none">
-                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
-                </svg>
               </span>
             </h1>
             
@@ -42,34 +36,33 @@ export default function HomePage() {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300 fill-mode-both">
-              <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] hover:shadow-[0_0_60px_-10px_rgba(255,255,255,0.4)] transition-shadow duration-300">
+              <Button size="lg" className="h-14 px-10 text-lg rounded-full shadow-sm transition-transform hover:scale-105">
                 Start Free Trial <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button variant="outline" size="lg" className="h-14 px-10 text-lg rounded-full border-primary/20 hover:bg-primary/10 transition-colors">
+              <Button variant="outline" size="lg" className="h-14 px-10 text-lg rounded-full border-border hover:bg-secondary transition-colors">
                 Explore Syllabus
               </Button>
             </div>
 
             {/* Social Proof/Trusted By */}
-            <div className="mt-24 pt-8 border-t border-border/40 w-full animate-in fade-in duration-1000 delay-500">
+            <div className="mt-24 pt-8 border-t border-border w-full animate-in fade-in duration-1000 delay-500">
                 <p className="text-sm text-muted-foreground mb-6 font-medium tracking-widest uppercase">Trusted by 50,000+ Students from</p>
-                <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                    {/* Placeholder Text Logos for Universities */}
-                    <span className="text-xl font-bold font-serif">HARVARD</span>
-                    <span className="text-xl font-bold font-mono">MIT</span>
-                    <span className="text-xl font-bold font-sans tracking-tighter">STANFORD</span>
-                    <span className="text-xl font-bold font-serif italic">OXFORD</span>
-                    <span className="text-xl font-bold font-mono tracking-widest">IIT-B</span>
+                <div className="flex flex-wrap justify-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                    <span className="text-xl font-bold font-serif text-foreground">HARVARD</span>
+                    <span className="text-xl font-bold font-mono text-foreground">MIT</span>
+                    <span className="text-xl font-bold font-sans tracking-tighter text-foreground">STANFORD</span>
+                    <span className="text-xl font-bold font-serif italic text-foreground">OXFORD</span>
+                    <span className="text-xl font-bold font-mono tracking-widest text-foreground">IIT-B</span>
                 </div>
             </div>
           </div>
         </section>
 
-        {/* Features Grid with Hover Effects */}
-        <section className="py-32 bg-secondary/5 border-y border-border/50">
+        {/* Features Grid */}
+        <section className="py-32 bg-background border-b border-border">
           <div className="container mx-auto px-4">
             <div className="text-center mb-20 max-w-3xl mx-auto">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">Engineered for Success</h2>
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6 text-foreground">Engineered for Success</h2>
               <p className="text-muted-foreground text-xl">
                  We've stripped away the clutter to focus on raw performance and learning efficiency.
               </p>
@@ -110,10 +103,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Testimonials Section (New) */}
-        <section className="py-32 overflow-hidden">
+        {/* Testimonials Section */}
+        <section className="py-32 overflow-hidden bg-background border-b border-border">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-20 text-center">Don't just take our word for it</h2>
+                <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-20 text-center text-foreground">Don't just take our word for it</h2>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     <TestimonialCard 
@@ -135,24 +128,24 @@ export default function HomePage() {
             </div>
         </section>
 
-        {/* Stats Section Redesigned */}
-        <section className="py-24 border-y bg-secondary/10">
+        {/* Stats Section */}
+        <section className="py-24 border-b border-border bg-background">
            <div className="container mx-auto px-4">
-             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center divide-x divide-border/20">
+             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center divide-x divide-border">
                <div className="space-y-2">
-                 <h3 className="text-5xl font-bold tracking-tighter">50k+</h3>
+                 <h3 className="text-5xl font-bold tracking-tighter text-foreground">50k+</h3>
                  <p className="text-muted-foreground uppercase text-xs tracking-widest font-semibold">Active Students</p>
                </div>
                <div className="space-y-2">
-                 <h3 className="text-5xl font-bold tracking-tighter">1M+</h3>
+                 <h3 className="text-5xl font-bold tracking-tighter text-foreground">1M+</h3>
                  <p className="text-muted-foreground uppercase text-xs tracking-widest font-semibold">Questions Solved</p>
                </div>
                <div className="space-y-2">
-                 <h3 className="text-5xl font-bold tracking-tighter">95%</h3>
+                 <h3 className="text-5xl font-bold tracking-tighter text-foreground">95%</h3>
                  <p className="text-muted-foreground uppercase text-xs tracking-widest font-semibold">Success Rate</p>
                </div>
                <div className="space-y-2">
-                 <h3 className="text-5xl font-bold tracking-tighter">4.9/5</h3>
+                 <h3 className="text-5xl font-bold tracking-tighter text-foreground">4.9/5</h3>
                  <p className="text-muted-foreground uppercase text-xs tracking-widest font-semibold">User Rating</p>
                </div>
              </div>
@@ -162,28 +155,28 @@ export default function HomePage() {
 
         {/* FAQ Section */}
         <section className="py-32 max-w-3xl mx-auto px-4">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-12 text-center">Frequently Asked Questions</h2>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-12 text-center text-foreground">Frequently Asked Questions</h2>
             <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1" className="border-b-border/40">
-                <AccordionTrigger className="text-lg">How does the AI study plan work?</AccordionTrigger>
+              <AccordionItem value="item-1" className="border-b-border">
+                <AccordionTrigger className="text-lg hover:no-underline hover:text-primary transition-colors">How does the AI study plan work?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
                   Our AI analyzes your initial assessment and ongoing performance to create a dynamic study schedule that adapts to your learning speed and retention. It constantly recalibrates based on your quiz scores.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="item-2" className="border-b-border/40">
-                <AccordionTrigger className="text-lg">Can I access content offline?</AccordionTrigger>
+              <AccordionItem value="item-2" className="border-b-border">
+                <AccordionTrigger className="text-lg hover:no-underline hover:text-primary transition-colors">Can I access content offline?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
                   Yes! You can download video lectures and notes for offline access via our mobile app, perfect for studying on the go or in low-connectivity areas.
                 </AccordionContent>
               </AccordionItem>
-              <AccordionItem value="item-3" className="border-b-border/40">
-                <AccordionTrigger className="text-lg">Is there a money-back guarantee?</AccordionTrigger>
+              <AccordionItem value="item-3" className="border-b-border">
+                <AccordionTrigger className="text-lg hover:no-underline hover:text-primary transition-colors">Is there a money-back guarantee?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
                   We offer a 7-day no-questions-asked refund policy if you are not satisfied with our premium plans. No hidden clauses.
                 </AccordionContent>
               </AccordionItem>
-               <AccordionItem value="item-4" className="border-b-border/40">
-                <AccordionTrigger className="text-lg">Can I switch plans later?</AccordionTrigger>
+               <AccordionItem value="item-4" className="border-b-border">
+                <AccordionTrigger className="text-lg hover:no-underline hover:text-primary transition-colors">Can I switch plans later?</AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
                   Absolutely. You can upgrade or downgrade your plan at any time. The difference will be pro-rated.
                 </AccordionContent>
@@ -192,21 +185,17 @@ export default function HomePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-32 relative overflow-hidden">
-            <div className="absolute inset-0 bg-primary/5 -z-10"></div>
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-            
+        <section className="py-32 relative overflow-hidden bg-background">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight">Ready to top the ranks?</h2>
+            <h2 className="text-4xl md:text-6xl font-bold mb-8 tracking-tight text-foreground">Ready to top the ranks?</h2>
             <p className="text-muted-foreground text-xl mb-12 max-w-2xl mx-auto">
               Join the community of achievers. Your journey to excellence begins with a single click.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
-               <Button size="lg" className="h-14 px-12 text-lg rounded-full">
+               <Button size="lg" className="h-14 px-12 text-lg rounded-full shadow-sm hover:translate-y-[-2px] transition-transform">
                 Get Started for Free
               </Button>
-              <Button size="lg" variant="outline" className="h-14 px-12 text-lg rounded-full hover:bg-background/50">
+              <Button size="lg" variant="outline" className="h-14 px-12 text-lg rounded-full hover:bg-secondary">
                 Contact Sales
               </Button>
             </div>
@@ -275,9 +264,9 @@ export default function HomePage() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
-    <Card className="group border-border/40 bg-card/10 hover:bg-card/30 transition-all duration-500 hover:scale-[1.02] hover:border-primary/20 hover:shadow-2xl hover:shadow-primary/5">
+    <Card className="group border-border bg-card transition-all duration-300 hover:border-primary/50 hover:shadow-sm">
       <CardHeader>
-        <div className="h-14 w-14 rounded-2xl bg-secondary flex items-center justify-center mb-6 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-500">
+        <div className="h-14 w-14 rounded-2xl bg-secondary flex items-center justify-center mb-6 text-foreground group-hover:text-primary transition-colors duration-300 border border-border">
           {icon}
         </div>
         <CardTitle className="text-xl mb-3 group-hover:text-primary transition-colors">{title}</CardTitle>
@@ -289,8 +278,8 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
 
 function TestimonialCard({ name, role, quote }: { name: string, role: string, quote: string }) {
     return (
-        <Card className="bg-transparent border-border/30 p-8 relative hover:bg-secondary/20 transition-colors">
-            <Quote className="absolute top-8 right-8 h-8 w-8 text-secondary-foreground/20" />
+        <Card className="bg-card border-border p-8 relative hover:bg-secondary/10 transition-colors">
+            <Quote className="absolute top-8 right-8 h-8 w-8 text-muted-foreground/20" />
             <div className="flex items-center gap-1 mb-6 text-primary">
                 {[1, 2, 3, 4, 5].map((i) => (
                     <Star key={i} className="h-4 w-4 fill-current" />

@@ -71,9 +71,9 @@ export default function CreateSessionPage() {
 
   return (
     <div className="container mx-auto py-20 px-4 max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-700">
-      <Card className="border-border/50 shadow-2xl bg-card/50 backdrop-blur-sm">
+      <Card className="border-border shadow-sm bg-card">
         <CardHeader className="text-center space-y-2">
-          <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+          <div className="mx-auto w-12 h-12 bg-secondary rounded-full flex items-center justify-center mb-4 border border-border">
             <UploadCloud className="h-6 w-6 text-primary" />
           </div>
           <CardTitle className="text-3xl font-bold">New Study Session</CardTitle>
@@ -90,7 +90,7 @@ export default function CreateSessionPage() {
                 placeholder="e.g. Organic Chemistry Chapter 1"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="h-12 bg-background/50"
+                className="h-12 bg-background border-border"
                 required
               />
             </div>
@@ -98,7 +98,7 @@ export default function CreateSessionPage() {
             <div className="space-y-2">
               <Label className="text-base">Study Material</Label>
               <div 
-                className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center transition-colors cursor-pointer hover:bg-secondary/20 ${file ? 'border-primary bg-primary/5' : 'border-border'}`}
+                className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center transition-colors cursor-pointer hover:bg-accent/50 ${file ? 'border-primary bg-primary/5' : 'border-border bg-background'}`}
                 onClick={() => document.getElementById('file-upload')?.click()}
               >
                   <input 
@@ -127,12 +127,12 @@ export default function CreateSessionPage() {
             </div>
 
             {error && (
-              <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md text-center">
+              <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md text-center border border-destructive/20">
                 {error}
               </div>
             )}
 
-            <Button type="submit" disabled={uploading || !file || !title} className="w-full h-12 text-lg font-medium shadow-lg shadow-primary/20">
+            <Button type="submit" disabled={uploading || !file || !title} className="w-full h-12 text-lg font-medium shadow-sm transition-all hover:translate-y-[-1px]">
               {uploading ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
