@@ -88,7 +88,7 @@ export default function MCQPage() {
             <p className="text-muted-foreground">Session #{sessionId}</p>
         </div>
         {submitted && (
-            <div className="ml-auto bg-primary/10 px-6 py-3 rounded-xl border border-primary/20">
+            <div className="ml-auto bg-secondary px-6 py-3 rounded-xl border border-border">
                 <span className="text-2xl font-bold text-primary">{calculateScore()} / {attemptData.questions.length}</span>
                 <span className="ml-2 text-sm text-muted-foreground">Score</span>
             </div>
@@ -102,12 +102,12 @@ export default function MCQPage() {
             
             let cardBorder = "";
             if (submitted) {
-                if (answers[idx] === q.correct_answer) cardBorder = "border-green-500 bg-green-500/5";
-                else if (answers[idx] && answers[idx] !== q.correct_answer) cardBorder = "border-red-500 bg-red-500/5";
+                if (answers[idx] === q.correct_answer) cardBorder = "border-green-500 shadow-sm";
+                else if (answers[idx] && answers[idx] !== q.correct_answer) cardBorder = "border-red-500 shadow-sm";
             }
 
             return (
-              <Card key={idx} className={`transition-all duration-300 bg-card/50 backdrop-blur-md border-primary/5 ${cardBorder}`}>
+              <Card key={idx} className={`transition-all duration-300 bg-card border ${cardBorder || 'border-border'}`}>
                 <CardHeader>
                   <CardTitle className="text-lg flex gap-3">
                     <span className="text-muted-foreground min-w-[1.5rem]">{idx + 1}.</span>

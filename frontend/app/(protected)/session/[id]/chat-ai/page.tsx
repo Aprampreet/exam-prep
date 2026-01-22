@@ -103,9 +103,10 @@ export default function ChatAIPage() {
                         key={idx} 
                         className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
+
                         {msg.role === 'assistant' && (
-                            <Avatar className="h-8 w-8 mt-1 border bg-emerald-500/10">
-                                <AvatarFallback><Bot className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /></AvatarFallback>
+                            <Avatar className="h-8 w-8 mt-1 border border-border bg-secondary">
+                                <AvatarFallback><Bot className="h-4 w-4 text-emerald-600 dark:text-emerald-500" /></AvatarFallback>
                             </Avatar>
                         )}
                         
@@ -136,8 +137,8 @@ export default function ChatAIPage() {
                 
                 {loading && (
                     <div className="flex gap-3 justify-start animate-fade-in">
-                         <Avatar className="h-8 w-8 mt-1 border bg-emerald-500/10">
-                             <AvatarFallback><Bot className="h-4 w-4 text-emerald-600 dark:text-emerald-400" /></AvatarFallback>
+                         <Avatar className="h-8 w-8 mt-1 border border-border bg-secondary">
+                             <AvatarFallback><Bot className="h-4 w-4 text-emerald-600 dark:text-emerald-500" /></AvatarFallback>
                          </Avatar>
                          <div className="bg-muted rounded-3xl rounded-tl-sm px-5 py-4 h-12 w-24 flex items-center justify-center">
                              <div className="flex gap-1.5">
@@ -160,7 +161,7 @@ export default function ChatAIPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about specific concepts, summary, or explanations..."
-                className="h-14 bg-card shadow-sm border focus-visible:ring-emerald-500/30 pl-5 pr-14 rounded-full text-base"
+                className="h-14 bg-card shadow-sm border border-border focus-visible:ring-ring pl-5 pr-14 rounded-full text-base"
                 disabled={loading}
             />
             <Button 

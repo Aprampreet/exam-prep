@@ -42,107 +42,110 @@ export default function SessionSelectionPage() {
   };
 
   return (
-    <div className="container mx-auto py-20 px-4 max-w-4xl animate-in fade-in zoom-in duration-500">
+    <div className="container mx-auto py-20 px-4 max-w-5xl animate-in fade-in zoom-in duration-500">
       <Button 
         variant="ghost" 
-        className="mb-8 pl-0 hover:bg-transparent hover:text-primary"
+        className="mb-8 pl-0 text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors group"
         onClick={() => router.back()}
       >
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Dashboard
+        <ArrowLeft className="mr-2 h-4 w-4 group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
       </Button>
 
-      <div className="text-center mb-16 space-y-4">
-        <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-          Choose Your Exam Mode
+      <div className="mb-16 space-y-4">
+        <h1 className="text-4xl font-bold tracking-tight lg:text-5xl text-foreground">
+          Choose Exam Mode
         </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Select how you want to test your knowledge. Our AI will generate questions based on your study material.
+        <p className="text-xl text-muted-foreground max-w-2xl">
+          Select how you want to test your knowledge. AI-generated questions based on your material.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
         {/* MCQ Card */}
         <Card 
-            className="group relative overflow-hidden border hover:border-blue-500/50 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-blue-500/5 hover:-translate-y-1 bg-card"
+            className="group relative border border-border bg-card hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 cursor-pointer"
             onClick={handleCreateMCQ}
         >
-          <CardHeader className="text-center pt-8 pb-4">
-            <div className="mx-auto w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-              <ListChecks className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+          <CardHeader className="pt-8">
+            <div className="w-12 h-12 rounded-lg bg-secondary/50 flex items-center justify-center mb-4 border border-border group-hover:border-blue-500/50 group-hover:bg-blue-500/10 transition-colors duration-300">
+              <ListChecks className="h-6 w-6 text-foreground group-hover:text-blue-500 transition-colors" />
             </div>
-            <CardTitle className="text-xl font-bold mb-2">Multiple Choice</CardTitle>
-            <CardDescription className="text-sm px-4">
+            <CardTitle className="text-xl font-bold">Multiple Choice</CardTitle>
+            <CardDescription className="text-sm pt-2">
                 Quick revision and testing factual recall. 20 Questions.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-8 flex justify-center">
-             <Button variant="secondary" className="w-32 group-hover:bg-blue-600 group-hover:text-white transition-colors" disabled={loading !== null}>
-                {loading === "mcq" ? <Loader2 className="animate-spin h-4 w-4" /> : "Start"}
+          <CardContent className="pb-8">
+             <Button variant="outline" className="w-full justify-between group-hover:border-blue-500 group-hover:text-blue-500 transition-colors" disabled={loading !== null}>
+                {loading === "mcq" ? <Loader2 className="animate-spin h-4 w-4" /> : "Start MCQ"}
+                <ArrowLeft className="h-4 w-4 rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
              </Button>
           </CardContent>
         </Card>
 
         {/* Short Answer Card */}
         <Card 
-            className="group relative overflow-hidden border hover:border-purple-500/50 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-purple-500/5 hover:-translate-y-1 bg-card"
+            className="group relative border border-border bg-card hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 cursor-pointer"
             onClick={handleCreateShortAnswer}
         >
-          <CardHeader className="text-center pt-8 pb-4">
-            <div className="mx-auto w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-              <BrainCircuit className="h-8 w-8 text-purple-600 dark:text-purple-400" />
+          <CardHeader className="pt-8">
+            <div className="w-12 h-12 rounded-lg bg-secondary/50 flex items-center justify-center mb-4 border border-border group-hover:border-purple-500/50 group-hover:bg-purple-500/10 transition-colors duration-300">
+              <BrainCircuit className="h-6 w-6 text-foreground group-hover:text-purple-500 transition-colors" />
             </div>
-            <CardTitle className="text-xl font-bold mb-2">Short Answer</CardTitle>
-            <CardDescription className="text-sm px-4">
+            <CardTitle className="text-xl font-bold">Short Answer</CardTitle>
+            <CardDescription className="text-sm pt-2">
                 Deep dive into concepts. AI evaluates your logic. 10 Questions.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-8 flex justify-center">
-             <Button variant="secondary" className="w-32 group-hover:bg-purple-600 group-hover:text-white transition-colors" disabled={loading !== null}>
-                {loading === "short" ? <Loader2 className="animate-spin h-4 w-4" /> : "Start"}
+          <CardContent className="pb-8">
+             <Button variant="outline" className="w-full justify-between group-hover:border-purple-500 group-hover:text-purple-500 transition-colors" disabled={loading !== null}>
+                {loading === "short" ? <Loader2 className="animate-spin h-4 w-4" /> : "Start Short Answer"}
+                <ArrowLeft className="h-4 w-4 rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
              </Button>
           </CardContent>
         </Card>
 
         {/* Chat with AI Card */}
         <Card 
-            className="group relative overflow-hidden border hover:border-emerald-500/50 transition-all duration-300 cursor-pointer hover:shadow-lg hover:shadow-emerald-500/5 hover:-translate-y-1 bg-card"
+            className="group relative border border-border bg-card hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 cursor-pointer"
             onClick={() => router.push(`/session/${sessionId}/chat-ai`)}
         >
-          <CardHeader className="text-center pt-8 pb-4">
-            <div className="mx-auto w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
-              <Bot className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+          <CardHeader className="pt-8">
+            <div className="w-12 h-12 rounded-lg bg-secondary/50 flex items-center justify-center mb-4 border border-border group-hover:border-emerald-500/50 group-hover:bg-emerald-500/10 transition-colors duration-300">
+              <Bot className="h-6 w-6 text-foreground group-hover:text-emerald-500 transition-colors" />
             </div>
-            <CardTitle className="text-xl font-bold mb-2">Chat with AI</CardTitle>
-            <CardDescription className="text-sm px-4">
+            <CardTitle className="text-xl font-bold">Chat with AI</CardTitle>
+            <CardDescription className="text-sm pt-2">
                 Ask questions to your document and clear your doubts instantly.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-8 flex justify-center">
-             <Button variant="secondary" className="w-32 group-hover:bg-emerald-600 group-hover:text-white transition-colors" disabled={loading !== null}>
-                Start
+          <CardContent className="pb-8">
+             <Button variant="outline" className="w-full justify-between group-hover:border-emerald-500 group-hover:text-emerald-500 transition-colors" disabled={loading !== null}>
+                Start Chat
+                <ArrowLeft className="h-4 w-4 rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
              </Button>
           </CardContent>
         </Card>
 
         {/* Long Question Card (Disabled) */}
         <Card 
-            className="group relative overflow-hidden border-2 border-dashed opacity-60 cursor-not-allowed bg-muted/20"
+            className="group relative border border-border/50 bg-muted/10 opacity-60 cursor-not-allowed"
         >
-            <CardHeader className="text-center pt-10">
-            <div className="mx-auto w-16 h-16 bg-muted/50 rounded-2xl flex items-center justify-center mb-6 border border-border/50">
-              <FileQuestion className="h-8 w-8 text-muted-foreground/50" />
+          <CardHeader className="pt-8">
+            <div className="w-12 h-12 rounded-lg bg-muted/20 flex items-center justify-center mb-4 border border-border/50">
+              <FileQuestion className="h-6 w-6 text-muted-foreground" />
             </div>
-            <div className="flex items-center justify-center gap-2 mb-2">
-                <CardTitle className="text-xl text-muted-foreground">Long Questions</CardTitle>
-                <div className="px-2 py-0.5 rounded-full bg-muted text-[10px] font-bold uppercase tracking-wider text-muted-foreground border border-border">Coming Soon</div>
+            <div className="flex items-center gap-2 mb-0">
+                <CardTitle className="text-xl font-bold text-muted-foreground">Long Questions</CardTitle>
+                <div className="px-2 py-0.5 rounded-full bg-secondary text-[10px] font-medium uppercase tracking-wider text-muted-foreground border border-border">Soon</div>
             </div>
-            <CardDescription className="text-sm">
+            <CardDescription className="text-sm pt-2">
                 Practice detailed essay-type answers with comprehensive AI feedback.
             </CardDescription>
           </CardHeader>
-          <CardContent className="pb-10 flex justify-center">
-             <Button variant="secondary" className="w-40" disabled>
+          <CardContent className="pb-8">
+             <Button variant="ghost" className="w-full justify-start cursor-not-allowed text-muted-foreground pl-0 hover:bg-transparent" disabled>
                 Locked
              </Button>
           </CardContent>

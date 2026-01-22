@@ -50,7 +50,7 @@ export default function SessionsPage() {
             <p className="text-muted-foreground mt-1">View and manage all your study sessions.</p>
         </div>
         <Link href="/session-create">
-            <Button size="lg" className="w-full md:w-auto shadow-lg shadow-primary/20 hover:shadow-primary/40 rounded-full transition-all">
+            <Button size="lg" className="w-full md:w-auto shadow-sm rounded-full transition-all">
                 <PlusCircle className="mr-2 h-5 w-5" /> New Session
             </Button>
         </Link>
@@ -61,7 +61,7 @@ export default function SessionsPage() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input 
             placeholder="Search sessions..." 
-            className="pl-10 h-10 w-full bg-background/50 backdrop-blur-sm border-border/50"
+            className="pl-10 h-10 w-full bg-background border-border"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -73,7 +73,7 @@ export default function SessionsPage() {
             <Loader2 className="h-10 w-10 animate-spin text-primary" />
         </div>
       ) : filteredSessions.length === 0 ? (
-        <div className="text-center py-20 border-2 border-dashed border-border/50 rounded-2xl bg-card/30 backdrop-blur-sm">
+        <div className="text-center py-20 border-2 border-dashed border-border/50 rounded-2xl bg-card">
              <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-muted mb-4">
                 <BookOpen className="h-6 w-6 text-muted-foreground" />
              </div>
@@ -98,7 +98,7 @@ export default function SessionsPage() {
                                     {session.title || "Untitled Session"}
                                 </CardTitle>
                                 <span className={`shrink-0 text-[10px] uppercase font-bold px-2 py-1 rounded-full border ${
-                                    session.status === 'completed' ? 'bg-green-500/10 text-green-600 border-green-200 dark:border-green-800' : 'bg-blue-500/10 text-blue-600 border-blue-200 dark:border-blue-800'
+                                    session.status === 'completed' ? 'text-green-600 border-green-200 dark:border-green-800' : 'text-blue-600 border-blue-200 dark:border-blue-800'
                                 }`}>
                                     {session.status || "In Progress"}
                                 </span>
@@ -108,10 +108,10 @@ export default function SessionsPage() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                             <div className="h-20 bg-muted/30 rounded-lg p-3 mb-4 flex items-center gap-3 border border-border/40">
+                             <div className="h-20 bg-muted rounded-lg p-3 mb-4 flex items-center gap-3 border border-border">
                                  {session.original_file_url ? (
                                     <>
-                                        <div className="h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
+                                        <div className="h-10 w-10 bg-secondary rounded-lg flex items-center justify-center shrink-0 border border-border">
                                             <FileText className="h-5 w-5 text-primary" />
                                         </div>
                                         <div className="flex flex-col min-w-0">
