@@ -86,7 +86,7 @@ export default function ChatAIPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4 max-w-4xl h-[calc(100vh-80px)] flex flex-col animate-in fade-in duration-500">
+    <div className="container mx-auto py-6 px-4 max-w-4xl h-[calc(100vh-140px)] flex flex-col animate-in fade-in duration-500">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-6 shrink-0">
@@ -108,8 +108,8 @@ export default function ChatAIPage() {
       </div>
 
       {/* Chat Area */}
-      <Card className="flex-1 mb-4 overflow-hidden border bg-card shadow-sm flex flex-col">
-        <ScrollArea className="flex-1 p-4 md:p-6">
+      <Card className="flex-1 min-h-0 mb-4 overflow-hidden border bg-card shadow-sm flex flex-col">
+        <ScrollArea className="flex-1 h-full p-4 md:p-6">
             <div className="space-y-6">
                 {messages.map((msg, idx) => (
                     <div 
