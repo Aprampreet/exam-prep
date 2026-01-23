@@ -86,7 +86,7 @@ export default function ChatAIPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4 max-w-4xl h-[calc(100vh-140px)] flex flex-col animate-in fade-in duration-500">
+    <div className="container mx-auto py-6 px-4 max-w-6xl h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-6 shrink-0">
@@ -107,9 +107,9 @@ export default function ChatAIPage() {
          </Button>
       </div>
 
-      {/* Chat Area */}
-      <Card className="flex-1 min-h-0 mb-4 overflow-hidden border bg-card shadow-sm flex flex-col">
-        <ScrollArea className="flex-1 h-full p-4 md:p-6">
+      {/* Chat Area - Open Layout */}
+      <div className="flex-1 min-h-0 flex flex-col relative">
+        <ScrollArea className="flex-1 h-full px-4 mx-4">
             <div className="space-y-6">
                 {messages.map((msg, idx) => (
                     <div 
@@ -165,7 +165,6 @@ export default function ChatAIPage() {
                 <div ref={scrollRef} />
             </div>
         </ScrollArea>
-        {/* Quick Questions (Floating Pill Box Style) */}
       {!started && (
       <div className="shrink-0 mb-4 px-2">
           <div className="flex flex-wrap gap-2 justify-center pb-2">
@@ -191,7 +190,7 @@ export default function ChatAIPage() {
           </div>
       </div>
       )}
-      </Card>
+      </div>
 
       
 
@@ -202,14 +201,14 @@ export default function ChatAIPage() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask about specific concepts, summary, or explanations..."
-                className="h-14 bg-card shadow-sm border border-border focus-visible:ring-ring pl-5 pr-14 rounded-full text-base"
+                className="h-14 bg-card shadow-sm border border-border  focus-visible:ring-ring pl-5 pr-14 rounded-full text-base"
                 disabled={loading}
             />
             <Button 
                 type="submit" 
                 size="icon" 
                 disabled={!input.trim() || loading} 
-                className="absolute right-1 top-1 h-10 w-10 rounded-lg shadow-sm"
+                className="absolute right-2 top-2 h-10 w-10 rounded-lg shadow-sm"
             >
                 {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             </Button>
@@ -218,4 +217,4 @@ export default function ChatAIPage() {
       
     </div>
   );
-}
+} 
