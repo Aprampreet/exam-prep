@@ -148,19 +148,17 @@ async def chat_rag_with_memory(
     history: str,
     question: str,
 ) -> str:
-    doc_context = doc_context[:3500]
-
     prompt = f"""
-You are a study assistant.
+You are an AI study tutor.
 
-Rules:
-- Use ONLY the document content
-- Use chat history ONLY for context
-- If the answer is not in the document, say:
-  "I cannot find this in the provided document."
-- Do NOT hallucinate
+RULES:
+- If the question is about weak areas or revision, use WEAK AREAS.
+- If the question is conceptual, use STUDY MATERIAL.
+- Be concise, clear, and helpful.
+- Do NOT hallucinate.
+- If the answer cannot be inferred, say so clearly.
 
-DOCUMENT:
+CONTEXT:
 {doc_context}
 
 CHAT HISTORY:
@@ -177,47 +175,3 @@ USER QUESTION:
 
     return response.content.strip()
 
-
-async def evaluate_short_answer(
-    question: str,
-    correct_answer: str,
-    user_answer: str,
-) -> dict:
-    prompt = f"""
-You are an exam evaluator.
-
-Compare the user's answer with the correct answer.
-
-Rules:
-- Score from 0 to 5
-- Be strict but fair
-- Give short feedback
-- Return ONLY valid JSON
-
-JSON format:
-{{
-  "score": number,
-  "feedback": "text"
-}}
-
-QUESTION:
-{question}
-
-CORRECT ANSWER:
-{correct_answer}
-
-USER ANSWER:
-{user_answer}
-"""
-
-    response = await llm.ainvoke(prompt)
-
-    if not response or not getattr(response, "content", None):
-        raise ValueError("LLM returned empty evaluation")
-
-    raw = response.content.strip()
-
-    if raw.startswith("```"):
-        raw = raw.replace("```json", "").replace("```", "").strip()
-
-    return json.loads(raw)

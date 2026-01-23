@@ -26,7 +26,7 @@ export function Navbar() {
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           {user && (
             <>
-              <Link href="/sessions" className="hover:text-foreground transition-colors">Sessions</Link>
+              <Link href="/dashboard" className="hover:text-foreground transition-colors">Dashboard</Link>
               <Link href="/session-create" className="hover:text-foreground transition-colors">Create Session</Link>
             </>
           )}
@@ -65,8 +65,8 @@ export function Navbar() {
                              </Link>
                              {user && (
                                <>
-                                 <Link href="/sessions" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
-                                    Sessions
+                                 <Link href="/dashboard" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                                    Dashboard
                                  </Link>
                                  <Link href="/session-create" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
                                     Create Session

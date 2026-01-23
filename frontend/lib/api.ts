@@ -85,6 +85,6 @@ export const checkShortAnswer = async (sessionId: number, data?: any) => {
 }
 
 export const getProfileTabs = async () => {
-  const res = await api.get("/session/profile-tabs");
+  const res = await api.get("/session/profile/tabs");
   return res.data;
 }

@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { useProfileData } from "@/Data/profileData";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,6 +13,7 @@ import { Loader2, MapPin, GraduationCap, Calendar, Mail, Phone, Edit2, Check, X,
 import { updateProfile } from "@/lib/api";
 import { useAuth } from "@/lib/context/AuthContext";
 import { Textarea } from "@/components/ui/textarea";
+import { getProfileTabs } from "@/lib/api";
 
 export default function ProfilePage() {
   const { loading, full_name, email, phone, bio, college, location, degree, passing_year, avatar_url, user } = useProfileData();
@@ -23,6 +24,23 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState<any>({});
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const [stats, setStats] = useState<any>({});
+
+  const loadData = async () => {
+      try {
+        const [statsData] = await Promise.all([
+            getProfileTabs()
+        ]);
+        setStats(statsData);
+      } catch (error) {
+        console.error("Failed to load dashboard data", error);
+      }
+    };
+
+    useEffect(() => {
+      loadData();
+    }, []);
 
   const handleStartEdit = () => {
     setFormData({
@@ -209,27 +227,24 @@ export default function ProfilePage() {
             </Card>
         </div>
 
-        {/* Right Column: Stats / Activity / Edit Form */}
         <div className="col-span-1 md:col-span-2 space-y-6">
-            
-            {/* Stats Cards (Static for now) */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Card className="bg-primary/5 border-primary/20">
                     <CardContent className="flex flex-col items-center justify-center p-6">
-                        <span className="text-3xl font-bold">12</span>
-                        <span className="text-sm text-muted-foreground">Courses</span>
+                        <span className="text-3xl font-bold">{stats.total_sessions}</span>
+                        <span className="text-sm text-muted-foreground">Sessions</span>
                     </CardContent>
                 </Card>
                 <Card className="bg-primary/5 border-primary/20">
                     <CardContent className="flex flex-col items-center justify-center p-6">
-                        <span className="text-3xl font-bold">85%</span>
-                        <span className="text-sm text-muted-foreground">Avg. Score</span>
+                        <span className="text-3xl font-bold">{stats.avg_mcq_score}</span>
+                        <span className="text-sm text-muted-foreground">Avg. MCQ Score</span>
                     </CardContent>
                 </Card>
                 <Card className="bg-primary/5 border-primary/20">
                     <CardContent className="flex flex-col items-center justify-center p-6">
-                        <span className="text-3xl font-bold">124</span>
-                        <span className="text-sm text-muted-foreground">Hours Studied</span>
+                        <span className="text-3xl font-bold">{Math.round(stats.avg_short_score * 10) / 10}</span>
+                        <span className="text-sm text-muted-foreground">Avg. Short Answer Score</span>
                     </CardContent>
                 </Card>
             </div>

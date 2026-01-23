@@ -20,6 +20,8 @@ from app.services.llm import *
 from db.models.ShortAnswer import ShortAnswer
 from sqlalchemy.orm import selectinload
 from db.models.MCQans import MCQQuestion
+from sqlalchemy import desc
+from app.services.embeddings import EmbeddingService
 
 session_router = APIRouter(prefix="/session", tags=["session"])
 
@@ -79,7 +81,7 @@ async def get_all_sessions(
     result = await db.execute(
         select(Session).where(
             Session.user_id == user.id
-        )
+        ).order_by(desc(Session.created_at))
     )
     sessions = result.scalars().all()
 
@@ -319,39 +321,105 @@ async def check_short_answer(
 @session_router.post("/{session_id}/chat")
 @limiter.limit("10/minute")
 async def chat_with_ai(
-        request: Request,
-        session_id: int,
-        payload: ChatRequest,
-        user: User = Depends(get_current_user),
-        db: AsyncSession = Depends(get_db),
-    ):
-    session = await db.execute(
+    request: Request,
+    session_id: int,
+    payload: ChatRequest,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
         select(Session)
-        .where(
-            Session.id == session_id,
-            Session.user_id == user.id
-        )
+        .where(Session.id == session_id, Session.user_id == user.id)
     )
-    session = session.scalar_one_or_none()
+    session = result.scalar_one_or_none()
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
-    chunks = await db.execute(
-        select(DocumentChunk)
-        .where(DocumentChunk.session_id == session_id)
-        .order_by(DocumentChunk.chunk_index)
-        .limit(12)
-    )
-    chunks = chunks.scalars().all()
-    context = "\n".join(c.content for c in chunks)
-    history_text=""
-    for msg in payload.history[-6:]:  
+
+    performance_keywords = [
+        "weak", "weak areas", "weak topics", "mistakes",
+        "revision", "improve", "score", "low", "focus"
+    ]
+    lower_q = payload.message.lower()
+    is_performance_query = any(k in lower_q for k in performance_keywords)
+
+    weak_mcqs = (
+        await db.execute(
+            select(MCQQuestion)
+            .join(MCQAttempt)
+            .where(
+                MCQAttempt.session_id == session_id,
+                MCQQuestion.is_correct.is_(False)
+            )
+        )
+    ).scalars().all()
+
+    weak_shorts = (
+        await db.execute(
+            select(ShortAnswer)
+            .join(ShortAnswerAttempt)
+            .where(
+                ShortAnswerAttempt.session_id == session_id,
+                ShortAnswer.score.isnot(None),
+                ShortAnswer.score < 3
+            )
+        )
+    ).scalars().all()
+
+    weak_context = ""
+    for q in weak_mcqs:
+        weak_context += f"- MCQ: {q.question}\n"
+    for s in weak_shorts:
+        weak_context += f"- Short Answer: {s.question}\n"
+
+    semantic_chunks = []
+
+    if not is_performance_query:
+        embedding_service = EmbeddingService()
+        query_embedding = embedding_service.embed_text(payload.message)
+
+        result = await db.execute(
+            select(DocumentChunk)
+            .where(DocumentChunk.session_id == session_id)
+            .order_by(
+                DocumentChunk.embedding.cosine_distance(query_embedding)
+            )
+            .limit(6)
+        )
+        semantic_chunks = result.scalars().all()
+
+    doc_context = "\n".join(c.content for c in semantic_chunks)
+
+    history_text = ""
+    for msg in payload.history[-6:]:
         history_text += f"{msg.role.upper()}: {msg.content}\n"
+
+    if is_performance_query:
+        final_context = f"""
+WEAK AREAS (from exam analysis):
+{weak_context}
+
+Instruction:
+Explain weak areas clearly and suggest revision strategy.
+"""
+    else:
+        final_context = f"""
+STUDY MATERIAL:
+{doc_context}
+
+WEAK AREAS:
+{weak_context}
+"""
+
     answer = await chat_rag_with_memory(
-        doc_context=context,
+        doc_context=final_context,
         history=history_text,
         question=payload.message
     )
+
     return {"answer": answer}
+
+
+
     
 
 @session_router.get("/profile/tabs", response_model=ProfileTabsOut)
@@ -364,22 +432,43 @@ async def get_profile_tabs(
         select(Session)
         .where(Session.user_id == user.id)
     )
-    total_sessions = result.scalar_one_or_none()
+    sessions = result.scalars().all()
+    total_sessions = len(sessions)
     result = await db.execute(
         select(MCQAttempt)
-        .where(MCQAttempt.user_id == user.id)
+        .join(Session)
+        .where(Session.user_id == user.id)
     )
     mcq_attempts = result.scalars().all()
-    total_score = sum(attempt.score for attempt in mcq_attempts)
-    avg_score = total_score / len(mcq_attempts) if mcq_attempts else 0
+    
+    mcq_percentages = []
+    for attempt in mcq_attempts:
+        if attempt.score is not None and attempt.total_questions and attempt.total_questions > 0:
+            percentage = (attempt.score / attempt.total_questions) * 100
+            mcq_percentages.append(percentage)
+            
+    avg_mcq_score = sum(mcq_percentages) / len(mcq_percentages) if mcq_percentages else 0
     result = await db.execute(
         select(ShortAnswerAttempt)
-        .where(ShortAnswerAttempt.user_id == user.id)
+        .join(Session)
+        .where(Session.user_id == user.id)
     )
     short_attempts = result.scalars().all()
-    total_score = sum(attempt.total_score for attempt in short_attempts)
-    avg_short_score = total_score / len(short_attempts) if short_attempts else 0
+    
+    total_short_points = 0
+    total_short_questions = 0
+    
+    for attempt in short_attempts:
+        if attempt.total_score is not None and attempt.total_questions and attempt.total_questions > 0:
+            total_short_points += attempt.total_score
+            total_short_questions += attempt.total_questions
+            
+    avg_short_score = (total_short_points / total_short_questions) if total_short_questions > 0 else 0
 
-    return {"total_sessions": total_sessions, "avg_mcq_score": avg_score, "avg_short_score": avg_short_score }
+    return {
+        "total_sessions": total_sessions, 
+        "avg_mcq_score": avg_mcq_score, 
+        "avg_short_score": avg_short_score 
+    }
 
     

@@ -2,29 +2,34 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { getAllSessions } from "@/lib/api";
+import { getAllSessions, getProfileTabs } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle, BookOpen, Clock, FileText, ChevronRight, Loader2, Search, Zap, Trophy, Flame } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/lib/context/AuthContext";
 
-export default function DashboardPage() {
+  export default function DashboardPage() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [stats, setStats] = useState<any>({ total_sessions: 0, avg_mcq_score: 0, avg_short_score: 0 });
 
   useEffect(() => {
-    loadSessions();
+    loadData();
   }, []);
 
-  const loadSessions = async () => {
+  const loadData = async () => {
     try {
-      const data = await getAllSessions();
-      setSessions(data);
+      const [sessionsData, statsData] = await Promise.all([
+          getAllSessions(),
+          getProfileTabs()
+      ]);
+      setSessions(sessionsData);
+      setStats(statsData);
     } catch (error) {
-      console.error("Failed to load sessions", error);
+      console.error("Failed to load dashboard data", error);
     } finally {
       setLoading(false);
     }
@@ -61,12 +66,12 @@ export default function DashboardPage() {
                 <BookOpen className="h-24 w-24 text-blue-500" />
             </div>
             <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-                <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider">Total Sessions</CardTitle>
+                <CardTitle className="text-sm font-medium text-blue-600 dark:text-blue-400 uppercase tracking-wider">Courses</CardTitle>
                 <BookOpen className="h-5 w-5 text-blue-500" />
             </CardHeader>
             <CardContent className="relative z-10">
-                <div className="text-4xl font-bold text-foreground">{sessions.length}</div>
-                <p className="text-sm text-muted-foreground mt-1">Active materials</p>
+                <div className="text-4xl font-bold text-foreground">{stats.total_sessions}</div>
+                <p className="text-sm text-muted-foreground mt-1">Total active sessions</p>
             </CardContent>
         </Card>
 
@@ -75,13 +80,13 @@ export default function DashboardPage() {
                 <Flame className="h-24 w-24 text-purple-500" />
             </div>
             <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-                <CardTitle className="text-sm font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wider">Study Streak</CardTitle>
+                <CardTitle className="text-sm font-medium text-purple-600 dark:text-purple-400 uppercase tracking-wider">Avg. MCQ Score</CardTitle>
                 <Zap className="h-5 w-5 text-purple-500" />
             </CardHeader>
             <CardContent className="relative z-10">
-                <div className="text-4xl font-bold text-foreground">3 <span className="text-xl font-normal text-muted-foreground">Days</span></div>
+                <div className="text-4xl font-bold text-foreground">{Math.round(stats.avg_mcq_score)}%</div>
                 <p className="text-sm text-green-500 font-medium mt-1 flex items-center">
-                    <Flame className="h-3 w-3 mr-1" /> On fire!
+                   Based on your attempts
                 </p>
             </CardContent>
         </Card>
@@ -91,12 +96,12 @@ export default function DashboardPage() {
                 <Trophy className="h-24 w-24 text-amber-500" />
             </div>
              <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-                <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wider">Avg. Score</CardTitle>
+                <CardTitle className="text-sm font-medium text-amber-600 dark:text-amber-400 uppercase tracking-wider">Avg. Short Ans.</CardTitle>
                 <Trophy className="h-5 w-5 text-amber-500" />
             </CardHeader>
             <CardContent className="relative z-10">
-                <div className="text-4xl font-bold text-foreground">88%</div>
-                <p className="text-sm text-muted-foreground mt-1">Top 10% of students</p>
+                <div className="text-4xl font-bold text-foreground">{Math.round(stats.avg_short_score * 10) / 10} <span className="text-lg text-muted-foreground">/ 5</span></div>
+                <p className="text-sm text-muted-foreground mt-1">Average performance</p>
             </CardContent>
         </Card>
       </div>
