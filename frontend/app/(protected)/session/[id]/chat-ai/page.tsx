@@ -20,8 +20,15 @@ interface ChatMessage {
 export default function ChatAIPage() {
   const params = useParams();
   const router = useRouter();
+  const [started, setStarted] = useState(false);
   const { user } = useAuth();
   const sessionId = params.id ? parseInt(params.id as string) : -1;
+  const sample_q = [
+    "What are the key concepts in this chapter?",
+    "Can you explain this topic in simpler terms?",
+    "Can you give me a summary of the main points?",
+    "What are my weak areas?",
+  ]
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: "Hello! I've analyzed your study material. Ask me anything about it." }
@@ -40,11 +47,10 @@ export default function ChatAIPage() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || loading) return;
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || loading) return;
 
-    const userMsg: ChatMessage = { role: "user", content: input };
+    const userMsg: ChatMessage = { role: "user", content: text };
     setMessages(prev => [...prev, userMsg]);
     setInput("");
     setLoading(true);
@@ -53,9 +59,11 @@ export default function ChatAIPage() {
       const history = messages.slice(1); 
 
       const res = await chatWithAI(sessionId, {
-        message: userMsg.content,
+        message: text,
         history: history
       });
+
+      setStarted(true);
 
       const aiMsg: ChatMessage = { role: "assistant", content: res.answer };
       setMessages(prev => [...prev, aiMsg]);
@@ -70,6 +78,11 @@ export default function ChatAIPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    sendMessage(input);
   };
 
   return (
@@ -89,7 +102,7 @@ export default function ChatAIPage() {
                 <p className="text-sm text-muted-foreground">Session #{sessionId}</p>
             </div>
          </div>
-         <Button variant="outline" size="sm" onClick={() => setMessages([messages[0]])}>
+         <Button variant="outline" size="sm" onClick={() => {setMessages([messages[0]]); setStarted(false);}}>
             <RefreshCw className="h-4 w-4 mr-2" /> Clear Chat
          </Button>
       </div>
@@ -152,7 +165,35 @@ export default function ChatAIPage() {
                 <div ref={scrollRef} />
             </div>
         </ScrollArea>
+        {/* Quick Questions (Floating Pill Box Style) */}
+      {!started && (
+      <div className="shrink-0 mb-4 px-2">
+          <div className="flex flex-wrap gap-2 justify-center pb-2">
+            {sample_q.map((question, index) => (
+              <button
+                key={index}
+                onClick={() => sendMessage(question)}
+                disabled={loading}
+                className="
+                  group relative 
+                  bg-background/80 backdrop-blur-sm border border-border/60 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)]
+                  dark:shadow-[0_8px_30px_rgb(255,255,255,0.05)] dark:hover:shadow-[0_8px_30px_rgb(255,255,255,0.1)]
+                  text-sm font-medium text-foreground/80 hover:text-primary 
+                  px-5 py-2.5 rounded-full transition-all duration-300 transform hover:-translate-y-1
+                  animate-in zoom-in slide-in-from-bottom-4 fade-in fill-mode-both
+                  flex items-center gap-2
+                "
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <span>{question}</span>
+              </button>
+            ))}
+          </div>
+      </div>
+      )}
       </Card>
+
+      
 
       {/* Input Area */}
       <div className="shrink-0 relative">
