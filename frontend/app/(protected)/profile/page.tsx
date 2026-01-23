@@ -111,7 +111,7 @@ export default function ProfilePage() {
 
   const initials = (full_name || email || "U")
     .split(" ")
-    .map((n) => n[0])
+    .map((n: string) => n[0])
     .join("")
     .substring(0, 2)
     .toUpperCase();
