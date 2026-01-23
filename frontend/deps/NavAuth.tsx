@@ -40,7 +40,6 @@ export function AuthNav() {
     );
   }
 
-  // Derived initials or fallback
   const displayName = user.profile?.full_name || user.email.split("@")[0] || "User";
   const initials = displayName
     .split(" ")
