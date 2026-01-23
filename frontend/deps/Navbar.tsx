@@ -59,24 +59,24 @@ export function Navbar() {
                     </SheetHeader>
                     
                     <div className="flex flex-col gap-6 flex-1">
-                        <nav className="flex flex-col space-y-4">
-                             <Link href="/" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                        <nav className="flex flex-col space-y-4 items-start">
+                             <Link href="/" className="flex items-center gap-3 text-lg font-medium text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
                                 Home
                              </Link>
                              {user && (
                                <>
-                                 <Link href="/dashboard" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                                 <Link href="/dashboard" className="flex items-center gap-3 text-lg font-medium text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
                                     Dashboard
                                  </Link>
-                                 <Link href="/session-create" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                                 <Link href="/session-create" className="flex items-center gap-3 text-lg font-medium text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
                                     Create Session
                                  </Link>
                                </>
                              )}
-                             <Link href="#" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                             <Link href="#" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
                                 Features
                              </Link>
-                             <Link href="#" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1">
+                             <Link href="#" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
                                 Pricing
                              </Link>
                         </nav>
