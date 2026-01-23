@@ -168,6 +168,60 @@ async def get_mcq(
     return attempt
 
 
+@session_router.post("/{session_id}/mcq/check", response_model=MCQAttemptOut)
+@limiter.limit("10/minute")
+async def check_mcq(
+    request: Request,
+    session_id: int,
+    payload: MCQCheckRequest,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(MCQAttempt)
+        .join(Session)
+        .where(
+            MCQAttempt.session_id == session_id,
+            Session.user_id == user.id
+        )
+    )
+    attempt = result.scalar_one_or_none()
+    if not attempt:
+        raise HTTPException(status_code=404, detail="MCQ attempt not found")
+    result = await db.execute(
+        select(MCQQuestion)
+        .where(
+            MCQQuestion.id == payload.question_id,
+            MCQQuestion.attempt_id == attempt.id
+        )
+    )
+    question = result.scalar_one_or_none()
+    if not question:
+        raise HTTPException(status_code=404, detail="MCQ question not found")
+
+    question.user_answer = payload.answer
+    question.is_correct = (payload.answer == question.correct_answer)
+
+    result = await db.execute(
+        select(MCQQuestion)
+        .where(
+            MCQQuestion.attempt_id == attempt.id,
+            MCQQuestion.is_correct.is_(True)
+        )
+    )
+    attempt.score = len(result.scalars().all())
+
+    await db.commit()
+    result = await db.execute(
+        select(MCQAttempt)
+        .options(selectinload(MCQAttempt.questions))
+        .where(MCQAttempt.id == attempt.id)
+    )
+    return result.scalar_one()
+    
+    
+    
+
 @session_router.get("/{session_id}/short", response_model=ShortAnswerAttemptOut)
 @limiter.limit("10/minute")
 async def get_short_attempt(
