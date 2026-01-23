@@ -176,3 +176,48 @@ USER QUESTION:
         raise ValueError("Empty AI response")
 
     return response.content.strip()
+
+
+async def evaluate_short_answer(
+    question: str,
+    correct_answer: str,
+    user_answer: str,
+) -> dict:
+    prompt = f"""
+You are an exam evaluator.
+
+Compare the user's answer with the correct answer.
+
+Rules:
+- Score from 0 to 5
+- Be strict but fair
+- Give short feedback
+- Return ONLY valid JSON
+
+JSON format:
+{{
+  "score": number,
+  "feedback": "text"
+}}
+
+QUESTION:
+{question}
+
+CORRECT ANSWER:
+{correct_answer}
+
+USER ANSWER:
+{user_answer}
+"""
+
+    response = await llm.ainvoke(prompt)
+
+    if not response or not getattr(response, "content", None):
+        raise ValueError("LLM returned empty evaluation")
+
+    raw = response.content.strip()
+
+    if raw.startswith("```"):
+        raw = raw.replace("```json", "").replace("```", "").strip()
+
+    return json.loads(raw)

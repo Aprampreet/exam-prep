@@ -237,6 +237,85 @@ async def get_short_attempt(
     return attempt
 
 
+
+
+
+@session_router.post("/{session_id}/short/check", response_model=ShortAnswerAttemptOut)
+@limiter.limit("10/minute")
+async def check_short_answer(
+    request: Request,
+    session_id: int,
+    payload: ShortAnswerSubmitRequest,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(ShortAnswerAttempt)
+        .join(Session)
+        .where(
+            ShortAnswerAttempt.session_id == session_id,
+            Session.user_id == user.id
+        )
+    )
+    attempt = result.scalar_one_or_none()
+    if not attempt:
+        raise HTTPException(status_code=404, detail="Short answer attempt not found")
+
+    result = await db.execute(
+        select(ShortAnswer)
+        .where(
+            ShortAnswer.id == payload.question_id,
+            ShortAnswer.attempt_id == attempt.id
+        )
+    )
+    question = result.scalar_one_or_none()
+    if not question:
+        raise HTTPException(status_code=404, detail="Short answer question not found")
+
+    if question.score is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="This question has already been evaluated"
+        )
+
+    if not payload.answer.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Answer cannot be empty"
+        )
+
+    question.user_answer = payload.answer.strip()
+
+    evaluation = await evaluate_short_answer(
+        question.question,
+        question.correct_answer,
+        question.user_answer,
+    )
+
+    question.score = int(evaluation["score"])
+    question.feedback = evaluation["feedback"]
+
+    result = await db.execute(
+        select(ShortAnswer)
+        .where(
+            ShortAnswer.attempt_id == attempt.id,
+            ShortAnswer.score.isnot(None)
+        )
+    )
+    attempt.total_score = sum(q.score for q in result.scalars())
+
+    await db.commit()
+
+    result = await db.execute(
+        select(ShortAnswerAttempt)
+        .options(selectinload(ShortAnswerAttempt.answers))
+        .where(ShortAnswerAttempt.id == attempt.id)
+    )
+    return result.scalar_one()
+
+
+
+
 @session_router.post("/{session_id}/chat")
 @limiter.limit("10/minute")
 async def chat_with_ai(

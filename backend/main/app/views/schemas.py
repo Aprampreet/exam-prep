@@ -68,3 +68,7 @@ class ChatRequest(BaseModel):
 
 class MCQSubmitRequest(BaseModel):
     answers: dict[int, str]
+
+class ShortAnswerSubmitRequest(BaseModel):
+    question_id: int
+    answer: str
