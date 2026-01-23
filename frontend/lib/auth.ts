@@ -28,3 +28,4 @@ export async function registerUser(
 
   return res.data;
 }
+

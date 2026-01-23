@@ -78,3 +78,13 @@ export const checkMCQ = async (sessionId: number, data?: any) => {
   const res = await api.post(`/session/${sessionId}/mcq/check`, data || {});
   return res.data;
 }
+
+export const checkShortAnswer = async (sessionId: number, data?: any) => {
+  const res = await api.post(`/session/${sessionId}/short/check`, data || {});
+  return res.data;
+}
+
+export const getProfileTabs = async () => {
+  const res = await api.get("/session/profile-tabs");
+  return res.data;
+}

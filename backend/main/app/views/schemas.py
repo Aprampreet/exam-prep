@@ -72,3 +72,8 @@ class MCQSubmitRequest(BaseModel):
 class ShortAnswerSubmitRequest(BaseModel):
     question_id: int
     answer: str
+
+class ProfileTabsOut(BaseModel):
+    total_sessions: int
+    avg_mcq_score: float | None
+    avg_short_score: float | None

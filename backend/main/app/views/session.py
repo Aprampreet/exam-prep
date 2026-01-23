@@ -353,3 +353,33 @@ async def chat_with_ai(
     )
     return {"answer": answer}
     
+
+@session_router.get("/profile/tabs", response_model=ProfileTabsOut)
+async def get_profile_tabs(
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+
+):
+    result = await db.execute(
+        select(Session)
+        .where(Session.user_id == user.id)
+    )
+    total_sessions = result.scalar_one_or_none()
+    result = await db.execute(
+        select(MCQAttempt)
+        .where(MCQAttempt.user_id == user.id)
+    )
+    mcq_attempts = result.scalars().all()
+    total_score = sum(attempt.score for attempt in mcq_attempts)
+    avg_score = total_score / len(mcq_attempts) if mcq_attempts else 0
+    result = await db.execute(
+        select(ShortAnswerAttempt)
+        .where(ShortAnswerAttempt.user_id == user.id)
+    )
+    short_attempts = result.scalars().all()
+    total_score = sum(attempt.total_score for attempt in short_attempts)
+    avg_short_score = total_score / len(short_attempts) if short_attempts else 0
+
+    return {"total_sessions": total_sessions, "avg_mcq_score": avg_score, "avg_short_score": avg_short_score }
+
+    
