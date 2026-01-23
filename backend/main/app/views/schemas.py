@@ -66,6 +66,5 @@ class ChatRequest(BaseModel):
     message: str
     history: List[ChatMessage] = []
 
-class MCQCheckRequest(BaseModel):
-    answers: str
-    question_id: int
+class MCQSubmitRequest(BaseModel):
+    answers: dict[int, str]

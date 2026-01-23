@@ -173,12 +173,13 @@ async def get_mcq(
 async def check_mcq(
     request: Request,
     session_id: int,
-    payload: MCQCheckRequest,
+    payload: MCQSubmitRequest,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
     result = await db.execute(
         select(MCQAttempt)
+        .options(selectinload(MCQAttempt.questions))  
         .join(Session)
         .where(
             MCQAttempt.session_id == session_id,
@@ -188,36 +189,25 @@ async def check_mcq(
     attempt = result.scalar_one_or_none()
     if not attempt:
         raise HTTPException(status_code=404, detail="MCQ attempt not found")
-    result = await db.execute(
-        select(MCQQuestion)
-        .where(
-            MCQQuestion.id == payload.question_id,
-            MCQQuestion.attempt_id == attempt.id
-        )
-    )
-    question = result.scalar_one_or_none()
-    if not question:
-        raise HTTPException(status_code=404, detail="MCQ question not found")
 
-    question.user_answer = payload.answer
-    question.is_correct = (payload.answer == question.correct_answer)
-
-    result = await db.execute(
-        select(MCQQuestion)
-        .where(
-            MCQQuestion.attempt_id == attempt.id,
-            MCQQuestion.is_correct.is_(True)
-        )
-    )
-    attempt.score = len(result.scalars().all())
-
+    questions_map = {q.id: q for q in attempt.questions}
+    current_score = 0
+    for q_id, user_ans in payload.answers.items():
+        if q_id in questions_map:
+            question = questions_map[q_id]
+            question.user_answer = user_ans
+            question.is_correct = (user_ans == question.correct_answer)
+    score = 0
+    for q in attempt.questions:
+        if q.is_correct:
+            score += 1
+            
+    attempt.score = score
     await db.commit()
-    result = await db.execute(
-        select(MCQAttempt)
-        .options(selectinload(MCQAttempt.questions))
-        .where(MCQAttempt.id == attempt.id)
-    )
-    return result.scalar_one()
+    
+    await db.refresh(attempt)
+    
+    return attempt
     
     
     

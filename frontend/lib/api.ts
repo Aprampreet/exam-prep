@@ -73,3 +73,8 @@ export const chatWithAI = async (sessionId: number, data?: any) => {
   const res = await api.post(`/session/${sessionId}/chat`, data || {});
   return res.data;
 }
+
+export const checkMCQ = async (sessionId: number, data?: any) => {
+  const res = await api.post(`/session/${sessionId}/mcq/check`, data || {});
+  return res.data;
+}
