@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { getProfileTabs } from "@/lib/api";
 
 export default function ProfilePage() {
-  const { loading, full_name, email, phone, bio, college, location, degree, passing_year, avatar_url, user } = useProfileData();
+  const { loading, full_name, email, phone_number, bio, college, location, degree, passing_year, avatar_url } = useProfileData();
   const { refreshUser } = useAuth();
   const [updating, setUpdating] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -117,65 +117,91 @@ export default function ProfilePage() {
     .toUpperCase();
 
   return (
-    <div className="container mx-auto py-10 px-4 md:px-8 max-w-5xl animate-in fade-in duration-500">
+    <div className="container mx-auto py-10 px-4 md:px-8 max-w-6xl animate-in fade-in duration-500">
       
-      {/* Header / Cover Area */}
-      <div className="relative mb-20 md:mb-24">
-         <div className="h-48 md:h-64 w-full rounded-xl bg-gradient-to-r from-neutral-900 to-neutral-800 relative overflow-hidden">
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] opacity-20"></div>
-         </div>
-         
-         {/* Profile Avatar & Actions */}
-         <div className="absolute -bottom-16 left-6 md:left-10 flex items-end gap-6 group">
-            <div className="relative">
-                <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-xl">
+      {/* Profile Header */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start justify-between gap-6 mb-12 p-8 rounded-3xl bg-gradient-to-br from-background via-muted/30 to-muted/50 border shadow-sm">
+         <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="relative group">
+                <Avatar className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-2xl ring-2 ring-border/20">
                     <AvatarImage src={previewUrl || avatar_url} alt={full_name} className="object-cover" />
-                    <AvatarFallback className="text-4xl bg-secondary text-secondary-foreground">{initials}</AvatarFallback>
+                    <AvatarFallback className="text-4xl bg-primary/10 text-primary font-bold">{initials}</AvatarFallback>
                 </Avatar>
                 {updating && (
-                     <label htmlFor="avatar-upload" className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 hover:opacity-100 transition-opacity cursor-pointer text-white">
+                     <label htmlFor="avatar-upload" className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer text-white backdrop-blur-sm">
                         <Camera className="h-8 w-8" />
                         <input id="avatar-upload" type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
                      </label>
                 )}
             </div>
             
-            <div className="mb-4 hidden md:block">
-                <h1 className="text-3xl font-bold">{full_name || "User"}</h1>
+            <div className="text-center md:text-left space-y-2">
+                <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+                    {full_name || "User"}
+                </h1>
+                <div className="flex flex-col md:flex-row items-center gap-3 text-muted-foreground">
+                    <div className="flex items-center gap-1.5 bg-background/50 px-3 py-1 rounded-full border border-border/50">
+                        <Mail className="h-3.5 w-3.5" />
+                        <span className="text-sm font-medium">{email}</span>
+                    </div>
+                    {phone_number && (
+                         <div className="flex items-center gap-1.5 bg-background/50 px-3 py-1 rounded-full border border-border/50">
+                            <Phone className="h-3.5 w-3.5" />
+                            <span className="text-sm font-medium">{phone_number}</span>
+                        </div>
+                    )}
+                </div>
             </div>
          </div>
 
-         <div className="absolute bottom-4 right-6 md:right-10 flex gap-2">
+         <div className="flex gap-2">
             {updating ? (
-                <>
-                    <Button variant="ghost" className="backdrop-blur-sm bg-background/50 text-destructive hover:bg-destructive/10" onClick={handleCancelEdit} disabled={saving}>
+                <div className="flex items-center gap-2 bg-background/80 backdrop-blur-sm p-1.5 rounded-full border shadow-sm">
+                    <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full" onClick={handleCancelEdit} disabled={saving}>
                         <X className="h-4 w-4" /> 
                     </Button>
-                    <Button className="" onClick={handleSave} disabled={saving}>
-                        {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Check className="mr-2 h-4 w-4" />}
-                        Save
+                    <Button size="sm" className="rounded-full px-4" onClick={handleSave} disabled={saving}>
+                        {saving ? <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" /> : <Check className="mr-2 h-3.5 w-3.5" />}
+                        Save Changes
                     </Button>
-                </>
+                </div>
             ) : (
-                <Button variant="outline" className="backdrop-blur-sm bg-background/50" onClick={handleStartEdit}>
-                    <Edit2 className="mr-2 h-4 w-4" /> Edit Profile
+                <Button variant="outline" className="rounded-full border-primary/20 hover:bg-primary/5 hover:text-primary hover:border-primary/50 transition-all shadow-sm" onClick={handleStartEdit}>
+                    <Edit2 className="mr-2 h-3.5 w-3.5" /> Edit Profile
                 </Button>
             )}
          </div>
       </div>
 
-      <div className="md:hidden mb-8 px-2">
-         <h1 className="text-2xl font-bold">{full_name || "User"}</h1>
-         <p className="text-muted-foreground">{email}</p>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <Card className="bg-gradient-to-br from-blue-500/5 to-purple-500/5 border-primary/10 hover:border-primary/20 transition-all hover:shadow-md group">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                    <span className="text-4xl font-bold text-foreground group-hover:scale-110 transition-transform duration-500">{stats.total_sessions || 0}</span>
+                    <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mt-2">Total Sessions</span>
+                </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-emerald-500/5 to-teal-500/5 border-primary/10 hover:border-primary/20 transition-all hover:shadow-md group">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                    <span className="text-4xl font-bold text-foreground group-hover:scale-110 transition-transform duration-500">{stats.avg_mcq_score || 0}%</span>
+                    <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mt-2">Avg. MCQ Score</span>
+                </CardContent>
+            </Card>
+            <Card className="bg-gradient-to-br from-orange-500/5 to-red-500/5 border-primary/10 hover:border-primary/20 transition-all hover:shadow-md group">
+                <CardContent className="flex flex-col items-center justify-center p-6">
+                    <span className="text-4xl font-bold text-foreground group-hover:scale-110 transition-transform duration-500">{Math.round((stats.avg_short_score || 0) * 10) / 10}</span>
+                    <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider mt-2">Short Answer Avg.</span>
+                </CardContent>
+            </Card>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Left Column: Personal Info */}
-        <div className="col-span-1 space-y-6">
-            <Card>
+        {/* Left Column: Personal Bio & Contact */}
+        <div className="lg:col-span-1 space-y-6">
+            <Card className="border shadow-none bg-background/50 backdrop-blur-sm">
                 <CardHeader>
-                    <CardTitle>About</CardTitle>
+                    <CardTitle className="text-lg">About Me</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                      {updating ? (
@@ -184,133 +210,113 @@ export default function ProfilePage() {
                             placeholder="Tell us about yourself..." 
                             value={formData.bio} 
                             onChange={handleInputChange} 
-                            className="min-h-[100px]"
+                            className="min-h-[120px] resize-none bg-white/50"
                          />
                      ) : (
-                        <p className="text-sm text-muted-foreground leading-relaxed">
-                            {bio || "No bio added yet. Tell us about yourself!"}
+                        <p className="text-sm text-muted-foreground leading-relaxed italic">
+                            "{bio || "No bio added yet."}"
                         </p>
                      )}
                      
-                     <Separator />
+                     <Separator className="my-4" />
                      
-                     <div className="flex items-center gap-2 text-sm">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span>{location || "Location not set"}</span>
-                     </div>
-                     <div className="flex items-center gap-2 text-sm">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
-                        <span className="truncate">{email}</span>
-                     </div>
-                </CardContent>
-            </Card>
-
-             <Card>
-                <CardHeader>
-                    <CardTitle>Education</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                     <div className="flex gap-3">
-                        <div className="mt-1 bg-primary/10 p-2 rounded-md h-fit">
-                             <GraduationCap className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                            <p className="font-medium">{college || "University not set"}</p>
-                            <p className="text-sm text-muted-foreground">{degree || "Degree"}</p>
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                                <Calendar className="h-3 w-3" />
-                                <span>Class of {passing_year || "N/A"}</span>
+                     <div className="space-y-3">
+                         <div className="flex items-center gap-3">
+                            <div className="bg-muted p-2 rounded-full">
+                                <MapPin className="h-4 w-4 text-muted-foreground" />
                             </div>
-                        </div>
+                            {updating ? (
+                                <Input 
+                                    name="location"
+                                    placeholder="City, Country"
+                                    value={formData.location} 
+                                    onChange={handleInputChange} 
+                                    className="h-8 text-sm"
+                                />
+                            ) : (
+                                <span className="text-sm font-medium">{location || "Location not set"}</span>
+                            )}
+                         </div>
                      </div>
                 </CardContent>
             </Card>
         </div>
 
-        <div className="col-span-1 md:col-span-2 space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <Card className="bg-primary/5 border-primary/20">
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                        <span className="text-3xl font-bold">{stats.total_sessions}</span>
-                        <span className="text-sm text-muted-foreground">Sessions</span>
-                    </CardContent>
-                </Card>
-                <Card className="bg-primary/5 border-primary/20">
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                        <span className="text-3xl font-bold">{stats.avg_mcq_score}</span>
-                        <span className="text-sm text-muted-foreground">Avg. MCQ Score</span>
-                    </CardContent>
-                </Card>
-                <Card className="bg-primary/5 border-primary/20">
-                    <CardContent className="flex flex-col items-center justify-center p-6">
-                        <span className="text-3xl font-bold">{Math.round(stats.avg_short_score * 10) / 10}</span>
-                        <span className="text-sm text-muted-foreground">Avg. Short Answer Score</span>
-                    </CardContent>
-                </Card>
-            </div>
-
-             <Card>
+        {/* Right Column: Academic & Details */}
+        <div className="lg:col-span-2 space-y-6">
+             <Card className="border shadow-none bg-background/50 backdrop-blur-sm">
                 <CardHeader>
-                    <CardTitle>Profile Details</CardTitle>
-                    <CardDescription>Manage your personal information</CardDescription>
+                    <CardTitle className="text-lg">Academic Information</CardTitle>
+                    <CardDescription>Your educational background</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                             <Label>Full Name</Label>
-                             <Input 
-                                name="full_name"
-                                value={updating ? formData.full_name : (full_name || "")} 
-                                onChange={handleInputChange} 
-                                readOnly={!updating} 
-                                className={!updating ? "bg-muted/50" : ""} 
-                             />
+                             <Label className="text-xs uppercase text-muted-foreground font-semibold">College / University</Label>
+                             {updating ? (
+                                 <Input 
+                                    name="college"
+                                    value={formData.college} 
+                                    onChange={handleInputChange} 
+                                 />
+                             ) : (
+                                 <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/50">
+                                     <GraduationCap className="h-5 w-5 text-primary/70" />
+                                     <span className="font-medium">{college || "Not Set"}</span>
+                                 </div>
+                             )}
                         </div>
-                        <div className="space-y-2">
-                             <Label>College / University</Label>
-                             <Input 
-                                name="college"
-                                value={updating ? formData.college : (college || "")} 
-                                onChange={handleInputChange} 
-                                readOnly={!updating} 
-                                className={!updating ? "bg-muted/50" : ""} 
-                             />
-                        </div>
+
                          <div className="space-y-2">
-                             <Label>Degree</Label>
-                             <Input 
-                                name="degree"
-                                value={updating ? formData.degree : (degree || "")} 
-                                onChange={handleInputChange} 
-                                readOnly={!updating} 
-                                className={!updating ? "bg-muted/50" : ""} 
-                             />
+                             <Label className="text-xs uppercase text-muted-foreground font-semibold">Degree / Major</Label>
+                             {updating ? (
+                                 <Input 
+                                    name="degree"
+                                    value={formData.degree} 
+                                    onChange={handleInputChange} 
+                                 />
+                             ) : (
+                                 <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/50">
+                                     <GraduationCap className="h-5 w-5 text-primary/70" />
+                                     <span className="font-medium">{degree || "Not Set"}</span>
+                                 </div>
+                             )}
                         </div>
+
                         <div className="space-y-2">
-                             <Label>Location</Label>
-                             <Input 
-                                name="location"
-                                value={updating ? formData.location : (location || "")} 
-                                onChange={handleInputChange} 
-                                readOnly={!updating} 
-                                className={!updating ? "bg-muted/50" : ""} 
-                             />
+                             <Label className="text-xs uppercase text-muted-foreground font-semibold">Passing Year</Label>
+                             {updating ? (
+                                 <Input 
+                                    name="passing_year"
+                                    type="number"
+                                    value={formData.passing_year} 
+                                    onChange={handleInputChange} 
+                                 />
+                             ) : (
+                                 <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/50">
+                                     <Calendar className="h-5 w-5 text-primary/70" />
+                                     <span className="font-medium">{passing_year || "Not Set"}</span>
+                                 </div>
+                             )}
                         </div>
-                         <div className="space-y-2">
-                             <Label>Passing Year</Label>
-                             <Input 
-                                name="passing_year"
-                                type="number"
-                                value={updating ? formData.passing_year : (passing_year || "")} 
-                                onChange={handleInputChange} 
-                                readOnly={!updating} 
-                                className={!updating ? "bg-muted/50" : ""} 
-                             />
+                        
+                        <div className="space-y-2">
+                             <Label className="text-xs uppercase text-muted-foreground font-semibold">Full Name</Label>
+                              {updating ? (
+                                 <Input 
+                                    name="full_name"
+                                    value={formData.full_name} 
+                                    onChange={handleInputChange} 
+                                 />
+                             ) : (
+                                 <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/30 border border-border/50">
+                                    <span className="font-medium">{full_name || "Not Set"}</span>
+                                 </div>
+                             )}
                         </div>
                     </div>
                 </CardContent>
             </Card>
-
         </div>
       </div>
     </div>

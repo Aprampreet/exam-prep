@@ -15,6 +15,10 @@ class ProfileOut(ProfileCreate):
     class Config:
         from_attributes = True
 
+class UserProfileResponse(ProfileOut):
+    email: EmailStr
+    phone_number: str
+
 class UserCreate(BaseModel):
     email: EmailStr
     phone_number: str

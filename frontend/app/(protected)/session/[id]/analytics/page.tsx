@@ -60,9 +60,12 @@ export default function AnalyticsPage() {
     );
   }
 
+  const shortAvg = data.short_stats ? data.short_stats.average_score : 0;
+  const shortPct = shortAvg > 0 ? Math.round((shortAvg / 5) * 100) : 0;
+
   const chartData = [
-    { name: "Correct", value: data.stats.correct, color: "#10b981" }, // emerald-500
-    { name: "Wrong", value: data.stats.wrong, color: "#ef4444" },   // red-500
+    { name: "MCQ Mastery", value: data.stats.accuracy, color: "#10b981" }, // emerald-500
+    { name: "Short Answer", value: shortPct, color: "#8b5cf6" },   // violet-500
   ];
 
   return (
@@ -82,25 +85,39 @@ export default function AnalyticsPage() {
          </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {/* Score Card */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+        {/* MCQ Accuracy */}
         <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Accuracy</CardTitle>
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <CardTitle className="text-sm font-medium">MCQ Accuracy</CardTitle>
+                <TrendingUp className="h-4 w-4 text-emerald-500" />
             </CardHeader>
             <CardContent>
                 <div className="text-2xl font-bold">{data.stats.accuracy}%</div>
                 <p className="text-xs text-muted-foreground">
-                    {data.stats.correct} correct out of {data.stats.correct + data.stats.wrong}
+                    {data.stats.correct}/{data.stats.correct + data.stats.wrong} Correct
                 </p>
             </CardContent>
         </Card>
 
-        {/* Correct Count */}
+        {/* Short Answer Avg */}
         <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Correct Answers</CardTitle>
+                <CardTitle className="text-sm font-medium">Short Ans Avg</CardTitle>
+                 <Brain className="h-4 w-4 text-violet-500" />
+            </CardHeader>
+            <CardContent>
+                <div className="text-2xl font-bold text-violet-600">{shortAvg} <span className="text-sm text-muted-foreground">/ 5.0</span></div>
+                <p className="text-xs text-muted-foreground">
+                    Based on AI grading
+                </p>
+            </CardContent>
+        </Card>
+
+         {/* Correct Count */}
+         <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Total Correct</CardTitle>
                  <CheckCircle className="h-4 w-4 text-emerald-500" />
             </CardHeader>
             <CardContent>
@@ -111,7 +128,7 @@ export default function AnalyticsPage() {
          {/* Wrong Count */}
          <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Areas to Improve</CardTitle>
+                <CardTitle className="text-sm font-medium">Needs Review</CardTitle>
                  <AlertTriangle className="h-4 w-4 text-red-500" />
             </CardHeader>
             <CardContent>
@@ -126,17 +143,18 @@ export default function AnalyticsPage() {
         <div className="lg:col-span-1">
              <Card className="h-full">
                 <CardHeader>
-                    <CardTitle>Score Distribution</CardTitle>
+                    <CardTitle>Mastery Comparison</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="h-[300px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={chartData}>
                                 <XAxis dataKey="name" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}`} />
+                                <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(value) => `${value}%`} />
                                 <Tooltip 
                                     cursor={{fill: 'transparent'}}
                                     contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', borderRadius: '8px' }}
+                                    formatter={(value: any) => [`${value}%`, "Score"]}
                                 />
                                 <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={50}>
                                     {chartData.map((entry, index) => (

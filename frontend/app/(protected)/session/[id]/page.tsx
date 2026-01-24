@@ -42,7 +42,7 @@ export default function SessionSelectionPage() {
   };
 
   return (
-    <div className="container mx-auto py-20 px-4 max-w-5xl animate-in fade-in zoom-in duration-500">
+    <div className="container mx-auto py-10 px-4 max-w-5xl animate-in fade-in zoom-in duration-500">
       <Button 
         variant="ghost" 
         className="mb-8 pl-0 text-muted-foreground hover:text-foreground hover:bg-transparent transition-colors group"

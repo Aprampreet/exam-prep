@@ -6,7 +6,7 @@ from db.models.Profile import Profile
 from db.deps import get_db
 from db.models.user import User
 from auth.security import hash_password, verify_password
-from auth.schemas import UserCreate, UserLogin,UserOut,ProfileCreate,ProfileOut
+from auth.schemas import UserCreate, UserLogin,UserOut,ProfileCreate,ProfileOut,UserProfileResponse
 from app.core.ratelimiter import limiter
 from auth.jwt import create_access_token, create_refresh_token, decode_token
 from cloudinary.uploader import upload
@@ -75,11 +75,26 @@ async def login(
     }
 
 
-@auth_router.get("/profile", response_model=ProfileOut)
+@auth_router.get("/profile", response_model=UserProfileResponse)
 async def get_profile(
     user: User = Depends(get_current_user)
 ):
-    return user.profile
+    if not user.profile:
+        # Should usually exist due to registration flow, but handle just in case
+        return {
+            "id": user.id, # Fallback ID, real profile needs Creation
+             # Return minimal data if profile is missing
+            "email": user.email,
+            "phone_number": user.phone_number,
+             # other fields default to None
+        }
+    
+    # Merge profile data with user data
+    return {
+        **user.profile.__dict__,
+        "email": user.email,
+        "phone_number": user.phone_number
+    }
 
 
 @auth_router.put("/update/profile", response_model=ProfileOut)
