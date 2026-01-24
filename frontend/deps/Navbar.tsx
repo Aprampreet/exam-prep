@@ -30,8 +30,8 @@ export function Navbar() {
               <Link href="/session-create" className="hover:text-foreground transition-colors">Create Session</Link>
             </>
           )}
-          <Link href="#" className="hover:text-foreground transition-colors">Features</Link>
-          <Link href="#" className="hover:text-foreground transition-colors">Pricing</Link>
+          <Link href="/features" className="hover:text-foreground transition-colors">Features</Link>
+          <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
         </nav>
 
         {/* Desktop Auth */}
@@ -73,11 +73,11 @@ export function Navbar() {
                                  </Link>
                                </>
                              )}
-                             <Link href="#" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
+                             <Link href="/features" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
                                 Features
                              </Link>
-                             <Link href="#" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
-                                Pricing
+                             <Link href="/about" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
+                                About
                              </Link>
                         </nav>
                         

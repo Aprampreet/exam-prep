@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { GraduationCap, Users, Target, Zap } from "lucide-react";
 
+import Image from "next/image";
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
@@ -69,8 +71,12 @@ export default function AboutPage() {
                 </div>
                 <div className="flex-1 relative">
                     <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10 flex items-center justify-center relative overflow-hidden">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent opacity-50" />
-                        <GraduationCap className="h-32 w-32 text-primary/40" />
+                        <Image 
+                           src="/feature_ai_tutor.png" 
+                           alt="Fusion of AI and Learning" 
+                           fill
+                           className="object-cover"
+                        />
                     </div>
                 </div>
             </div>
