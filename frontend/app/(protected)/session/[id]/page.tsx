@@ -6,7 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { createMCQ, createShortAnswer } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, FileQuestion, ListChecks, BrainCircuit, ArrowLeft, Bot } from "lucide-react";
+import { Loader2, FileQuestion, ListChecks, BrainCircuit, ArrowLeft, Bot, BarChart } from "lucide-react";
 
 export default function SessionSelectionPage() {
   const router = useRouter();
@@ -123,6 +123,28 @@ export default function SessionSelectionPage() {
           <CardContent className="pb-8">
              <Button variant="outline" className="w-full justify-between group-hover:border-emerald-500 group-hover:text-emerald-500 transition-colors" disabled={loading !== null}>
                 Start Chat
+                <ArrowLeft className="h-4 w-4 rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
+             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Analytics Card */}
+        <Card 
+            className="group relative border border-border bg-card hover:border-primary/50 hover:bg-accent/50 transition-all duration-300 cursor-pointer"
+            onClick={() => router.push(`/session/${sessionId}/analytics`)}
+        >
+          <CardHeader className="pt-8">
+            <div className="w-12 h-12 rounded-lg bg-secondary/50 flex items-center justify-center mb-4 border border-border group-hover:border-orange-500/50 group-hover:bg-orange-500/10 transition-colors duration-300">
+              <BarChart className="h-6 w-6 text-foreground group-hover:text-orange-500 transition-colors" />
+            </div>
+            <CardTitle className="text-xl font-bold">Analytics</CardTitle>
+            <CardDescription className="text-sm pt-2">
+                View detailed performance reports and AI-generated insights.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="pb-8">
+             <Button variant="outline" className="w-full justify-between group-hover:border-orange-500 group-hover:text-orange-500 transition-colors" disabled={loading !== null}>
+                View Report
                 <ArrowLeft className="h-4 w-4 rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
              </Button>
           </CardContent>

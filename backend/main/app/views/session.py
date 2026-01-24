@@ -22,6 +22,7 @@ from sqlalchemy.orm import selectinload
 from db.models.MCQans import MCQQuestion
 from sqlalchemy import desc
 from app.services.embeddings import EmbeddingService
+from app.services.analytics import *
 
 session_router = APIRouter(prefix="/session", tags=["session"])
 
@@ -472,3 +473,85 @@ async def get_profile_tabs(
     }
 
     
+@session_router.get("/{session_id}/analytics")
+async def session_analytics(
+    session_id: int,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(Session).where(
+            Session.id == session_id,
+            Session.user_id == user.id
+        )
+    )
+    session = result.scalar_one_or_none()
+    if not session:
+        raise HTTPException(404, "Session not found")
+
+    result = await db.execute(
+        select(MCQAttempt)
+        .options(selectinload(MCQAttempt.questions))
+        .where(MCQAttempt.session_id == session_id)
+    )
+    mcq = result.scalar_one_or_none()
+    if not mcq:
+        raise HTTPException(404, "No MCQ attempt")
+
+    # ... existing MCQ fetch ...
+    result = await db.execute(
+        select(ShortAnswerAttempt)
+        .options(selectinload(ShortAnswerAttempt.answers))
+        .where(ShortAnswerAttempt.session_id == session_id)
+    )
+    short_attempt = result.scalar_one_or_none()
+
+    result = await db.execute(
+        select(DocumentChunk)
+        .where(DocumentChunk.session_id == session_id)
+        .order_by(DocumentChunk.chunk_index)
+    )
+    chunks = result.scalars().all()
+
+    stats = analyze_session_performance(mcq)
+    
+    # Process Short Answers
+    short_mistakes = []
+    short_stats = {"average_score": 0, "total_questions": 0}
+    
+    if short_attempt:
+        total_score = 0
+        count = 0
+        for ans in short_attempt.answers:
+            if ans.score is not None:
+                total_score += ans.score
+                count += 1
+                if ans.score < 3: # Weak answer threshold
+                    short_mistakes.append({
+                        "question": ans.question,
+                        "user_answer": ans.user_answer,
+                        "correct_answer": ans.correct_answer
+                    })
+        
+        if count > 0:
+            short_stats["average_score"] = round(total_score / count, 1)
+            short_stats["total_questions"] = count
+
+    # Combine errors for AI insight
+    all_mistakes = stats["wrong_questions"] + short_mistakes
+    weak_chunks = extract_weak_topics(all_mistakes, chunks)
+
+    ai_insight = await generate_ai_insight(
+        weak_chunks,
+        all_mistakes
+    )
+
+    return {
+        "stats": {
+            "accuracy": stats["accuracy"],
+            "correct": stats["correct"],
+            "wrong": stats["wrong"]
+        },
+        "short_stats": short_stats,
+        "ai_insight": ai_insight
+    }

@@ -11,13 +11,12 @@ from app.core.ratelimiter import limiter
 from auth.jwt import create_access_token, create_refresh_token, decode_token
 from cloudinary.uploader import upload
 from .dependancy import get_current_user
+from sqlalchemy.orm import selectinload
 
 auth_router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @auth_router.post("/register", response_model=UserOut)
-@limiter.limit("5/minute")
 async def register(
-    request: Request,
     data: UserCreate,
     db: AsyncSession = Depends(get_db)
 ):
@@ -26,23 +25,35 @@ async def register(
         existing_user = result.scalar_one_or_none()
         if existing_user:
             raise HTTPException(status_code=400, detail="User already exists")
-        user = User(email=data.email, phone_number=data.phone_number, hashed_password=hash_password(data.password))
-        profile = Profile(user=user)  
+        
+        user = User(
+            email=data.email, 
+            phone_number=data.phone_number, 
+            hashed_password=hash_password(data.password)
+        )
         db.add(user)
+        await db.flush() 
+
+        profile = Profile(user_id=user.id)
         db.add(profile)
+        
         await db.commit()
-        await db.refresh(user)
+        
+
+        q = select(User).options(selectinload(User.profile)).where(User.id == user.id)
+        result = await db.execute(q)
+        user = result.scalar_one()
+        
         return user
     except HTTPException:
         raise
     except Exception as e:
+        await db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @auth_router.post("/login")
-@limiter.limit("5/minute")
 async def login(
-    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_db)
 ):
@@ -65,18 +76,14 @@ async def login(
 
 
 @auth_router.get("/profile", response_model=ProfileOut)
-@limiter.limit("5/minute")
 async def get_profile(
-    request: Request,
     user: User = Depends(get_current_user)
 ):
     return user.profile
 
 
 @auth_router.put("/update/profile", response_model=ProfileOut)
-@limiter.limit("5/minute")
 async def update_profile(
-    request: Request,
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 

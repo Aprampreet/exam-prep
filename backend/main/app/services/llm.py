@@ -178,3 +178,79 @@ USER QUESTION:
 
     return response.content.strip()
 
+
+async def generate_ai_insight(weak_chunks, wrong_questions):
+    context = "\n".join(weak_chunks)[:2500]
+
+    mistakes = "\n".join(
+        f"- Q: {q['question']}\n  Student Answer: {q['user_answer']}\n  Correct Answer: {q['correct_answer']}"
+        for q in wrong_questions[:5]
+    )
+
+    prompt = f"""
+You are a Personal Exam Performance Coach. Your student has just taken a quiz and made some mistakes.
+Your job is to analyze these mistakes and provide a high-impact, actionable recovery plan.
+
+TASK:
+1. Identify the specific CONCEPTUAL GAPS based on the mistakes.
+2. Explain WHY the student likely got it wrong (e.g., confusion between similar terms, calculation error, missing key fact).
+3. Do NOT just say "You got question 1 wrong." Explain the underlying concept they missed.
+4. Provide a concrete "Next Step" for revision.
+
+OUTPUT FORMAT (Markdown):
+### Diagnosis
+(One sentence summary of the weak area)
+
+### Root Cause Analysis
+- **Concept X**: You confused A with B. Remember that...
+- **Concept Y**: You missed the key detail about...
+
+### Action Plan
+1. Review the section on [Topic].
+2. Focus specifically on [Detail].
+
+RELEVANT CONTENT:
+{context}
+
+STUDENT MISTAKES:
+{mistakes}
+"""
+
+    response = await llm.ainvoke(prompt)
+    return response.content.strip()
+
+
+async def evaluate_short_answer(question: str, correct_answer: str, user_answer: str) -> dict:
+    prompt = f"""
+You are an expert teacher grading a student's short answer.
+
+Question: {question}
+Correct Answer (Model): {correct_answer}
+Student Answer: {user_answer}
+
+Task:
+1. Compare the Student Answer to the Correct Answer.
+2. Assign a score from 0 to 5 based on accuracy and completeness.
+3. Provide brief, constructive feedback.
+
+Return ONLY JSON:
+{{
+  "score": 0,
+  "feedback": "..."
+}}
+"""
+    response = await llm.ainvoke(prompt)
+    raw = str(response.content).strip()
+
+    if raw.startswith("```"):
+        raw = raw.replace("```json", "").replace("```", "").strip()
+
+    try:
+        data = json.loads(raw)
+        return data
+    except Exception:
+        return {
+            "score": 0, 
+            "feedback": "Unable to automatically grade. Please review manually."
+        }
+

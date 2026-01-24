@@ -86,7 +86,7 @@ export default function ChatAIPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4 max-w-6xl h-[calc(100vh-100px)] flex flex-col animate-in fade-in duration-500">
+    <div className="container mx-auto py-6 px-4 max-w-6xl h-[calc(100vh-80px)] overflow-hidden flex flex-col animate-in fade-in duration-500">
       
       {/* Header */}
       <div className="flex items-center justify-between mb-6 shrink-0">
