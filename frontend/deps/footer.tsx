@@ -15,7 +15,7 @@ export  function Footer (){
                 <div className="h-8 w-8 bg-foreground rounded-lg flex items-center justify-center">
                   <GraduationCap className="h-5 w-5 text-background" />
                 </div>
-                <span className="font-bold text-xl">ExamPrep.</span>
+                <span className="font-bold text-xl">ScribeMind.</span>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
                 Empowering students with technology-driven education. Built for the modern aspirant.
@@ -52,7 +52,7 @@ export  function Footer (){
           </div>
           <Separator className="mb-8 bg-border/40" />
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
-            <p>© 2024 ExamPrep Inc. All rights reserved.</p>
+            <p>© 2024 ScribeMind Inc. All rights reserved.</p>
             <div className="flex gap-8 mt-4 md:mt-0">
               <Link href="#" className="hover:text-foreground transition-colors">Privacy</Link>
               <Link href="#" className="hover:text-foreground transition-colors">Terms</Link>

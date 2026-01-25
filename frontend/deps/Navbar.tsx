@@ -18,7 +18,7 @@ export function Navbar() {
           <div className="h-8 w-8 bg-foreground rounded-lg flex items-center justify-center">
             <GraduationCap className="h-5 w-5 text-background" />
           </div>
-          <span className="font-bold text-xl tracking-tight">ExamPrep.</span>
+          <span className="font-bold text-xl tracking-tight">ScribeMind.</span>
         </div>
         
         {/* Desktop Navigation */}
@@ -54,7 +54,7 @@ export function Navbar() {
                             <div className="h-8 w-8 bg-foreground rounded-lg flex items-center justify-center">
                                 <GraduationCap className="h-5 w-5 text-background" />
                             </div>
-                            <span className="font-bold text-xl">ExamPrep.</span>
+                            <span className="font-bold text-xl">ScribeMind.</span>
                         </SheetTitle>
                     </SheetHeader>
                     

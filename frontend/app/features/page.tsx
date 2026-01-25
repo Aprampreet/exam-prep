@@ -1,22 +1,24 @@
 import React from "react";
+import { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { 
-    Brain, 
-    BarChart3, 
-    FileText, 
-    Bot, 
-    Clock, 
-    Sparkles, 
-    Layers, 
-    ShieldCheck, 
     Upload, 
     Cpu, 
     MessageSquare, 
     TrendingUp,
     CheckCircle2,
     Zap,
-    Search
+    Search,
+    Brain,
+    BarChart3,
+    FileText,
+    Bot,
+    Clock,
+    Sparkles,
+    Layers,
+    ShieldCheck
 } from "lucide-react";
 
 export default function FeaturesPage() {
@@ -36,7 +38,7 @@ export default function FeaturesPage() {
                 <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">Complete Mastery</span>
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-                A complete walkthrough of how ExamPrep transforms your study materials into an active learning engine.
+                A complete walkthrough of how ScribeMind transforms your study materials into an active learning engine.
             </p>
          </div>
       </section>

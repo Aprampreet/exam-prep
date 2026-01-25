@@ -77,8 +77,10 @@ export default function HomePage() {
                          <div className="flex-1 flex flex-col">
                              {/* Mock Header */}
                              <div className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-zinc-900/30">
-                                 <div className="flex items-center gap-3">
-                                     <div className="h-8 w-32 rounded-md bg-white/5"></div>
+                                 <div className="flex items-center gap-2">
+                                     <div className="h-3 w-3 rounded-full bg-red-500/80"></div>
+                                     <div className="h-3 w-3 rounded-full bg-yellow-500/80"></div>
+                                     <div className="h-3 w-3 rounded-full bg-green-500/80"></div>
                                  </div>
                                  <div className="flex items-center gap-3">
                                       <div className="h-8 w-8 rounded-full bg-white/10"></div>
@@ -149,17 +151,14 @@ export default function HomePage() {
                                             </div>
                                       </div>
 
-                                      <div className="space-y-3 flex-1">
-                                        <div className="h-3 w-20 bg-white/10 rounded-full mb-2"></div>
-                                          {[1, 2, 3].map((i) => (
-                                              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
-                                                  <div className="h-1 w-1 rounded-full bg-orange-400"></div>
-                                                  <div className="space-y-1.5 flex-1">
-                                                      <div className="h-1.5 w-3/4 bg-white/20 rounded-full"></div>
-                                                      <div className="h-1.5 w-1/2 bg-white/10 rounded-full"></div>
-                                                  </div>
-                                              </div>
-                                          ))}
+                                      <div className="space-y-4 flex-1">
+                                          <div className="h-3 w-20 bg-white/10 rounded-full mb-2"></div>
+                                          {/* Mini Bar Graph */}
+                                          <div className="flex items-end justify-between h-32 px-2 pb-2 border-b border-white/10">
+                                              {[40, 70, 45, 90, 60, 80].map((h, i) => (
+                                                  <div key={i} className="w-2 rounded-t-sm bg-primary/40 hover:bg-primary transition-colors cursor-pointer" style={{ height: `${h}%` }}></div>
+                                              ))}
+                                          </div>
                                       </div>
                                  </div>
                              </div>
@@ -183,15 +182,12 @@ export default function HomePage() {
         </section>
 
         {/* How It Works - Unified Premium Section */}
-        <section className="py-32 border-b border-border/40 relative overflow-hidden">
-             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
-             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+        <section className="py-32 relative overflow-hidden">
 
              <div className="container mx-auto px-4 relative z-10">
-                 <div className="max-w-6xl mx-auto bg-zinc-900/20 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden shadow-2xl">
+                 <div className="max-w-6xl mx-auto bg-zinc-900/20 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden shadow-2xl">
                      {/* Inner Ambient Glow */}
                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent blur-sm"></div>
-                     <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
 
                      <div className="text-center max-w-3xl mx-auto mb-20 relative z-10">
                          <Badge variant="outline" className="mb-6 border-primary/20 bg-primary/5 text-primary px-3 py-1 text-sm tracking-wide">THE PROCESS</Badge>
@@ -433,6 +429,65 @@ export default function HomePage() {
                         <CarouselPrevious />
                         <CarouselNext />
                     </Carousel>
+                </div>
+            </div>
+        </section>
+
+        {/* SEO Content Section - Latest Insights */}
+        <section className="py-24 bg-background border-b border-border/40">
+            <div className="container mx-auto px-4">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+                    <div className="max-w-2xl">
+                        <Badge variant="secondary" className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">Learning Hub</Badge>
+                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">Master the Art of Learning</h2>
+                        <p className="text-lg text-muted-foreground mt-4 leading-relaxed">
+                            Deep dive into evidence-based study techniques, mental models, and productivity hacks.
+                        </p>
+                    </div>
+                    <Button variant="outline" className="hidden md:flex">View All Articles <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {[
+                        {
+                            category: "Study Technique",
+                            title: "Feynman Technique vs. Active Recall: Which Works Best?",
+                            excerpt: "We analyzed 500 top rankers to see which method leads to better long-term retention.",
+                            readTime: "5 min read",
+                            image: "bg-indigo-500/10"
+                        },
+                        {
+                            category: "Productivity",
+                            title: "The 2-Minute Rule for Procrastination",
+                            excerpt: "How to trick your brain into starting difficult tasks immediately using this psychological hack.",
+                            readTime: "3 min read",
+                            image: "bg-orange-500/10"
+                        },
+                        {
+                            category: "Mental Health",
+                            title: "Exam Anxiety: 5 Breathing Exercises for Focus",
+                            excerpt: "Regulate your nervous system before the big test with these navy-seal approved techniques.",
+                            readTime: "4 min read",
+                            image: "bg-emerald-500/10"
+                        }
+                    ].map((post, i) => (
+                        <Card key={i} className="group cursor-pointer border-border/50 hover:border-primary/50 transition-all hover:shadow-lg bg-card overflow-hidden flex flex-col h-full">
+                            <div className={`h-48 w-full ${post.image} relative overflow-hidden group-hover:scale-105 transition-transform duration-700`}>
+                                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60"></div>
+                            </div>
+                            <CardContent className="p-6 flex flex-col flex-1">
+                                <div className="flex justify-between items-center mb-4">
+                                    <span className="text-xs font-bold text-primary tracking-wider uppercase">{post.category}</span>
+                                    <span className="text-xs text-muted-foreground flex items-center"><Clock className="h-3 w-3 mr-1" /> {post.readTime}</span>
+                                </div>
+                                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">{post.title}</h3>
+                                <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-3">{post.excerpt}</p>
+                                <div className="mt-auto pt-4 border-t border-border/50 flex items-center text-sm font-medium text-foreground group-hover:translate-x-2 transition-transform">
+                                    Read Article <ArrowRight className="ml-2 h-4 w-4 text-primary" />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))}
                 </div>
             </div>
         </section>

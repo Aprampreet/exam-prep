@@ -19,7 +19,7 @@ export default function AboutPage() {
             Empowering Every Student to <br className="hidden md:block" /> Achieve Excellence
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-5 duration-700 delay-150">
-            We believe that with the right tools and guidance, anyone can master any subject. ExamPrep is built to be your intelligent study companion.
+            We believe that with the right tools and guidance, anyone can master any subject. ScribeMind is built to be your intelligent study companion.
           </p>
         </div>
       </section>
@@ -63,10 +63,10 @@ export default function AboutPage() {
                 <div className="flex-1 space-y-6">
                     <h2 className="text-3xl font-bold">Our Story</h2>
                     <p className="text-muted-foreground leading-relaxed">
-                        Started by a group of passionate educators and engineers, ExamPrep was born out of frustration with one-size-fits-all study methods. We saw students struggling not because they lacked ability, but because they lacked personalized guidance.
+                        Started by a group of passionate educators and engineers, ScribeMind was born out of frustration with one-size-fits-all study methods. We saw students struggling not because they lacked ability, but because they lacked personalized guidance.
                     </p>
                     <p className="text-muted-foreground leading-relaxed">
-                        We combined advanced AI technology with proven pedagogical principles to create a platform that understands you. Whether you're preparing for college entrance exams or professional certifications, ExamPrep adapts to your needs.
+                        We combined advanced AI technology with proven pedagogical principles to create a platform that understands you. Whether you're preparing for college entrance exams or professional certifications, ScribeMind adapts to your needs.
                     </p>
                 </div>
                 <div className="flex-1 relative">
