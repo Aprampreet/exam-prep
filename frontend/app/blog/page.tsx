@@ -36,8 +36,12 @@ export default function BlogListingPage() {
             <Link href={`/blog/${blogPosts[0].slug}`} className="group block relative rounded-3xl overflow-hidden border border-border/50 bg-card shadow-lg hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500">
                <div className={`absolute inset-0 bg-gradient-to-br ${blogPosts[0].gradient} opacity-20 group-hover:opacity-30 transition-opacity`} />
                <div className="relative grid md:grid-cols-2 gap-8 p-8 md:p-12 items-center">
-                   <div className={`aspect-video w-full rounded-2xl bg-gradient-to-br ${blogPosts[0].gradient} relative overflow-hidden shadow-inner`}>
-                        <div className="absolute inset-0 opacity-40 mix-blend-overlay" style={{ backgroundImage: blogPosts[0].pattern, backgroundSize: '30px 30px' }}></div>
+                   <div className="aspect-video w-full rounded-2xl relative overflow-hidden shadow-inner">
+                       <img 
+                           src={blogPosts[0].image} 
+                           alt={blogPosts[0].title} 
+                           className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                       />
                    </div>
                    <div className="space-y-6">
                        <div className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
@@ -66,9 +70,14 @@ export default function BlogListingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {blogPosts.slice(1).map((post) => (
                 <Link key={post.id} href={`/blog/${post.slug}`} className="group flex flex-col h-full bg-card border border-border/50 rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all duration-300">
-                    <div className={`h-56 w-full bg-gradient-to-br ${post.gradient} relative overflow-hidden`}>
-                        <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ backgroundImage: post.pattern, backgroundSize: '20px 20px' }}></div>
-                        <Badge className="absolute top-4 left-4 bg-background/80 backdrop-blur text-foreground border-transparent">{post.category}</Badge>
+                    <div className="h-56 w-full relative overflow-hidden">
+                        <img 
+                            src={post.image} 
+                            alt={post.title} 
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-60"></div>
+                        <Badge className="absolute top-4 left-4 bg-background/80 backdrop-blur text-foreground border-transparent z-10">{post.category}</Badge>
                     </div>
                     <div className="p-6 flex flex-col flex-1">
                          <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3 font-medium">

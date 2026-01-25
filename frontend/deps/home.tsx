@@ -439,15 +439,15 @@ export default function HomePage() {
         <section className="py-32 bg-zinc-950/30 border-b border-border/40 relative">
              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay pointer-events-none"></div>
             <div className="container mx-auto px-4 relative z-10">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-                    <div className="max-w-2xl">
-                        <Badge variant="outline" className="mb-4 border-primary/20 bg-primary/5 text-primary">SCRIBEMIND ACADEMY</Badge>
+                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6 center items-center justify-center">
+                    <div className="max-w-2xl flex flex-col center items-center justify-center">
+                        <Badge variant="outline" className="mb-4 center  border-primary/20 bg-primary/5 text-primary">SCRIBEMIND ACADEMY</Badge>
                         <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground mb-4">Master the Art of <span className="text-primary">Learning</span></h2>
                         <p className="text-xl text-muted-foreground leading-relaxed">
                             Strategies from cognitive science to help you study smarter, not harder.
                         </p>
                     </div>
-                    <Link href="/blog">
+                    <Link href="/blog" >
                         <Button variant="ghost" className="hidden md:flex group hover:bg-primary/10 hover:text-primary">
                             View All Articles <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
@@ -462,9 +462,13 @@ export default function HomePage() {
                                     <Link href={`/blog/${post.slug}`} className="block h-full">
                                         <Card className="group cursor-pointer border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 overflow-hidden flex flex-col h-full ring-1 ring-white/5">
                                             {/* Abstract Header Image */}
-                                            <div className={`h-56 w-full bg-gradient-to-br ${post.gradient} relative overflow-hidden flex-shrink-0`}>
-                                                <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ backgroundImage: post.pattern, backgroundSize: '20px 20px' }}></div>
-                                                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-90"></div>
+                                            <div className="h-56 w-full relative overflow-hidden flex-shrink-0">
+                                                <img 
+                                                    src={post.image} 
+                                                    alt={post.title} 
+                                                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-80"></div>
                                                 
                                                 <Badge className="absolute top-4 left-4 bg-black/50 hover:bg-black/70 backdrop-blur-md border-white/10 text-white font-medium tracking-wide">
                                                     {post.category}
@@ -505,7 +509,7 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-32 max-w-3xl mx-auto px-4 bg-transparent">
+        <section className="py-16 max-w-3xl mx-auto px-4 bg-transparent">
             <div className="text-center mb-16">
               <Badge variant="secondary" className="mb-4  text-muted-foreground">FAQ</Badge>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-center text-foreground">Common Questions</h2>

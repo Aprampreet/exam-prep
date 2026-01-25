@@ -37,7 +37,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "5 min read",
     author: "Dr. A. Singh",
     date: "Oct 12, 2024",
-    image: "/blog-placeholders/feynman.jpg", 
+    image: "/id1.png", 
     gradient: "from-indigo-500 via-purple-500 to-pink-500",
     pattern: "radial-gradient(circle at 100% 100%, rgba(255,255,255,0.2) 0, transparent 50%)"
   },
@@ -64,7 +64,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "3 min read",
     author: "Sarah J.",
     date: "Nov 05, 2024",
-    image: "/blog-placeholders/deepwork.jpg",
+    image: "/id2.png",
     gradient: "from-orange-500 via-amber-500 to-yellow-500",
     pattern: "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)"
   },
@@ -91,7 +91,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "4 min read",
     author: "Mark Divine",
     date: "Dec 10, 2024",
-    image: "/blog-placeholders/calm.jpg",
+    image: "/id3.png",
     gradient: "from-emerald-500 via-teal-500 to-cyan-500",
     pattern: "repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 10px)"
   },
@@ -118,7 +118,7 @@ export const blogPosts: BlogPost[] = [
     readTime: "3 min read",
     author: "Francesco C.",
     date: "Jan 15, 2025",
-    image: "/blog-placeholders/pomodoro.jpg",
+    image: "/id4.png",
     gradient: "from-red-500 via-rose-500 to-pink-600",
     pattern: "radial-gradient(circle, rgba(255,255,255,0.15) 2px, transparent 2.5px) 0 0 / 10px 10px"
   }

@@ -77,10 +77,10 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
         </header>
 
-        {/* Featured Image (Abstract) */}
-        <div className={`w-full aspect-[21/9] rounded-3xl bg-gradient-to-br ${post.gradient} relative overflow-hidden mb-16 shadow-2xl`}>
-             <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ backgroundImage: post.pattern, backgroundSize: '40px 40px' }}></div>
-             <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent"></div>
+        {/* Featured Image */}
+        <div className="w-full aspect-[21/9] rounded-3xl relative overflow-hidden mb-16 shadow-2xl">
+             <img src={post.image} alt={post.title} className="absolute inset-0 w-full h-full object-cover" />
+             <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent"></div>
         </div>
 
         {/* Content */}
