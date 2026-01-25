@@ -66,7 +66,7 @@ export default function HomePage() {
                 <div className="rounded-xl border border-white/10 bg-zinc-950/80 backdrop-blur-md p-2 shadow-2xl shadow-indigo-500/20 ring-1 ring-white/10">
                      <div className="rounded-lg overflow-hidden relative bg-zinc-950 aspect-[16/10] md:aspect-[21/9] flex">
                          {/* Mock Sidebar */}
-                         <div className="w-16 md:w-20 border-r border-white/10 flex flex-col items-center py-6 gap-6 bg-zinc-900/50">
+                         <div className="w-12 md:w-20 border-r border-white/10 flex flex-col items-center py-6 gap-6 bg-zinc-900/50 flex-shrink-0">
                              <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4"><Zap className="h-5 w-5" /></div>
                              <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><BookOpen className="h-4 w-4" /></div>
                              <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><TrendingUp className="h-4 w-4" /></div>
@@ -74,9 +74,9 @@ export default function HomePage() {
                          </div>
                          
                          {/* Mock Content */}
-                         <div className="flex-1 flex flex-col">
+                         <div className="flex-1 flex flex-col min-w-0">
                              {/* Mock Header */}
-                             <div className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-zinc-900/30">
+                             <div className="h-16 border-b border-white/10 flex items-center justify-between px-4 md:px-6 bg-zinc-900/30">
                                  <div className="flex items-center gap-2">
                                      <div className="h-3 w-3 rounded-full bg-red-500/80"></div>
                                      <div className="h-3 w-3 rounded-full bg-yellow-500/80"></div>
@@ -89,27 +89,28 @@ export default function HomePage() {
                              </div>
                              
                              {/* Dashboard Grid */}
-                             <div className="p-6 grid grid-cols-12 gap-6 h-full overflow-hidden">
-                                 {/* Main Stats Area (8/12) */}
-                                 <div className="col-span-8 flex flex-col gap-6">
-                                     <div className="grid grid-cols-4 gap-4">
+                             <div className="p-4 md:p-6 grid grid-cols-12 gap-6 h-full overflow-hidden">
+                                 {/* Main Stats Area (Full on mobile, 8/12 on desktop) */}
+                                 <div className="col-span-12 md:col-span-8 flex flex-col gap-4 md:gap-6">
+                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
                                          {[
                                              { label: "Focus Score", val: "92%", color: "text-emerald-400" },
-                                             { label: "Questions", val: "1,240", color: "text-blue-400" },
+                                             { label: "Questions", val: "1.2k", color: "text-blue-400" },
                                              { label: "Accuracy", val: "88%", color: "text-purple-400" },
-                                             { label: "Streak", val: "12 Days", color: "text-orange-400" }
+                                             { label: "Streak", val: "12d", color: "text-orange-400" }
                                          ].map((s, i) => (
-                                             <div key={i} className="h-20 rounded-xl border border-white/5 bg-white/[0.02] p-3 flex flex-col justify-between">
-                                                 <div className="h-1.5 w-12 bg-white/10 rounded-full"></div>
-                                                 <div className={`text-xl font-bold ${s.color}`}>{s.val}</div>
+                                             <div key={i} className="h-16 md:h-20 rounded-xl border border-white/5 bg-white/[0.02] p-3 flex flex-col justify-between">
+                                                 <div className="h-1.5 w-8 md:w-12 bg-white/10 rounded-full"></div>
+                                                 <div className={`text-lg md:text-xl font-bold ${s.color}`}>{s.val}</div>
                                              </div>
                                          ))}
                                      </div>
                                      
                                      {/* Charts Row */}
-                                     <div className="flex-1 grid grid-cols-2 gap-6 min-h-0">
+                                     {/* On mobile, stack these vertical or hide one. Let's stack. */}
+                                     <div className="flex-1 flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-6 min-h-0 overflow-y-auto md:overflow-hidden">
                                          {/* Performance Chart */}
-                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 relative overflow-hidden flex flex-col">
+                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 relative overflow-hidden flex flex-col h-32 md:h-auto">
                                              <div className="flex justify-between items-center mb-4">
                                                  <div className="h-3 w-24 bg-white/10 rounded-full"></div>
                                              </div>
@@ -128,8 +129,8 @@ export default function HomePage() {
                                              </div>
                                          </div>
 
-                                          {/* Weakness Heatmap */}
-                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 flex flex-col">
+                                          {/* Weakness Heatmap - Hide on text-xs screens maybe? Keep for now */}
+                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 flex flex-col h-32 md:h-auto">
                                             <div className="h-3 w-28 bg-white/10 rounded-full mb-4"></div>
                                             <div className="grid grid-cols-4 gap-2 flex-1">
                                                 {[...Array(16)].map((_, i) => (
@@ -140,8 +141,8 @@ export default function HomePage() {
                                      </div>
                                  </div>
                                  
-                                 {/* Side Panel (4/12) */}
-                                 <div className="col-span-4 border-l border-white/10 pl-6 flex flex-col gap-6">
+                                 {/* Side Panel (Hidden on mobile) */}
+                                 <div className="hidden md:flex md:col-span-4 border-l border-white/10 pl-6 flex-col gap-6">
                                       {/* Ranking Card */}
                                       <div className="h-28 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 p-4 flex flex-row items-center gap-4">
                                             <div className="h-12 w-12 rounded-full bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/40"><Trophy className="h-6 w-6 text-white" /></div>
@@ -434,56 +435,77 @@ export default function HomePage() {
         </section>
 
         {/* SEO Content Section - Latest Insights */}
-        <section className="py-24 bg-background border-b border-border/40">
-            <div className="container mx-auto px-4">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+        <section className="py-32 bg-zinc-950/30 border-b border-border/40 relative">
+             <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay pointer-events-none"></div>
+            <div className="container mx-auto px-4 relative z-10">
+                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                     <div className="max-w-2xl">
-                        <Badge variant="secondary" className="mb-4 bg-primary/10 text-primary hover:bg-primary/20">Learning Hub</Badge>
-                        <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">Master the Art of Learning</h2>
-                        <p className="text-lg text-muted-foreground mt-4 leading-relaxed">
-                            Deep dive into evidence-based study techniques, mental models, and productivity hacks.
+                        <Badge variant="outline" className="mb-4 border-primary/20 bg-primary/5 text-primary">SCRIBEMIND ACADEMY</Badge>
+                        <h2 className="text-3xl md:text-5xl font-black tracking-tight text-foreground mb-4">Master the Art of <span className="text-primary">Learning</span></h2>
+                        <p className="text-xl text-muted-foreground leading-relaxed">
+                            Strategies from cognitive science to help you study smarter, not harder.
                         </p>
                     </div>
-                    <Button variant="outline" className="hidden md:flex">View All Articles <ArrowRight className="ml-2 h-4 w-4" /></Button>
+                    <Button variant="ghost" className="hidden md:flex group hover:bg-primary/10 hover:text-primary">
+                        View All Articles <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                    </Button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {[
                         {
                             category: "Study Technique",
-                            title: "Feynman Technique vs. Active Recall: Which Works Best?",
-                            excerpt: "We analyzed 500 top rankers to see which method leads to better long-term retention.",
+                            title: "The Feynman Technique: Learn Difficult Concepts 4x Faster",
+                            excerpt: "We analyzed 500 top rankers to see which method leads to better long-term retention compared to rote memorization.",
                             readTime: "5 min read",
-                            image: "bg-indigo-500/10"
+                            gradient: "from-indigo-500 via-purple-500 to-pink-500",
+                            pattern: "radial-gradient(circle at 100% 100%, rgba(255,255,255,0.2) 0, transparent 50%)"
                         },
                         {
                             category: "Productivity",
-                            title: "The 2-Minute Rule for Procrastination",
-                            excerpt: "How to trick your brain into starting difficult tasks immediately using this psychological hack.",
+                            title: "Deep Work: Rewiring Your Brain for Intense Focus",
+                            excerpt: "In an age of distraction, the ability to focus is a superpower. Here is the protocol to reclaim your attention span.",
                             readTime: "3 min read",
-                            image: "bg-orange-500/10"
+                            gradient: "from-orange-500 via-amber-500 to-yellow-500",
+                             pattern: "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)"
                         },
                         {
                             category: "Mental Health",
-                            title: "Exam Anxiety: 5 Breathing Exercises for Focus",
-                            excerpt: "Regulate your nervous system before the big test with these navy-seal approved techniques.",
+                            title: "Exam Anxiety: The Navy SEAL Protocol for Calm",
+                            excerpt: "Regulate your nervous system before the big test using 'Box Breathing' and other physiological control techniques.",
                             readTime: "4 min read",
-                            image: "bg-emerald-500/10"
+                            gradient: "from-emerald-500 via-teal-500 to-cyan-500",
+                             pattern: "repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 10px)"
                         }
                     ].map((post, i) => (
-                        <Card key={i} className="group cursor-pointer border-border/50 hover:border-primary/50 transition-all hover:shadow-lg bg-card overflow-hidden flex flex-col h-full">
-                            <div className={`h-48 w-full ${post.image} relative overflow-hidden group-hover:scale-105 transition-transform duration-700`}>
-                                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-60"></div>
+                        <Card key={i} className="group cursor-pointer border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 overflow-hidden flex flex-col h-full ring-1 ring-white/5">
+                            {/* Abstract Header Image */}
+                            <div className={`h-56 w-full bg-gradient-to-br ${post.gradient} relative overflow-hidden`}>
+                                <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ backgroundImage: post.pattern, backgroundSize: '20px 20px' }}></div>
+                                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-90"></div>
+                                
+                                <Badge className="absolute top-4 left-4 bg-black/50 hover:bg-black/70 backdrop-blur-md border-white/10 text-white font-medium tracking-wide">
+                                    {post.category}
+                                </Badge>
                             </div>
-                            <CardContent className="p-6 flex flex-col flex-1">
-                                <div className="flex justify-between items-center mb-4">
-                                    <span className="text-xs font-bold text-primary tracking-wider uppercase">{post.category}</span>
-                                    <span className="text-xs text-muted-foreground flex items-center"><Clock className="h-3 w-3 mr-1" /> {post.readTime}</span>
+                            
+                            <CardContent className="p-8 flex flex-col flex-1 relative -mt-12">
+                                <div className="text-xs font-bold text-muted-foreground mb-3 flex items-center gap-2">
+                                    <div className="h-1 w-8 bg-primary/50 rounded-full"></div>
+                                    <Clock className="h-3 w-3" /> {post.readTime}
                                 </div>
-                                <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors line-clamp-2">{post.title}</h3>
+                                <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">{post.title}</h3>
                                 <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-3">{post.excerpt}</p>
-                                <div className="mt-auto pt-4 border-t border-border/50 flex items-center text-sm font-medium text-foreground group-hover:translate-x-2 transition-transform">
-                                    Read Article <ArrowRight className="ml-2 h-4 w-4 text-primary" />
+                                
+                                <div className="mt-auto pt-6 border-t border-border/50 flex items-center justify-between text-sm font-semibold text-foreground">
+                                    <div className="flex -space-x-2">
+                                         {[...Array(3)].map((_, i) => (
+                                             <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-zinc-800 flex items-center justify-center text-[10px] text-white/50">User</div>
+                                         ))}
+                                    </div>
+                                    <span className="flex items-center group-hover:translate-x-2 transition-transform text-primary">
+                                        Read Now <ArrowRight className="ml-2 h-4 w-4" />
+                                    </span>
                                 </div>
                             </CardContent>
                         </Card>
