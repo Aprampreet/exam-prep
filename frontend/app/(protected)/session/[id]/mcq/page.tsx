@@ -207,47 +207,43 @@ export default function MCQPage() {
   const currentAnswer = answers[currentQ.id];
   
   return (
-    <div className="min-h-screen container mx-auto py-8 px-4 max-w-3xl flex flex-col">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between mb-6">
-        <Button variant="ghost" size="sm" onClick={() => router.back()} className="text-muted-foreground hover:text-foreground">
-            <ArrowLeft className="h-4 w-4 mr-2" /> Exit Exam
-        </Button>
-        <div className="flex items-center gap-2">
-             {submitted && (
-                 <Button variant="outline" size="sm" onClick={() => setShowResults(true)}>
-                     View Results
-                 </Button>
-             )}
-        </div>
-      </div>
-
-      {/* Progress */}
-      <div className="mb-6 space-y-2">
-          <div className="flex justify-between text-sm font-medium text-muted-foreground">
+    <div className="min-h-[calc(100vh-80px)] w-full flex flex-col items-center justify-center p-4 md:p-8 animate-in fade-in duration-500 pb-20">
+      
+      {/* Top Bar / Progress */}
+      <div className="w-full max-w-3xl mb-8 space-y-3">
+          <div className="flex items-center justify-between">
+              <Button variant="ghost" size="sm" onClick={() => router.back()} className="text-muted-foreground hover:text-foreground -ml-2">
+                  <ArrowLeft className="h-4 w-4 mr-2" /> Exit Exam
+              </Button>
+              {submitted && (
+                  <Button variant="outline" size="sm" onClick={() => setShowResults(true)}>
+                      View Results
+                  </Button>
+              )}
+          </div>
+          <div className="flex justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               <span>Question {currentQuestionIndex + 1} of {totalQuestions}</span>
               <span>{Math.round(progressPercent)}% completed</span>
           </div>
-          <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
-               <div className="h-full bg-primary transition-all duration-300 ease-out" style={{ width: `${progressPercent}%` }} />
+          <div className="h-2 w-full bg-secondary rounded-full overflow-hidden shadow-inner">
+               <div className="h-full bg-primary transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }} />
           </div>
       </div>
 
       {/* Main Card */}
-      <div className="flex-grow flex flex-col justify-center pb-12">
-      <Card className="shadow-lg border-muted md:p-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-        <CardHeader>
+      <Card className="shadow-2xl border-border/60 w-full max-w-3xl overflow-hidden">
+        <CardHeader className="bg-muted/30 border-b border-border/50 py-6">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-             <div className="flex items-center gap-3">
-                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold shadow-sm">
+             <div className="flex items-start gap-4">
+                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold shadow-sm flex-shrink-0 mt-0.5">
                     {currentQuestionIndex + 1}
                  </span>
-                 <h2 className="text-lg font-semibold leading-tight text-foreground/90">
+                 <h2 className="text-xl font-semibold leading-snug text-foreground">
                     {currentQ.question}
                  </h2>
              </div>
              {submitted && currentQ.is_correct !== undefined && (
-                 <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shrink-0 ${currentQ.is_correct ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                 <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shrink-0 ${currentQ.is_correct ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}`}>
                     {currentQ.is_correct ? (
                         <><CheckCircle2 className="w-3.5 h-3.5"/> Correct</>
                     ) : (
@@ -258,12 +254,12 @@ export default function MCQPage() {
           </div>
         </CardHeader>
         
-        <CardContent className="mt-2">
+        <CardContent className="p-6 md:p-8">
           <RadioGroup 
             onValueChange={(val) => handleValueChange(currentQ.id, val)} 
             value={currentAnswer || ""}
             disabled={submitted || isSubmitting}
-            className="space-y-3"
+            className="space-y-4"
           >
             {currentQ.options.map((opt: string, idx: number) => {
                // Styling logic for reviewed answers
@@ -273,51 +269,51 @@ export default function MCQPage() {
 
                if (submitted) {
                    if (opt === currentQ.correct_answer) {
-                       containerClass = "border-green-500 bg-green-50 dark:bg-green-900/10";
-                       labelClass = "text-green-700 dark:text-green-400 font-medium";
+                       containerClass = "border-green-500 bg-green-50 dark:bg-green-900/10 shadow-[0_0_0_1px_rgba(34,197,94,0.4)]";
+                       labelClass = "text-green-700 dark:text-green-400 font-bold";
                        icon = <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />;
                    } else if (opt === currentAnswer && opt !== currentQ.correct_answer) {
                        containerClass = "border-red-500 bg-red-50 dark:bg-red-900/10";
                        labelClass = "text-red-700 dark:text-red-400 font-medium";
                        icon = <XCircle className="h-5 w-5 text-red-600 dark:text-red-400" />;
                    } else {
-                       containerClass = "opacity-50 border-transparent bg-muted/20";
+                       containerClass = "opacity-50 border-transparent bg-muted/20 grayscale";
                    }
                } else if (currentAnswer === opt) {
-                   containerClass = "border-primary bg-primary/5 shadow-sm";
-                   labelClass = "font-medium text-primary";
+                   containerClass = "border-primary bg-primary/5 shadow-sm ring-1 ring-primary/20";
+                   labelClass = "font-semibold text-primary";
                }
 
                return (
                 <label 
                     key={idx} 
-                    className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 group relative overflow-hidden ${containerClass}`}
+                    className={`flex items-center p-5 rounded-xl border-2 cursor-pointer transition-all duration-200 group relative overflow-hidden ${containerClass}`}
                 >
                     <RadioGroupItem value={opt} id={`opt-${idx}`} className="sr-only" />
                     
                     {/* Checkbox-like indicator */}
-                    <div className={`mr-4 h-5 w-5 rounded-full border flex items-center justify-center shrink-0 transition-colors ${currentAnswer === opt ? 'border-primary bg-primary text-primary-foreground' : 'border-muted-foreground/30 group-hover:border-primary/50'}`}>
+                    <div className={`mr-4 h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${currentAnswer === opt ? 'border-primary bg-primary text-primary-foreground scale-110' : 'border-muted-foreground/30 group-hover:border-primary/50'}`}>
                          {currentAnswer === opt && <div className="h-2 w-2 rounded-full bg-white" />}
                     </div>
 
-                    <span className={`flex-grow text-base ${labelClass}`}>
+                    <span className={`flex-grow text-base leading-relaxed ${labelClass}`}>
                         {opt}
                     </span>
-                    {icon && <div className="ml-3 animate-in fade-in zoom-in">{icon}</div>}
+                    {icon && <div className="ml-3 animate-in fade-in zoom-in spin-in-12">{icon}</div>}
                 </label>
                );
             })}
           </RadioGroup>
         </CardContent>
 
-        <CardFooter className="flex justify-between pt-6 mt-4 border-t">
+        <CardFooter className="flex items-center justify-between border-t border-border/50 bg-muted/10 p-6 md:px-8 h-24">
             <Button 
                 variant="outline" 
                 onClick={handlePrev} 
                 disabled={currentQuestionIndex === 0}
-                className="w-32"
+                className="gap-2"
             >
-                <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+                <ArrowLeft className="h-4 w-4" /> Previous
             </Button>
             
             {currentQuestionIndex === totalQuestions - 1 ? (
@@ -325,7 +321,7 @@ export default function MCQPage() {
                     <Button 
                         onClick={handleSubmitExam} 
                         disabled={isSubmitting}
-                        className="w-40 bg-primary hover:bg-primary/90 shadow-md"
+                        className="min-w-[140px] bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md hover:shadow-lg transition-all"
                     >
                         {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Save className="mr-2 h-4 w-4"/>}
                         Submit Exam
@@ -334,21 +330,20 @@ export default function MCQPage() {
             ) : (
                 <Button 
                     onClick={handleNext} 
-                    className="w-32"
+                    className="min-w-[120px]"
                 >
-                    Next <ArrowRight className="ml-2 h-4 w-4" />
+                    Next <ArrowRight className="ml-1 h-4 w-4" />
                 </Button>
             )}
             
 
             {submitted && currentQuestionIndex === totalQuestions - 1 && (
-                 <Button onClick={() => setShowResults(true)}>
-                     Finish Review
+                 <Button onClick={() => setShowResults(true)} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                     Finish Review <ArrowRight className="ml-1 h-4 w-4" />
                  </Button>
             )}
         </CardFooter>
       </Card>
-      </div>
     </div>
   );
 }

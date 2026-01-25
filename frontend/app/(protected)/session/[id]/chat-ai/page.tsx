@@ -43,7 +43,7 @@ export default function ChatAIPage() {
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+      scrollRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   };
 
@@ -86,10 +86,10 @@ export default function ChatAIPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4 max-w-6xl h-[calc(100vh-80px)] overflow-hidden flex flex-col animate-in fade-in duration-500">
+    <div className="container mx-auto mb-10 mt-10 px-4 max-w-6xl h-[calc(100vh-140px)] flex flex-col animate-in fade-in duration-500 mb-8">
       
       {/* Header */}
-      <div className="flex items-center justify-between mb-6 shrink-0">
+      <div className="flex items-center justify-between mb-4 shrink-0">
          <div className="flex items-center gap-3">
             <Button variant="ghost" size="icon" onClick={() => router.back()} className="rounded-full">
                 <ArrowLeft className="h-5 w-5" />
@@ -108,8 +108,8 @@ export default function ChatAIPage() {
       </div>
 
       {/* Chat Area - Open Layout */}
-      <div className="flex-1 min-h-0 flex flex-col relative">
-        <ScrollArea className="flex-1 h-full px-4 mx-4">
+      <div className="flex-1 min-h-0 flex flex-col relative bg-muted/10 rounded-2xl border border-border/40 overflow-hidden mb-4 shadow-inner">
+        <ScrollArea className="flex-1 h-full px-4 py-4">
             <div className="space-y-6">
                 {messages.map((msg, idx) => (
                     <div 

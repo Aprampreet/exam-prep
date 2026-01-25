@@ -1,48 +1,85 @@
 import json
 from typing import List, Dict
+
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
+
 from app.core.config import settings
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from db.models.Session import Session
-from db.deps import get_db
 from db.models import MCQAttempt, ShortAnswerAttempt, DocumentChunk
 from db.models.MCQans import MCQQuestion
 from db.models.ShortAnswer import ShortAnswer
 
 
-llm = ChatGoogleGenerativeAI(
+gemini_llm = ChatGoogleGenerativeAI(
     api_key=settings.GOOGLE_API_KEY,
     model="gemini-2.5-flash-lite",
     temperature=0.2,
     max_tokens=400,
 )
 
+groq_llm = ChatGroq(
+    api_key=settings.GROQ_API_KEY,
+    model="llama-3.1-8b-instant",
+    temperature=0.2,
+)
+
+async def run_llm(prompt: str, primary: str, purpose: str = ""):
+    try:
+        if primary == "groq":
+            print(f"Groq | {purpose}")
+            return await groq_llm.ainvoke(prompt)
+        else:
+            print(f"Gemini | {purpose}")
+            return await gemini_llm.ainvoke(prompt)
+    except Exception as e:
+        if primary == "groq":
+            print(f"Groq failed: {e} → Switching to Gemini | {purpose}")
+            return await gemini_llm.ainvoke(prompt)
+        else:
+            print(f"Gemini failed: {e} → Switching to Groq | {purpose}")
+            return await groq_llm.ainvoke(prompt)
+
+
+
 
 async def generate_assessment(context: str) -> dict:
     context = context[:3000]
 
     prompt = f"""
-Generate:
-1) EXACTLY 2 MCQs
-2) EXACTLY 2 short-answer questions
+You are an exam question generator.
 
-Return ONLY JSON.
+TASK:
+- Generate EXACTLY 2 multiple choice questions (MCQs)
+- Generate EXACTLY 2 short-answer questions
+- Use ONLY the provided content
+- Do NOT add explanations
+- Do NOT add markdown
+- Do NOT add extra text
 
-FORMAT:
+STRICT RULES:
+- MCQs must have EXACTLY 4 options
+- Only ONE option is correct
+- Short answers must be ONE sentence
+- Output MUST be valid JSON
+- If you cannot comply, still return valid JSON
+
+RETURN FORMAT (JSON ONLY):
 {{
   "mcq": [
     {{
-      "question": "...",
+      "question": "Question text",
       "options": ["A", "B", "C", "D"],
       "correct_answer": "A"
     }}
   ],
   "short_answers": [
     {{
-      "question": "...",
-      "answer": "..."
+      "question": "Question text",
+      "answer": "Answer text"
     }}
   ]
 }}
@@ -51,19 +88,44 @@ CONTENT:
 {context}
 """
 
-    response = await llm.ainvoke(prompt)
+    response = await run_llm(prompt, primary="gemini")
+
+    if not response or not getattr(response, "content", None):
+        raise ValueError("Empty AI response")
+
     raw = str(response.content).strip()
 
     if raw.startswith("```"):
         raw = raw.replace("```json", "").replace("```", "").strip()
 
-    data = json.loads(raw)
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"Invalid JSON from AI: {e}\nRAW:\n{raw}")
+
+    if not isinstance(data, dict):
+        raise ValueError("AI response is not a JSON object")
 
     if "mcq" not in data or "short_answers" not in data:
-        raise ValueError("Invalid AI response")
+        raise ValueError("Missing mcq or short_answers keys")
+
+    if len(data["mcq"]) != 2 or len(data["short_answers"]) != 2:
+        raise ValueError("AI did not return exactly 2 MCQs and 2 short answers")
+
+    for q in data["mcq"]:
+        if (
+            "question" not in q
+            or "options" not in q
+            or "correct_answer" not in q
+            or len(q["options"]) != 4
+        ):
+            raise ValueError("Invalid MCQ schema")
+
+    for a in data["short_answers"]:
+        if "question" not in a or "answer" not in a:
+            raise ValueError("Invalid short answer schema")
 
     return data
-
 
 async def ensure_assessment_generated(
     session: Session,
@@ -171,7 +233,7 @@ USER QUESTION:
 {question}
 """
 
-    response = await llm.ainvoke(prompt)
+    response = await run_llm(prompt,primary="groq")
 
     if not response or not getattr(response, "content", None):
         raise ValueError("Empty AI response")
@@ -216,30 +278,61 @@ STUDENT MISTAKES:
 {mistakes}
 """
 
-    response = await llm.ainvoke(prompt)
+    response = await run_llm(prompt,primary="groq")
     return response.content.strip()
 
 
-async def evaluate_short_answer(question: str, correct_answer: str, user_answer: str) -> dict:
+import json
+
+async def evaluate_short_answer(
+    question: str,
+    correct_answer: str,
+    user_answer: str
+) -> dict:
     prompt = f"""
-You are an expert teacher grading a student's short answer.
+You are an expert examiner grading a short-answer response.
 
-Question: {question}
-Correct Answer (Model): {correct_answer}
-Student Answer: {user_answer}
+GRADING RULES:
+- Score must be an INTEGER between 0 and 5
+- 0 = completely incorrect or irrelevant
+- 3 = partially correct but missing key points
+- 5 = fully correct and complete
+- Be fair and strict
 
-Task:
-1. Compare the Student Answer to the Correct Answer.
-2. Assign a score from 0 to 5 based on accuracy and completeness.
-3. Provide brief, constructive feedback.
+TASK:
+1. Compare the student's answer with the correct answer
+2. Assign a score from 0 to 5
+3. Provide brief, constructive feedback (1–2 sentences max)
 
-Return ONLY JSON:
+STRICT OUTPUT RULES:
+- Return ONLY valid JSON
+- Do NOT add explanations outside JSON
+- Do NOT use markdown
+
+JSON FORMAT:
 {{
   "score": 0,
-  "feedback": "..."
+  "feedback": "Short constructive feedback"
 }}
+
+QUESTION:
+{question}
+
+CORRECT ANSWER:
+{correct_answer}
+
+STUDENT ANSWER:
+{user_answer}
 """
-    response = await llm.ainvoke(prompt)
+
+    response = await run_llm(prompt, primary="groq")
+
+    if not response or not getattr(response, "content", None):
+        return {
+            "score": 0,
+            "feedback": "No response from AI. Please review manually."
+        }
+
     raw = str(response.content).strip()
 
     if raw.startswith("```"):
@@ -247,10 +340,23 @@ Return ONLY JSON:
 
     try:
         data = json.loads(raw)
-        return data
-    except Exception:
+    except json.JSONDecodeError:
         return {
-            "score": 0, 
-            "feedback": "Unable to automatically grade. Please review manually."
+            "score": 0,
+            "feedback": "Automatic grading failed. Please review manually."
         }
+    if (
+        not isinstance(data, dict)
+        or "score" not in data
+        or "feedback" not in data
+        or not isinstance(data["score"], int)
+        or data["score"] < 0
+        or data["score"] > 5
+    ):
+        return {
+            "score": 0,
+            "feedback": "Invalid grading response. Please review manually."
+        }
+
+    return data
 

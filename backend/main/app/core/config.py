@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     CLOUDINARY_API_SECRET: str
     CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "http://localhost:3000",).split(",")
     GOOGLE_API_KEY: str
+    GROQ_API_KEY: str
 
     class Config:
         env_file = ".env"

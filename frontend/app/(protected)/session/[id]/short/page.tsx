@@ -108,20 +108,21 @@ export default function ShortAnswerPage() {
   const totalQuestions = attemptData.answers.length;
   const progressPercent = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
+
   return (
-      <div className="flex flex-col gap-6 max-w-3xl mx-auto mt-10">
+      <div className="min-h-[calc(100vh-80px)]  w-full flex flex-col items-center justify-center p-10 md:p-8 animate-in fade-in duration-500  pb-20 mt-10 mb-10">
         
         {isEvaluated && (
-            <div className={`w-full p-4 rounded-xlshadow-sm animate-in fade-in slide-in-from-top-4 duration-500 flex items-center justify-between ${currentQ.score >= 3 ? "border-1 rounded-lg border-green-500" : "border-1 rounded-lg border-orange-500"}`}>
+            <div className={`w-full max-w-3xl mb-6 p-4 rounded-xl shadow-sm flex items-center justify-between border ${currentQ.score >= 3 ? "bg-green-500/10 border-green-500/50" : "bg-orange-500/10 border-orange-500/50"}`}>
                 <div className="flex items-center gap-4">
-                     <div className={`p-3 rounded-full ${currentQ.score >= 3 ? "text-green-700" : "text-orange-700"}`}>
+                     <div className={`p-2 rounded-full ${currentQ.score >= 3 ? "bg-green-500/20 text-green-700 dark:text-green-400" : "bg-orange-500/20 text-orange-700 dark:text-orange-400"}`}>
                         {currentQ.score >= 3 ? <CheckCircle2 className="w-6 h-6"/> : <AlertCircle className="w-6 h-6"/>}
                      </div>
                      <div>
-                         <h3 className={`text-lg font-bold ${currentQ.score >= 3 ? "text-green-800" : "text-orange-800"}`}>
+                         <h3 className={`text-lg font-bold ${currentQ.score >= 3 ? "text-green-800 dark:text-green-300" : "text-orange-800 dark:text-orange-300"}`}>
                              Score: {currentQ.score} / 5
                          </h3>
-                         <p className="text-sm text-foreground/70">
+                         <p className="text-sm opacity-90">
                              {currentQ.score >= 4 ? "Excellent work!" : currentQ.score >= 3 ? "Good effort." : "Keep practicing."}
                          </p>
                      </div>
@@ -130,24 +131,24 @@ export default function ShortAnswerPage() {
         )}
 
         {/* Main Question Card */}
-        <Card className="shadow-lg border-muted md:p-2 animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <CardHeader className="border-b border-border/50 pb-4">
-              <div className="flex items-center gap-3">
-                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-bold shadow-sm flex-shrink-0">
+        <Card className="shadow-2xl border-border/60 w-full max-w-3xl overflow-hidden">
+            <CardHeader className="bg-muted/30 border-b border-border/50 py-6">
+              <div className="flex items-start gap-4">
+                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-bold shadow-sm flex-shrink-0 mt-0.5">
                     {currentQuestionIndex + 1}
                  </span>
-                 <h2 className="text-lg font-semibold leading-tight text-foreground/90">
+                 <h2 className="text-xl font-semibold leading-snug text-foreground">
                     {currentQ.question}
                  </h2>
               </div>
             </CardHeader>
             
-            <CardContent className="pt-6 space-y-6">
-              <div className="space-y-2">
-                <Label className="text-muted-foreground">Your Answer</Label>
+            <CardContent className="p-6 md:p-8 space-y-6">
+              <div className="space-y-3">
+                <Label className="text-base font-medium">Your Explanation</Label>
                 <Textarea 
-                    placeholder="Type your explanation here..."
-                    className={`min-h-[150px] resize-y bg-background text-base p-4 leading-relaxed transition-colors ${isEvaluated ? "border-primary/50 bg-muted/10" : ""}`}
+                    placeholder="Type your answer here..."
+                    className={`min-h-[200px] resize-y text-base p-4 leading-relaxed focus-visible:ring-primary/50 ${isEvaluated ? "opacity-90 bg-muted/20" : "bg-background"}`}
                     value={currentQ.user_answer || currentAnswer}
                     disabled={isEvaluated || isSubmitting}
                     onChange={(e) => handleAnswerChange(currentQ.id, e.target.value)}
@@ -156,21 +157,21 @@ export default function ShortAnswerPage() {
 
                {/* Feedback Section - Below Input */}
                {isEvaluated && (
-                   <div className="pt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
-                      <div className="p-4 rounded-lg bg-muted/30 border border-border">
-                          <h4 className="flex items-center gap-2 font-semibold text-sm mb-2 text-foreground">
+                   <div className="pt-2 space-y-4 animate-in fade-in slide-in-from-top-2 duration-500">
+                      <div className="p-5 rounded-xl bg-blue-500/5 border border-blue-500/20">
+                          <h4 className="flex items-center gap-2 font-semibold text-sm mb-3 text-blue-700 dark:text-blue-400">
                               <span className="h-2 w-2 rounded-full bg-blue-500"/> AI Feedback
                           </h4>
-                          <p className="text-sm text-muted-foreground leading-relaxed">
+                          <p className="text-sm text-foreground/80 leading-relaxed">
                               {currentQ.feedback}
                           </p>
                       </div>
 
-                      <div className="p-4 rounded-lg dark:bg-green-900/10 border border-green-100 dark:border-green-900/30">
-                          <h4 className="flex items-center gap-2 font-semibold text-sm mb-2 text-green-700 dark:text-green-400">
+                      <div className="p-5 rounded-xl bg-green-500/5 border border-green-500/20">
+                          <h4 className="flex items-center gap-2 font-semibold text-sm mb-3 text-green-700 dark:text-green-400">
                               <CheckCircle2 className="w-4 h-4"/> Ideal Answer
                           </h4>
-                          <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-wrap">
+                          <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap font-medium">
                               {currentQ.correct_answer}
                           </p>
                       </div>
@@ -183,15 +184,15 @@ export default function ShortAnswerPage() {
                         variant="ghost" 
                         size="sm" 
                         onClick={() => toggleReveal(currentQuestionIndex)}
-                        className="text-xs text-muted-foreground hover:text-foreground"
+                        className="text-xs text-muted-foreground hover:text-foreground h-auto py-2"
                       >
                         {isRevealed ? <EyeOff className="mr-2 h-3 w-3" /> : <Eye className="mr-2 h-3 w-3" />}
-                        {isRevealed ? "Hide Ideal Answer (No Score)" : "Peek Ideal Answer"}
+                        {isRevealed ? "Hide Ideal Answer" : "Peek Ideal Answer (Grading Disabled)"}
                       </Button>
                       
                       {isRevealed && (
-                        <div className="mt-4 p-4 bg-muted/50 border-l-4 border-yellow-500 rounded-r-lg animate-in slide-in-from-top-2 duration-300">
-                            <p className="text-xs font-semibold text-yellow-600 dark:text-yellow-500 mb-2 uppercase tracking-wide">Preview Ideal Answer</p>
+                        <div className="mt-4 p-4 bg-yellow-500/10 border-l-4 border-yellow-500/50 rounded-r-lg animate-in slide-in-from-top-2 duration-300">
+                            <p className="text-xs font-bold text-yellow-600 dark:text-yellow-500 mb-2 uppercase tracking-wide">Preview Ideal Answer</p>
                             <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-wrap">{currentQ.correct_answer}</p>
                         </div>
                       )}
@@ -199,20 +200,20 @@ export default function ShortAnswerPage() {
               )}
             </CardContent>
 
-            <CardFooter className="flex justify-between pt-6 mt-2 border-t bg-muted/20 md:bg-transparent md:border-t-0 p-6">
+            <CardFooter className="flex items-center justify-between border-t border-border/50 bg-muted/10 p-6 md:px-8 h-24">
                  <Button 
                     variant="outline" 
                     onClick={handlePrev} 
                     disabled={currentQuestionIndex === 0}
-                    className="w-32"
+                    className="gap-2"
                 >
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Previous
+                    <ArrowLeft className="h-4 w-4" /> Previous
                 </Button>
 
                 {!isEvaluated && (
                     <Button 
                         onClick={handleSubmit} 
-                        className="w-40 bg-primary hover:bg-primary/90"
+                        className="min-w-[140px] bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-md hover:shadow-lg transition-all"
                         disabled={isSubmitting || !currentAnswer.trim()}
                     >
                         {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Submit Answer"} 
@@ -222,9 +223,9 @@ export default function ShortAnswerPage() {
                 {isEvaluated && (
                      <Button 
                         onClick={handleProceed} 
-                        className="w-40"
+                        className={isLastQuestion ? "bg-emerald-600 hover:bg-emerald-700 text-white" : ""}
                     >
-                        {isLastQuestion ? "Finish" : "Next Question"} <ArrowRight className="ml-1 h-4 w-4" />
+                        {isLastQuestion ? "Finish Review" : "Next Question"} <ArrowRight className="ml-1 h-4 w-4" />
                     </Button>
                 )}
             </CardFooter>
