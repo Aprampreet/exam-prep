@@ -17,6 +17,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen mt-10 bg-black text-zinc-100 flex flex-col font-sans selection:bg-primary selection:text-primary-foreground relative overflow-x-hidden">
+      {/* Global Background Grid */}
+      <div className="fixed inset-0 w-full h-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0"></div>
       
       <main className="flex-1 z-10 relative">
         
@@ -24,7 +26,7 @@ export default function HomePage() {
         <section className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden border-b border-border/40">
            
            {/* Background Elements */}
-           <div className="absolute inset-0 -z-20 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
+
     
           <div className="container mx-auto px-4 flex flex-col items-center text-center max-w-5xl z-10 relative">
             
@@ -184,7 +186,7 @@ export default function HomePage() {
         </section>
 
         {/* How It Works - Unified Premium Section */}
-        <section className="py-32 relative overflow-hidden">
+        <section className="py-10 relative overflow-hidden">
 
              <div className="container mx-auto px-4 relative z-10">
                  <div className="max-w-6xl mx-auto bg-zinc-900/20 backdrop-blur-2xl rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden shadow-2xl">
@@ -253,7 +255,7 @@ export default function HomePage() {
         </section>
 
         {/* Features - Interactive Tabs */}
-        <section className="py-32 border-b border-border/40 relative dark:bg-zinc-950/50">
+        <section className="py-32    border-b border-border/40 relative dark:bg-zinc-950/50">
              {/* Subtle Technical Grid in Background */}
              <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
              
@@ -334,8 +336,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Stats Section - Floating Cards */}
-        <section className="relative py-24 bg-background border-b border-border/40">
+        <section className="relative py-16 border-b border-border/40">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 {[
@@ -346,7 +347,7 @@ export default function HomePage() {
                 ].map((stat, idx) => (
                     <Card
                     key={idx}
-                    className="group relative overflow-hidden text-center hover:-translate-y-1 transition-all duration-300 border-border/50 bg-background/50 hover:border-primary/20 hover:shadow-lg"
+                    className="group relative overflow-hidden text-center hover:-translate-y-1 transition-all duration-300 border-border/50 bg-zinc-950/40 backdrop-blur-sm hover:border-primary/20 hover:shadow-lg"
                     >
                         <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary/0 to-transparent group-hover:via-primary/50 transition-all duration-500" />
                         <CardContent className="pt-8 pb-6 flex flex-col items-center">
@@ -365,10 +366,7 @@ export default function HomePage() {
         </section>
         
         {/* Testimonials - Carousel */}
-        <section className="py-32 overflow-hidden bg-background relative border-b border-border/40">
-             {/* Decorative Background */}
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-indigo-500/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-            
+        <section className="py-32 overflow-hidden relative border-b border-border/40">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-20 max-w-3xl mx-auto">
                   <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-center text-foreground mb-6">Loved by top performers</h2>
@@ -377,7 +375,7 @@ export default function HomePage() {
                   </p>
                 </div>
                 
-                <div className="max-w-4xl mx-auto">
+                <div className="max-w-7xl mx-auto">
                     <Carousel
                         opts={{
                             align: "start",
@@ -385,9 +383,9 @@ export default function HomePage() {
                         }}
                         className="w-full"
                     >
-                        <CarouselContent>
-                             <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                <div className="p-1 h-full">
+                        <CarouselContent className="-ml-4">
+                             <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+                                <div className="h-full">
                                     <TestimonialCard 
                                         name="Alex Chen" 
                                         role="Medical Entrance Topper" 
@@ -396,8 +394,8 @@ export default function HomePage() {
                                     />
                                 </div>
                             </CarouselItem>
-                             <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                <div className="p-1 h-full">
+                             <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+                                <div className="h-full">
                                     <TestimonialCard 
                                         name="Sarah Johnson" 
                                         role="Civil Services Aspirant" 
@@ -407,8 +405,8 @@ export default function HomePage() {
                                     />
                                 </div>
                             </CarouselItem>
-                             <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                <div className="p-1 h-full">
+                             <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+                                <div className="h-full">
                                     <TestimonialCard 
                                         name="Rahul Gupta" 
                                         role="Engineering Student" 
@@ -417,8 +415,8 @@ export default function HomePage() {
                                     />
                                 </div>
                             </CarouselItem>
-                            <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                <div className="p-1 h-full">
+                            <CarouselItem className="pl-4 md:basis-1/2 lg:basis-1/3">
+                                <div className="h-full">
                                     <TestimonialCard 
                                         name="Emily Davis" 
                                         role="Law Student" 
@@ -428,8 +426,10 @@ export default function HomePage() {
                                 </div>
                             </CarouselItem>
                         </CarouselContent>
-                        <CarouselPrevious />
-                        <CarouselNext />
+                        <div className="flex justify-end gap-2 mt-8 pr-4">
+                            <CarouselPrevious className="static translate-y-0" />
+                            <CarouselNext className="static translate-y-0" />
+                         </div>
                     </Carousel>
                 </div>
             </div>
@@ -505,9 +505,9 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-32 max-w-3xl mx-auto px-4 bg-background">
+        <section className="py-32 max-w-3xl mx-auto px-4 bg-transparent">
             <div className="text-center mb-16">
-              <Badge variant="secondary" className="mb-4 bg-muted text-muted-foreground">FAQ</Badge>
+              <Badge variant="secondary" className="mb-4  text-muted-foreground">FAQ</Badge>
               <h2 className="text-4xl md:text-5xl font-bold tracking-tighter mb-4 text-center text-foreground">Common Questions</h2>
             </div>
             <Accordion type="single" collapsible className="w-full">
@@ -540,7 +540,7 @@ export default function HomePage() {
 
         {/* CTA Section - Gradient Glow */}
         <section className="py-32 relative overflow-hidden border-t border-border/50">
-           <div className="absolute inset-0 bg-background z-0"></div>
+
           <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5 mix-blend-overlay z-10"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-indigo-600/10 rounded-full blur-[100px] z-0"></div>
           
