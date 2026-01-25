@@ -6,11 +6,16 @@ import { Separator } from "@/components/ui/separator"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { ArrowRight, BookOpen, Flame, Sparkles, Zap, Star, Quote, TrendingUp, Target, Brain, Clock, ChevronRight, Activity, Trophy } from "lucide-react"
 import React from "react"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { win32 } from "path"
+import Link from "next/link"
 
 export default function HomePage() {
 
+
   return (
-    <div className="min-h-screen bg-black text-zinc-100 flex flex-col font-sans selection:bg-primary selection:text-primary-foreground relative overflow-x-hidden">
+    <div className="min-h-screen mt-10 bg-black text-zinc-100 flex flex-col font-sans selection:bg-primary selection:text-primary-foreground relative overflow-x-hidden">
       
       <main className="flex-1 z-10 relative">
         
@@ -19,7 +24,6 @@ export default function HomePage() {
            
            {/* Background Elements */}
            <div className="absolute inset-0 -z-20 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-           <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] bg-indigo-500/20 rounded-full blur-[120px] -z-10 opacity-50"></div>
 
           <div className="container mx-auto px-4 flex flex-col items-center text-center max-w-5xl z-10 relative">
             
@@ -50,11 +54,120 @@ export default function HomePage() {
             
             <div className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
               <Button size="lg" className="h-16 px-10 text-lg font-bold rounded-full shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] hover:-translate-y-1 transition-all bg-primary hover:bg-primary/90 text-primary-foreground border-t border-white/20">
-                Start Free Trial <ArrowRight className="ml-2 h-5 w-5" />
+                <Link href="/register">Start Free Trial</Link> <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button variant="outline" size="lg" className="h-16 px-10 text-lg font-bold rounded-full border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors bg-white/50 dark:bg-zinc-950/50 backdrop-blur-sm text-foreground">
+              <Button variant="outline" size="lg" className="h-16 px-10 text-lg font-bold rounded-full border-zinc-900 dark:border-zinc-800 hover:bg-zinc-900 dark:hover:bg-zinc-800 transition-colors dark:bg-zinc-950/50 backdrop-blur-sm text-foreground">
                 View Pricing
               </Button>
+            </div>
+
+            {/* Product Showcase Mockup */}
+            <div className="mt-20 relative w-full max-w-6xl mx-auto z-20 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-300">
+                <div className="rounded-xl border border-white/10 bg-zinc-950/80 backdrop-blur-md p-2 shadow-2xl shadow-indigo-500/20 ring-1 ring-white/10">
+                     <div className="rounded-lg overflow-hidden relative bg-zinc-950 aspect-[16/10] md:aspect-[21/9] flex">
+                         {/* Mock Sidebar */}
+                         <div className="w-16 md:w-20 border-r border-white/10 flex flex-col items-center py-6 gap-6 bg-zinc-900/50">
+                             <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4"><Zap className="h-5 w-5" /></div>
+                             <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><BookOpen className="h-4 w-4" /></div>
+                             <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><TrendingUp className="h-4 w-4" /></div>
+                             <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><Target className="h-4 w-4" /></div>
+                         </div>
+                         
+                         {/* Mock Content */}
+                         <div className="flex-1 flex flex-col">
+                             {/* Mock Header */}
+                             <div className="h-16 border-b border-white/10 flex items-center justify-between px-6 bg-zinc-900/30">
+                                 <div className="flex items-center gap-3">
+                                     <div className="h-8 w-32 rounded-md bg-white/5"></div>
+                                 </div>
+                                 <div className="flex items-center gap-3">
+                                      <div className="h-8 w-8 rounded-full bg-white/10"></div>
+                                      <div className="h-8 w-8 rounded-full bg-primary/20"></div>
+                                 </div>
+                             </div>
+                             
+                             {/* Dashboard Grid */}
+                             <div className="p-6 grid grid-cols-12 gap-6 h-full overflow-hidden">
+                                 {/* Main Stats Area (8/12) */}
+                                 <div className="col-span-8 flex flex-col gap-6">
+                                     <div className="grid grid-cols-4 gap-4">
+                                         {[
+                                             { label: "Focus Score", val: "92%", color: "text-emerald-400" },
+                                             { label: "Questions", val: "1,240", color: "text-blue-400" },
+                                             { label: "Accuracy", val: "88%", color: "text-purple-400" },
+                                             { label: "Streak", val: "12 Days", color: "text-orange-400" }
+                                         ].map((s, i) => (
+                                             <div key={i} className="h-20 rounded-xl border border-white/5 bg-white/[0.02] p-3 flex flex-col justify-between">
+                                                 <div className="h-1.5 w-12 bg-white/10 rounded-full"></div>
+                                                 <div className={`text-xl font-bold ${s.color}`}>{s.val}</div>
+                                             </div>
+                                         ))}
+                                     </div>
+                                     
+                                     {/* Charts Row */}
+                                     <div className="flex-1 grid grid-cols-2 gap-6 min-h-0">
+                                         {/* Performance Chart */}
+                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 relative overflow-hidden flex flex-col">
+                                             <div className="flex justify-between items-center mb-4">
+                                                 <div className="h-3 w-24 bg-white/10 rounded-full"></div>
+                                             </div>
+                                              {/* CSS Line Chart simulation */}
+                                             <div className="flex-1 relative w-full">
+                                                <svg className="w-full h-full absolute bottom-0 left-0 overflow-visible" preserveAspectRatio="none">
+                                                    <path d="M0,80 C50,60 100,90 150,40 S250,50 300,20" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary" />
+                                                    <path d="M0,80 C50,60 100,90 150,40 S250,50 300,20 L300,100 L0,100 Z" fill="url(#gradient)" opacity="0.1" />
+                                                    <defs>
+                                                        <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+                                                            <stop offset="0%" stopColor="rgb(99 102 241)" />
+                                                            <stop offset="100%" stopColor="transparent" />
+                                                        </linearGradient>
+                                                    </defs>
+                                                </svg>
+                                             </div>
+                                         </div>
+
+                                          {/* Weakness Heatmap */}
+                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 flex flex-col">
+                                            <div className="h-3 w-28 bg-white/10 rounded-full mb-4"></div>
+                                            <div className="grid grid-cols-4 gap-2 flex-1">
+                                                {[...Array(16)].map((_, i) => (
+                                                    <div key={i} className={`rounded-md ${[2,5,11,14].includes(i) ? 'bg-red-500/20 border border-red-500/30' : 'bg-emerald-500/5 border border-emerald-500/10'}`}></div>
+                                                ))}
+                                            </div>
+                                         </div>
+                                     </div>
+                                 </div>
+                                 
+                                 {/* Side Panel (4/12) */}
+                                 <div className="col-span-4 border-l border-white/10 pl-6 flex flex-col gap-6">
+                                      {/* Ranking Card */}
+                                      <div className="h-28 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 p-4 flex flex-row items-center gap-4">
+                                            <div className="h-12 w-12 rounded-full bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/40"><Trophy className="h-6 w-6 text-white" /></div>
+                                            <div>
+                                                <div className="text-sm font-bold text-white">Top 10%</div>
+                                                <div className="text-xs text-indigo-300">Global Rank #402</div>
+                                            </div>
+                                      </div>
+
+                                      <div className="space-y-3 flex-1">
+                                        <div className="h-3 w-20 bg-white/10 rounded-full mb-2"></div>
+                                          {[1, 2, 3].map((i) => (
+                                              <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/5">
+                                                  <div className="h-1 w-1 rounded-full bg-orange-400"></div>
+                                                  <div className="space-y-1.5 flex-1">
+                                                      <div className="h-1.5 w-3/4 bg-white/20 rounded-full"></div>
+                                                      <div className="h-1.5 w-1/2 bg-white/10 rounded-full"></div>
+                                                  </div>
+                                              </div>
+                                          ))}
+                                      </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                </div>
+                {/* Glow behind the dashboard */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-indigo-500/50 to-purple-600/50 rounded-xl blur-[80px] opacity-10 -z-10"></div>
             </div>
 
             {/* Social Proof Text */}
@@ -69,62 +182,157 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Features - Modern Bento Grid */}
+        {/* How It Works - Unified Premium Section */}
+        <section className="py-32 border-b border-border/40 relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
+             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+             <div className="container mx-auto px-4 relative z-10">
+                 <div className="max-w-6xl mx-auto bg-zinc-900/20 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-16 relative overflow-hidden shadow-2xl">
+                     {/* Inner Ambient Glow */}
+                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent blur-sm"></div>
+                     <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none"></div>
+
+                     <div className="text-center max-w-3xl mx-auto mb-20 relative z-10">
+                         <Badge variant="outline" className="mb-6 border-primary/20 bg-primary/5 text-primary px-3 py-1 text-sm tracking-wide">THE PROCESS</Badge>
+                         <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6">From <span className="text-muted-foreground line-through decoration-red-500/50 decoration-4">Chaos</span> to <span className="bg-gradient-to-r from-primary to-indigo-400 bg-clip-text text-transparent">Clarity</span></h2>
+                         <p className="text-xl text-muted-foreground/80 leading-relaxed">
+                            A unified ecosystem designed to streamline your path to the top. All your needs, in one place.
+                         </p>
+                     </div>
+                     
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative z-10">
+                         {/* Connecting Line Graphic */}
+                         <div className="absolute top-[3.5rem] left-16 right-16 h-[2px] bg-gradient-to-r from-transparent via-border to-transparent hidden md:block">
+                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+                         </div>
+                         
+                         {[
+                             { 
+                                title: "Connect", 
+                                subtitle: "Centralize Your Data",
+                                desc: "Sync past scores, notes, and study material into one unified dashboard.", 
+                                icon: <Zap className="h-6 w-6 text-white" />,
+                                color: "bg-amber-500"
+                            },
+                             { 
+                                title: "Analyze", 
+                                subtitle: "AI-Powered Insights",
+                                desc: "Our neural engine pinpoints weak topics and forgetting curves instantly.", 
+                                icon: <Brain className="h-6 w-6 text-white" />,
+                                color: "bg-indigo-500"
+                            },
+                             { 
+                                title: "Conquer", 
+                                subtitle: "Personalized Action",
+                                desc: "Execute a daily plan tailored to ensure 99% retention and mastery.", 
+                                icon: <Trophy className="h-6 w-6 text-white" />,
+                                color: "bg-emerald-500"
+                            }
+                         ].map((step, i) => (
+                             <div key={i} className="relative flex flex-col items-center text-center group">
+                                 {/* Step Icon Bubble */}
+                                 <div className={`relative w-28 h-28 rounded-full ${step.color} p-1 mb-8 shadow-xl shadow-black/20 group-hover:scale-110 transition-transform duration-500`}>
+                                     <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/20 to-transparent"></div>
+                                     <div className="w-full h-full rounded-full bg-zinc-950 flex items-center justify-center border-4 border-zinc-900 relative overflow-hidden">
+                                          <div className={`absolute inset-0 opacity-20 ${step.color} blur-md group-hover:opacity-40 transition-opacity`}></div>
+                                          {step.icon}
+                                     </div>
+                                     {/* Number Tag */}
+                                     <div className="absolute -bottom-2 -right-2 h-10 w-10 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-md font-bold shadow-lg">
+                                         {i + 1}
+                                     </div>
+                                 </div>
+
+                                 <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">{step.title}</h3>
+                                 <span className="text-xs font-bold tracking-widest text-primary/80 uppercase mb-4 block">{step.subtitle}</span>
+                                 <p className="text-muted-foreground leading-relaxed max-w-xs">{step.desc}</p>
+                             </div>
+                         ))}
+                     </div>
+                 </div>
+             </div>
+        </section>
+
+        {/* Features - Interactive Tabs */}
         <section className="py-32 border-b border-border/40 relative dark:bg-zinc-950/50">
              {/* Subtle Technical Grid in Background */}
              <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
              
           <div className="container mx-auto px-4 relative z-10">
-            <div className="text-center mb-20 max-w-3xl mx-auto">
-              <Badge variant="outline" className="mb-6 border-primary/20 bg-primary/5 text-primary px-3 py-1 text-sm tracking-wide">WHY CHOOSE US</Badge>
+            <div className="text-center mb-16 max-w-3xl mx-auto">
+              <Badge variant="outline" className="mb-6 border-primary/20 bg-primary/5 text-primary px-3 py-1 text-sm tracking-wide">features</Badge>
               <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-6 text-foreground">
-                Engineered for <span className="bg-gradient-to-r from-primary to-indigo-600 bg-clip-text text-transparent italic font-serif pr-2">Success</span>
+                Everything you need to <span className="text-primary italic font-serif pr-2">Excel</span>
               </h2>
               <p className="text-muted-foreground text-xl font-normal leading-relaxed text-balance">
-                 A clutter-free ecosystem designed for raw performance. We stripped away the noise so you can focus on the signal.
+                 We've broken down the science of high performance into a suite of powerful tools.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <FeatureCard 
-                icon={<BookOpen className="h-6 w-6" />}
-                title="Comprehensive Material"
-                description="Thousands of detailed notes and video lectures curated by top rankers."
-                className="lg:col-span-2"
-                gradient="from-blue-500/5 to-indigo-500/5"
-              />
-              <FeatureCard 
-                icon={<TrendingUp className="h-6 w-6" />}
-                title="Real-time Analytics"
-                description="Live performance tracking with granular breakdown of every topic."
-                gradient="from-violet-500/5 to-purple-500/5"
-              />
-              <FeatureCard 
-                icon={<Brain className="h-6 w-6" />}
-                title="AI-Powered Learning"
-                description="Our neural engine adapts your schedule based on retention rates."
-                 gradient="from-pink-500/5 to-rose-500/5"
-              />
-               <FeatureCard 
-                icon={<Sparkles className="h-6 w-6" />}
-                title="Minimalist Interface"
-                description="A brutalist, distraction-free environment for deep work."
-                className="lg:col-span-2"
-                 gradient="from-amber-500/5 to-orange-500/5"
-              />
-               <FeatureCard 
-                icon={<Zap className="h-6 w-6" />}
-                title="Offline Mode"
-                description="Download everything. Study on the subway or the moon."
-                 gradient="from-emerald-500/5 to-green-500/5"
-              />
-               <FeatureCard 
-                icon={<Target className="h-6 w-6" />}
-                title="24/7 Mentorship"
-                description="Instant doubt resolution from subject matter experts."
-                 gradient="from-cyan-500/5 to-sky-500/5"
-              />
-            </div>
+            <Tabs defaultValue="learn" className="w-full max-w-5xl mx-auto">
+              <div className="flex justify-center mb-12">
+                <TabsList className="grid w-full max-w-md grid-cols-3 bg-zinc-900/50 border border-border/50 p-1">
+                    <TabsTrigger value="learn">Learn</TabsTrigger>
+                    <TabsTrigger value="analyze">Analyze</TabsTrigger>
+                    <TabsTrigger value="succeed">Succeed</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="learn" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <FeatureCard 
+                        icon={<BookOpen className="h-6 w-6" />}
+                        title="Comprehensive Material"
+                        description="Thousands of detailed notes and video lectures curated by top rankers."
+                        className="lg:col-span-2"
+                        gradient="from-blue-500/5 to-indigo-500/5"
+                    />
+                     <FeatureCard 
+                        icon={<Zap className="h-6 w-6" />}
+                        title="Offline Mode"
+                        description="Download everything. Study on the subway or the moon."
+                         gradient="from-emerald-500/5 to-green-500/5"
+                    />
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="analyze" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <FeatureCard 
+                        icon={<TrendingUp className="h-6 w-6" />}
+                        title="Real-time Analytics"
+                        description="Live performance tracking with granular breakdown of every topic to pinpoint weakness."
+                        gradient="from-violet-500/5 to-purple-500/5"
+                        className="lg:col-span-2"
+                    />
+                     <FeatureCard 
+                        icon={<Brain className="h-6 w-6" />}
+                        title="AI-Powered Learning"
+                        description="Our neural engine adapts your schedule based on retention rates."
+                         gradient="from-pink-500/5 to-rose-500/5"
+                    />
+                </div>
+              </TabsContent>
+
+               <TabsContent value="succeed" className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <FeatureCard 
+                        icon={<Target className="h-6 w-6" />}
+                        title="24/7 Mentorship"
+                        description="Instant doubt resolution from subject matter experts anytime, anywhere."
+                         gradient="from-cyan-500/5 to-sky-500/5"
+                         className="lg:col-span-2"
+                    />
+                     <FeatureCard 
+                        icon={<Sparkles className="h-6 w-6" />}
+                        title="Minimalist Interface"
+                        description="A brutalist, distraction-free environment for deep work."
+                         gradient="from-amber-500/5 to-orange-500/5"
+                    />
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </section>
 
@@ -158,7 +366,7 @@ export default function HomePage() {
             </div>
         </section>
         
-        {/* Testimonials - Refined Layout */}
+        {/* Testimonials - Carousel */}
         <section className="py-32 overflow-hidden bg-background relative border-b border-border/40">
              {/* Decorative Background */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[600px] bg-indigo-500/5 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
@@ -171,27 +379,60 @@ export default function HomePage() {
                   </p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-                    <TestimonialCard 
-                        name="Alex Chen" 
-                        role="Medical Entrance Topper" 
-                        quote="The analytics are frighteningly accurate. It detected my Organic Chemistry weakness two weeks before I noticed it."
-                        rating={5}
-                    />
-                    <TestimonialCard 
-                        name="Sarah Johnson" 
-                        role="Civil Services Aspirant" 
-                        quote="No ads, no distractions. Just pure learning. My focus time increased by 40% in the first month alone."
-                        highlight
-                        rating={5}
-                        className="md:-mt-8 shadow-2xl skew-y-0"
-                    />
-                    <TestimonialCard 
-                        name="Rahul Gupta" 
-                        role="Engineering Student" 
-                        quote="It's like having a personal AI coach who knows exactly what I can handle. This changed my entire study approach."
-                        rating={5}
-                    />
+                <div className="max-w-4xl mx-auto">
+                    <Carousel
+                        opts={{
+                            align: "start",
+                            loop: true,
+                        }}
+                        className="w-full"
+                    >
+                        <CarouselContent>
+                             <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1 h-full">
+                                    <TestimonialCard 
+                                        name="Alex Chen" 
+                                        role="Medical Entrance Topper" 
+                                        quote="The analytics are frighteningly accurate. It detected my Organic Chemistry weakness two weeks before I noticed it."
+                                        rating={5}
+                                    />
+                                </div>
+                            </CarouselItem>
+                             <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1 h-full">
+                                    <TestimonialCard 
+                                        name="Sarah Johnson" 
+                                        role="Civil Services Aspirant" 
+                                        quote="No ads, no distractions. Just pure learning. My focus time increased by 40% in the first month alone."
+                                        highlight
+                                        rating={5}
+                                    />
+                                </div>
+                            </CarouselItem>
+                             <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1 h-full">
+                                    <TestimonialCard 
+                                        name="Rahul Gupta" 
+                                        role="Engineering Student" 
+                                        quote="It's like having a personal AI coach who knows exactly what I can handle. This changed my entire study approach."
+                                        rating={5}
+                                    />
+                                </div>
+                            </CarouselItem>
+                            <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1 h-full">
+                                    <TestimonialCard 
+                                        name="Emily Davis" 
+                                        role="Law Student" 
+                                        quote="The offline mode is a lifesaver. I can study on my commute without worrying about data."
+                                        rating={5}
+                                    />
+                                </div>
+                            </CarouselItem>
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                    </Carousel>
                 </div>
             </div>
         </section>
