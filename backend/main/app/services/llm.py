@@ -233,7 +233,7 @@ USER QUESTION:
 {question}
 """
 
-    response = await run_llm(prompt,primary="groq")
+    response = await run_llm(prompt,primary="groq",purpose="Chat")
 
     if not response or not getattr(response, "content", None):
         raise ValueError("Empty AI response")
@@ -278,7 +278,7 @@ STUDENT MISTAKES:
 {mistakes}
 """
 
-    response = await run_llm(prompt,primary="groq")
+    response = await run_llm(prompt,primary="groq",purpose="AI Insight")
     return response.content.strip()
 
 
@@ -325,7 +325,7 @@ STUDENT ANSWER:
 {user_answer}
 """
 
-    response = await run_llm(prompt, primary="groq")
+    response = await run_llm(prompt, primary="groq", purpose="Short Answer Evaluation")
 
     if not response or not getattr(response, "content", None):
         return {
