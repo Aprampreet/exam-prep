@@ -498,7 +498,6 @@ async def session_analytics(
     if not mcq:
         raise HTTPException(404, "No MCQ attempt")
 
-    # ... existing MCQ fetch ...
     result = await db.execute(
         select(ShortAnswerAttempt)
         .options(selectinload(ShortAnswerAttempt.answers))
@@ -515,7 +514,6 @@ async def session_analytics(
 
     stats = analyze_session_performance(mcq)
     
-    # Process Short Answers
     short_mistakes = []
     short_stats = {"average_score": 0, "total_questions": 0}
     
@@ -526,7 +524,7 @@ async def session_analytics(
             if ans.score is not None:
                 total_score += ans.score
                 count += 1
-                if ans.score < 3: # Weak answer threshold
+                if ans.score < 3:
                     short_mistakes.append({
                         "question": ans.question,
                         "user_answer": ans.user_answer,
@@ -537,7 +535,6 @@ async def session_analytics(
             short_stats["average_score"] = round(total_score / count, 1)
             short_stats["total_questions"] = count
 
-    # Combine errors for AI insight
     all_mistakes = stats["wrong_questions"] + short_mistakes
     weak_chunks = extract_weak_topics(all_mistakes, chunks)
 
