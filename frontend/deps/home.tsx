@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { win32 } from "path"
 import Link from "next/link"
+import { blogPosts } from "@/lib/blogData";
 
 export default function HomePage() {
 
@@ -24,7 +25,7 @@ export default function HomePage() {
            
            {/* Background Elements */}
            <div className="absolute inset-0 -z-20 h-full w-full bg-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-
+    
           <div className="container mx-auto px-4 flex flex-col items-center text-center max-w-5xl z-10 relative">
             
              {/* Announcement Pill - Shimmering */}
@@ -446,70 +447,59 @@ export default function HomePage() {
                             Strategies from cognitive science to help you study smarter, not harder.
                         </p>
                     </div>
-                    <Button variant="ghost" className="hidden md:flex group hover:bg-primary/10 hover:text-primary">
-                        View All Articles <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Button>
+                    <Link href="/blog">
+                        <Button variant="ghost" className="hidden md:flex group hover:bg-primary/10 hover:text-primary">
+                            View All Articles <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                    </Link>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {[
-                        {
-                            category: "Study Technique",
-                            title: "The Feynman Technique: Learn Difficult Concepts 4x Faster",
-                            excerpt: "We analyzed 500 top rankers to see which method leads to better long-term retention compared to rote memorization.",
-                            readTime: "5 min read",
-                            gradient: "from-indigo-500 via-purple-500 to-pink-500",
-                            pattern: "radial-gradient(circle at 100% 100%, rgba(255,255,255,0.2) 0, transparent 50%)"
-                        },
-                        {
-                            category: "Productivity",
-                            title: "Deep Work: Rewiring Your Brain for Intense Focus",
-                            excerpt: "In an age of distraction, the ability to focus is a superpower. Here is the protocol to reclaim your attention span.",
-                            readTime: "3 min read",
-                            gradient: "from-orange-500 via-amber-500 to-yellow-500",
-                             pattern: "linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.1) 75%, transparent 75%, transparent)"
-                        },
-                        {
-                            category: "Mental Health",
-                            title: "Exam Anxiety: The Navy SEAL Protocol for Calm",
-                            excerpt: "Regulate your nervous system before the big test using 'Box Breathing' and other physiological control techniques.",
-                            readTime: "4 min read",
-                            gradient: "from-emerald-500 via-teal-500 to-cyan-500",
-                             pattern: "repeating-linear-gradient(45deg, rgba(255,255,255,0.1) 0px, rgba(255,255,255,0.1) 2px, transparent 2px, transparent 10px)"
-                        }
-                    ].map((post, i) => (
-                        <Card key={i} className="group cursor-pointer border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 overflow-hidden flex flex-col h-full ring-1 ring-white/5">
-                            {/* Abstract Header Image */}
-                            <div className={`h-56 w-full bg-gradient-to-br ${post.gradient} relative overflow-hidden`}>
-                                <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ backgroundImage: post.pattern, backgroundSize: '20px 20px' }}></div>
-                                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-90"></div>
-                                
-                                <Badge className="absolute top-4 left-4 bg-black/50 hover:bg-black/70 backdrop-blur-md border-white/10 text-white font-medium tracking-wide">
-                                    {post.category}
-                                </Badge>
-                            </div>
-                            
-                            <CardContent className="p-8 flex flex-col flex-1 relative -mt-12">
-                                <div className="text-xs font-bold text-muted-foreground mb-3 flex items-center gap-2">
-                                    <div className="h-1 w-8 bg-primary/50 rounded-full"></div>
-                                    <Clock className="h-3 w-3" /> {post.readTime}
-                                </div>
-                                <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight">{post.title}</h3>
-                                <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-3">{post.excerpt}</p>
-                                
-                                <div className="mt-auto pt-6 border-t border-border/50 flex items-center justify-between text-sm font-semibold text-foreground">
-                                    <div className="flex -space-x-2">
-                                         {[...Array(3)].map((_, i) => (
-                                             <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-zinc-800 flex items-center justify-center text-[10px] text-white/50">User</div>
-                                         ))}
-                                    </div>
-                                    <span className="flex items-center group-hover:translate-x-2 transition-transform text-primary">
-                                        Read Now <ArrowRight className="ml-2 h-4 w-4" />
-                                    </span>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
+                <div className="w-full relative">
+                     <Carousel className="w-full" opts={{ align: "start", loop: true }}>
+                         <CarouselContent className="-ml-4">
+                            {blogPosts.map((post, i) => (
+                                <CarouselItem key={i} className="pl-4 md:basis-1/2 lg:basis-1/3 h-full">
+                                    <Link href={`/blog/${post.slug}`} className="block h-full">
+                                        <Card className="group cursor-pointer border-border/50 bg-card/50 backdrop-blur-sm hover:bg-card hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 overflow-hidden flex flex-col h-full ring-1 ring-white/5">
+                                            {/* Abstract Header Image */}
+                                            <div className={`h-56 w-full bg-gradient-to-br ${post.gradient} relative overflow-hidden flex-shrink-0`}>
+                                                <div className="absolute inset-0 opacity-30 mix-blend-overlay" style={{ backgroundImage: post.pattern, backgroundSize: '20px 20px' }}></div>
+                                                <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent opacity-90"></div>
+                                                
+                                                <Badge className="absolute top-4 left-4 bg-black/50 hover:bg-black/70 backdrop-blur-md border-white/10 text-white font-medium tracking-wide">
+                                                    {post.category}
+                                                </Badge>
+                                            </div>
+                                            
+                                            <CardContent className="p-8 flex flex-col flex-1 relative -mt-12">
+                                                <div className="text-xs font-bold text-muted-foreground mb-3 flex items-center gap-2">
+                                                    <div className="h-1 w-8 bg-primary/50 rounded-full"></div>
+                                                    <Clock className="h-3 w-3" /> {post.readTime}
+                                                </div>
+                                                <h3 className="text-2xl font-bold mb-4 group-hover:text-primary transition-colors leading-tight line-clamp-2">{post.title}</h3>
+                                                <p className="text-muted-foreground text-sm leading-relaxed mb-6 line-clamp-3">{post.excerpt}</p>
+                                                
+                                                <div className="mt-auto pt-6 border-t border-border/50 flex items-center justify-between text-sm font-semibold text-foreground">
+                                                    <div className="flex -space-x-2">
+                                                         {[...Array(3)].map((_, i) => (
+                                                             <div key={i} className="h-8 w-8 rounded-full border-2 border-background bg-zinc-800 flex items-center justify-center text-[10px] text-white/50">User</div>
+                                                         ))}
+                                                    </div>
+                                                    <span className="flex items-center group-hover:translate-x-2 transition-transform text-primary">
+                                                        Read Now <ArrowRight className="ml-2 h-4 w-4" />
+                                                    </span>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                </CarouselItem>
+                            ))}
+                         </CarouselContent>
+                         <div className="flex justify-end gap-2 mt-8 pr-4">
+                            <CarouselPrevious className="static translate-y-0" />
+                            <CarouselNext className="static translate-y-0" />
+                         </div>
+                     </Carousel>
                 </div>
             </div>
         </section>
