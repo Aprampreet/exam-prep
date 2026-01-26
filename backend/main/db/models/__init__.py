@@ -6,3 +6,4 @@ from .Short import ShortAnswerAttempt
 from .DocumentChunk import DocumentChunk
 from .ShortAnswer import ShortAnswer
 from .MCQans import MCQQuestion
+from .Analytics import Analytics

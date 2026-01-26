@@ -1,8 +1,7 @@
 from db.base import Base
 from db.session import engine
 
-# IMPORTANT: import models so SQLAlchemy knows about them
-import db.models  # <-- THIS LINE IS THE FIX
+import db.models  
 
 import asyncio
 

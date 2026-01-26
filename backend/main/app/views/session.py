@@ -24,6 +24,7 @@ from sqlalchemy import desc
 from app.services.embeddings import EmbeddingService
 from app.services.analytics import *
 from sqlalchemy import func
+from db.models.Analytics import Analytics
 session_router = APIRouter(prefix="/session", tags=["session"])
 
 
@@ -573,10 +574,30 @@ async def session_analytics(
     all_mistakes = stats["wrong_questions"] + short_mistakes
     weak_chunks = extract_weak_topics(all_mistakes, chunks)
 
-    ai_insight = await generate_ai_insight(
-        weak_chunks,
-        all_mistakes
+    result = await db.execute(
+        select(Analytics).where(Analytics.session_id == session_id)
     )
+    existing_analytics = result.scalar_one_or_none()
+    
+    ai_insight = ""
+    
+    if existing_analytics and existing_analytics.ai_response:
+        ai_insight = existing_analytics.ai_response
+    else:
+        ai_insight = await generate_ai_insight(
+            weak_chunks,
+            all_mistakes
+        )
+        if existing_analytics:
+            existing_analytics.ai_response = ai_insight
+        else:
+            new_analytics = Analytics(
+                session_id=session_id,
+                user_id=user.id,
+                ai_response=ai_insight
+            )
+            db.add(new_analytics)
+        await db.commit()
 
     return {
         "stats": {

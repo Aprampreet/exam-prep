@@ -46,3 +46,10 @@ class Session(Base):
         cascade="all, delete-orphan",
         order_by="DocumentChunk.chunk_index"
     )
+    analytics = relationship(
+        "Analytics",
+        back_populates="session",
+        uselist=False,
+        cascade="all, delete-orphan"
+    )
+    
