@@ -159,73 +159,80 @@ import { useAuth } from "@/lib/context/AuthContext";
              )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredSessions.map((session, index) => (
-                <Link href={`/session/${session.id}`} key={session.id} className="group relative block h-full">
-                    <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-b from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
-                    <Card className="h-full border-border/40 bg-gradient-to-b from-card/80 to-card/40 backdrop-blur-xl hover:bg-card/90 transition-all duration-300 shadow-sm hover:shadow-2xl hover:-translate-y-1 overflow-hidden rounded-2xl relative z-10">
-                        {/* Header Gradient Stripe */}
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/40 via-primary to-primary/40 opacity-50 group-hover:opacity-100 transition-opacity" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8">
+            {filteredSessions.map((session, index) => {
+                const gradients = [
+                    "from-blue-500/20 via-cyan-500/20 to-teal-500/20",
+                    "from-purple-500/20 via-pink-500/20 to-rose-500/20", 
+                    "from-amber-500/20 via-orange-500/20 to-yellow-500/20",
+                    "from-emerald-500/20 via-green-500/20 to-lime-500/20",
+                ];
+                const gradient = gradients[index % gradients.length];
+                
+                return (
+                <div key={session.id} className="group relative flex flex-col rounded-3xl bg-card border border-border/60 shadow-sm transition-all duration-300 hover:shadow-2xl hover:border-primary/20 hover:-translate-y-1 overflow-hidden">
+                    
+                    {/* Decorative Header */}
+                    <div className={`h-32 w-full bg-gradient-to-br ${gradient} relative`}>
+                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 mix-blend-overlay"></div>
+                        <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                             <Button
+                                variant="destructive"
+                                size="icon"
+                                className="h-9 w-9 rounded-full shadow-lg bg-white/20 hover:bg-red-500 hover:text-white backdrop-blur-md border border-white/10 text-destructive-foreground/70"
+                                onClick={(e) => handleDelete(e, session.id)}
+                                title="Delete Session"
+                            >
+                                <Trash2 className="h-4 w-4" />
+                            </Button>
+                        </div>
+                        <div className="absolute bottom-4 left-6">
+                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border shadow-sm backdrop-blur-md ${
+                                session.status === 'completed' 
+                                ? 'bg-green-500/80 text-white border-green-400/50' 
+                                : 'bg-white/30 dark:bg-black/30 text-foreground border-white/20'
+                            }`}>
+                                {session.status === 'completed' ? 'Completed' : 'In Progress'}
+                            </span>
+                        </div>
+                    </div>
 
-                        <CardHeader className="pb-2 pt-6 px-6">
-                            <div className="flex justify-between items-start gap-3">
-                                <div className="space-y-1.5 flex-1 min-w-0">
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide border ${
-                                            session.status === 'completed' 
-                                            ? 'bg-green-500/10 text-green-600 border-green-500/20' 
-                                            : 'bg-primary/10 text-primary border-primary/20'
-                                        }`}>
-                                            {session.status === 'completed' ? 'Completed' : 'In Progress'}
-                                        </span>
-                                        <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-                                            <Clock className="h-3 w-3" />
-                                            {new Date(session.created_at).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                    <CardTitle className="text-xl font-bold line-clamp-2 leading-tight group-hover:text-primary transition-colors" title={session.title}>
-                                        {session.title || "Untitled Session"}
-                                    </CardTitle>
-                                </div>
-                                
-                                {/* Delete Button */}
-                                <div className="absolute top-4 right-4 z-20">
-                                   <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 text-muted-foreground/50 hover:text-red-600 hover:bg-red-500/10 rounded-full transition-all duration-200"
-                                      onClick={(e) => handleDelete(e, session.id)}
-                                      title="Delete Session"
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                    </Button>
+                    {/* Content Section */}
+                    <Link href={`/session/${session.id}`} className="flex-1 flex flex-col p-6 pt-10 relative">
+                        {/* Floating Icon */}
+                        <div className="absolute -top-10 left-6 h-16 w-16 rounded-2xl bg-background shadow-lg border border-border flex items-center justify-center p-3 group-hover:scale-105 transition-transform duration-300">
+                             {session.original_file_url ? (
+                                <FileText className="h-8 w-8 text-primary" />
+                             ) : (
+                                <BookOpen className="h-8 w-8 text-primary/50" />
+                             )}
+                        </div>
+
+                        <div className="space-y-4">
+                            <div>
+                                <h3 className="text-xl font-bold leading-tight line-clamp-2 pr-2" title={session.title}>
+                                    {session.title || "Untitled Session"}
+                                </h3>
+                                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-2 font-medium">
+                                    <Clock className="h-3.5 w-3.5 opacity-70" />
+                                    Created on {new Date(session.created_at).toLocaleDateString(undefined, {
+                                        month: 'short', day: 'numeric', year: 'numeric'
+                                    })}
+                                </p>
+                            </div>
+                            
+                            <div className="pt-4 mt-auto border-t border-border/40 flex items-center justify-between">
+                                <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
+                                    Continue Learning
+                                </span>
+                                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                                    <ChevronRight className="h-4 w-4" />
                                 </div>
                             </div>
-                        </CardHeader>
-
-                        <CardContent className="px-6 pb-6 pt-2 flex flex-col h-[calc(100%-8rem)]">
-                             <div className="mt-auto pt-6">
-                                 <div className="relative group/doc p-4 rounded-xl bg-muted/30 border border-border/50 hover:border-primary/30 transition-colors flex items-center gap-4">
-                                     <div className="h-10 w-10 rounded-lg bg-background shadow-sm flex items-center justify-center group-hover/doc:scale-110 transition-transform duration-300">
-                                         {session.original_file_url ? (
-                                            <FileText className="h-5 w-5 text-primary" />
-                                         ) : (
-                                            <FileText className="h-5 w-5 text-muted-foreground/50" />
-                                         )}
-                                     </div>
-                                     <div className="flex-1 overflow-hidden">
-                                         <p className="text-sm font-medium truncate opacity-90">Course Material</p>
-                                         <p className="text-xs text-muted-foreground truncate">
-                                            {session.original_file_url ? "Document processed" : "No document uploaded"}
-                                         </p>
-                                     </div>
-                                     <ChevronRight className="h-4 w-4 text-muted-foreground/30 group-hover/doc:text-primary transition-colors" />
-                                 </div>
-                             </div>
-                        </CardContent>
-                    </Card>
-                </Link>
-            ))}
+                        </div>
+                    </Link>
+                </div>
+            )})}
         </div>
       )}
 
