@@ -1,8 +1,10 @@
+"use client";
+
 import React from "react";
-import { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { 
     Upload, 
     Cpu, 
@@ -23,68 +25,129 @@ import {
 
 
 export default function FeaturesPage() {
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1, 
+      transition: { duration: 0.5 } 
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background pb-20 overflow-x-hidden">
       
       {/* Hero Section */}
-      <section className="relative py-24 px-4 text-center overflow-hidden">
-         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/5 blur-[120px] rounded-full -z-10" />
+      <motion.section 
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="relative py-24 px-4 text-center overflow-hidden"
+      >
+         <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/5 blur-[120px] rounded-full -z-10" 
+         />
          <div className="container mx-auto max-w-5xl">
-            <Badge className="mb-6 px-4 py-1.5 text-sm bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 transition-colors rounded-full">
-                <Sparkles className="w-3 h-3 mr-2" />
-                Intelligent Study Ecosystem
-            </Badge>
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-block"
+            >
+                <Badge className="mb-6 px-4 py-1.5 text-sm bg-primary/10 text-primary hover:bg-primary/20 border-primary/20 transition-colors rounded-full">
+                    <Sparkles className="w-3 h-3 mr-2" />
+                    Intelligent Study Ecosystem
+                </Badge>
+            </motion.div>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-foreground/60 leading-tight">
                 From Raw Notes to <br className="hidden md:block" /> 
                 <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">Complete Mastery</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto leading-relaxed"
+            >
                 A complete walkthrough of how ScribeMind transforms your study materials into an active learning engine.
-            </p>
+            </motion.p>
          </div>
-      </section>
+      </motion.section>
 
       {/* The Process Section (Step-by-Step) */}
       <section className="py-20 bg-muted/30 border-y border-border/50">
         <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-16">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
                 <h2 className="text-3xl font-bold mb-4">How It Works</h2>
                 <p className="text-muted-foreground">Four simple steps to upgrade your learning workflow.</p>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+            <motion.div 
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="grid grid-cols-1 md:grid-cols-4 gap-8 relative"
+            >
                 {/* Connecting Line (Desktop) */}
                 <div className="hidden md:block absolute top-12 left-[10%] right-[10%] h-0.5 bg-gradient-to-r from-muted-foreground/20 via-primary/20 to-muted-foreground/20 -z-10" />
 
-                <ProcessStep 
-                    number="01"
-                    icon={<Upload className="w-6 h-6 text-white" />}
-                    title="Upload Material"
-                    description="Drop your PDFs, lecture notes, or textbooks. We support multiple formats."
-                    color="bg-blue-500"
-                />
-                <ProcessStep 
-                    number="02"
-                    icon={<Cpu className="w-6 h-6 text-white" />}
-                    title="AI Processing"
-                    description="Our engine chunks, embeds, and analyzes your content to build a knowledge graph."
-                    color="bg-purple-500"
-                />
-                 <ProcessStep 
-                    number="03"
-                    icon={<Zap className="w-6 h-6 text-white" />}
-                    title="Active Recall"
-                    description="Practice with auto-generated MCQs and Short Answer questions specifically targeting key concepts."
-                    color="bg-amber-500"
-                />
-                 <ProcessStep 
-                    number="04"
-                    icon={<TrendingUp className="w-6 h-6 text-white" />}
-                    title="Analytics Loop"
-                    description="We identify weak spots and adapt the next set of questions to bridge the gaps."
-                    color="bg-emerald-500"
-                />
-            </div>
+                <motion.div variants={itemVariants}>
+                    <ProcessStep 
+                        number="01"
+                        icon={<Upload className="w-6 h-6 text-white" />}
+                        title="Upload Material"
+                        description="Drop your PDFs, lecture notes, or textbooks. We support multiple formats."
+                        color="bg-blue-500"
+                    />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                    <ProcessStep 
+                        number="02"
+                        icon={<Cpu className="w-6 h-6 text-white" />}
+                        title="AI Processing"
+                        description="Our engine chunks, embeds, and analyzes your content to build a knowledge graph."
+                        color="bg-purple-500"
+                    />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                     <ProcessStep 
+                        number="03"
+                        icon={<Zap className="w-6 h-6 text-white" />}
+                        title="Active Recall"
+                        description="Practice with auto-generated MCQs and Short Answer questions specifically targeting key concepts."
+                        color="bg-amber-500"
+                    />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                     <ProcessStep 
+                        number="04"
+                        icon={<TrendingUp className="w-6 h-6 text-white" />}
+                        title="Analytics Loop"
+                        description="We identify weak spots and adapt the next set of questions to bridge the gaps."
+                        color="bg-emerald-500"
+                    />
+                </motion.div>
+            </motion.div>
         </div>
       </section>
 
@@ -92,7 +155,13 @@ export default function FeaturesPage() {
       <section className="py-24 container mx-auto px-4 max-w-7xl space-y-32">
         
         {/* Feature 1: The AI Tutor Chat (Left Image, Right Text) */}
-        <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+        <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row items-center gap-12 lg:gap-20"
+        >
             <div className="flex-1 w-full relative group">
                 <div className="absolute -inset-4 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-xl blur-xl opacity-50 group-hover:opacity-100 transition duration-1000" />
                 <div className="relative aspect-video bg-background border border-border/50 rounded-xl shadow-2xl overflow-hidden flex flex-col">
@@ -104,12 +173,22 @@ export default function FeaturesPage() {
                     <div className="p-6 flex-1 bg-neutral-950/5 relative">
                         {/* Mock Chat UI */}
                         <div className="space-y-4 max-w-sm mx-auto mt-4 text-sm font-medium">
-                            <div className="bg-muted p-3 rounded-lg rounded-tl-none w-fit max-w-[80%]">
+                            <motion.div 
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="bg-muted p-3 rounded-lg rounded-tl-none w-fit max-w-[80%]"
+                            >
                                 Explain the concept of Quantum Entanglement from page 42.
-                            </div>
-                            <div className="bg-primary/10 text-primary p-3 rounded-lg rounded-tr-none w-fit ml-auto border border-primary/20 max-w-[90%] shadow-sm">
+                            </motion.div>
+                            <motion.div 
+                                initial={{ opacity: 0, x: 20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.8 }}
+                                className="bg-primary/10 text-primary p-3 rounded-lg rounded-tr-none w-fit ml-auto border border-primary/20 max-w-[90%] shadow-sm"
+                            >
                                 Based on your notes, Quantum Entanglement is described as...
-                            </div>
+                            </motion.div>
                         </div>
                     </div>
                 </div>
@@ -129,9 +208,15 @@ export default function FeaturesPage() {
                     <FeatureCheck text="Persona Tuning: Acts as a patient tutor." />
                 </div>
             </div>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20">
+        <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row-reverse items-center gap-12 lg:gap-20"
+        >
             <div className="flex-1 w-full relative group">
                  <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-xl blur-xl opacity-50 group-hover:opacity-100 transition duration-1000" />
                 <div className="relative aspect-video bg-background border border-border/50 rounded-xl shadow-2xl overflow-hidden flex flex-col p-8 items-center justify-center">
@@ -142,7 +227,7 @@ export default function FeaturesPage() {
                         </div>
                          <div className="col-span-1 h-32 bg-primary/5 rounded-lg border border-primary/10 p-4 flex flex-col justify-between">
                             <div className="w-8 h-8 rounded bg-primary/20" />
-                             <div className="h-2 w-3/4 bg-primary/20 rounded" />
+                            <div className="h-2 w-3/4 bg-primary/20 rounded" />
                         </div>
                         <div className="col-span-2 h-16 bg-primary/10 rounded-lg border border-primary/20 p-4 flex items-center">
                             <div className="flex-1 space-y-2">
@@ -167,10 +252,16 @@ export default function FeaturesPage() {
                     <FeatureCheck text="Short Answer Evaluation: AI grades your written responses." />
                 </div>
             </div>
-        </div>
+        </motion.div>
 
         {/* Feature 3: Smart Analytics (Left Image, Right Text) */}
-        <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
+        <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col md:flex-row items-center gap-12 lg:gap-20"
+        >
             <div className="flex-1 w-full relative group">
                 <div className="absolute -inset-4 bg-gradient-to-r from-emerald-500/20 to-lime-500/20 rounded-xl blur-xl opacity-50 group-hover:opacity-100 transition duration-1000" />
                 <div className="relative aspect-video bg-background border border-border/50 rounded-xl shadow-2xl overflow-hidden flex items-center justify-center">
@@ -199,33 +290,58 @@ export default function FeaturesPage() {
                     <FeatureCheck text="AI Insights: Get textual revision strategies based on data." />
                 </div>
             </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Feature Grid for smaller things */}
       <section className="container mx-auto px-4 max-w-7xl mb-24">
-        <h2 className="text-2xl font-bold mb-12 text-center">And so much more...</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <SmallFeatureCard 
-                icon={<Brain className="w-5 h-5 text-indigo-500" />}
-                title="Adaptive Difficulty"
-                desc="Questions get harder as you get better, keeping you in the flow state."
-            />
-            <SmallFeatureCard 
-                icon={<Search className="w-5 h-5 text-indigo-500" />}
-                title="Semantic Search"
-                desc="Find any concept in your uploaded documents instantly using natural language."
-            />
-            <SmallFeatureCard 
-                icon={<Layers className="w-5 h-5 text-indigo-500" />}
-                title="Multi-Session Management"
-                desc="Keep different subjects organized in separate, isolated workspaces."
-            />
-        </div>
+        <motion.h2 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-2xl font-bold mb-12 text-center"
+        >
+            And so much more...
+        </motion.h2>
+        <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+            <motion.div variants={itemVariants}>
+                <SmallFeatureCard 
+                    icon={<Brain className="w-5 h-5 text-indigo-500" />}
+                    title="Adaptive Difficulty"
+                    desc="Questions get harder as you get better, keeping you in the flow state."
+                />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+                <SmallFeatureCard 
+                    icon={<Search className="w-5 h-5 text-indigo-500" />}
+                    title="Semantic Search"
+                    desc="Find any concept in your uploaded documents instantly using natural language."
+                />
+            </motion.div>
+            <motion.div variants={itemVariants}>
+                <SmallFeatureCard 
+                    icon={<Layers className="w-5 h-5 text-indigo-500" />}
+                    title="Multi-Session Management"
+                    desc="Keep different subjects organized in separate, isolated workspaces."
+                />
+            </motion.div>
+        </motion.div>
       </section>
 
       {/* CTA */}
-      <section className="py-24 text-center mt-12 bg-gradient-to-b from-transparent to-muted/20 border-t border-border/50">
+      <motion.section 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="py-24 text-center mt-12 bg-gradient-to-b from-transparent to-muted/20 border-t border-border/50"
+      >
           <div className="container mx-auto px-4">
               <h2 className="text-4xl font-bold mb-6">Ready to stop studying hard<br/>and start studying smart?</h2>
               <div className="flex flex-col sm:flex-row justify-center gap-6 mt-12">
@@ -239,7 +355,7 @@ export default function FeaturesPage() {
                    </div>
               </div>
           </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
