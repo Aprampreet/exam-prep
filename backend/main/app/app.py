@@ -10,16 +10,14 @@ from auth.router import auth_router
 from auth.dependancy import get_current_user
 from auth.schemas import UserOut
 from app.views.session import session_router
-app = FastAPI(title="Exam Prep API")
-
 from fastapi.middleware.cors import CORSMiddleware
-
 from app.core.config import settings
+app = FastAPI(title="Exam Prep API")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS, 
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
