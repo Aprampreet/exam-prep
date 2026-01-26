@@ -74,25 +74,26 @@ async def login(
         "token_type": "bearer"
     }
 
+@auth_router.post("/logout")
+async def logout(user: User = Depends(get_current_user)):
+
+    return {"message": "Successfully logged out"}
+
 
 @auth_router.get("/profile", response_model=UserProfileResponse)
 async def get_profile(
     user: User = Depends(get_current_user)
 ):
     if not user.profile:
-        # Should usually exist due to registration flow, but handle just in case
         return {
-            "id": user.id, # Fallback ID, real profile needs Creation
-             # Return minimal data if profile is missing
+            "id": user.id,
             "email": user.email,
             "phone_number": user.phone_number,
-             # other fields default to None
         }
     
-    # Merge profile data with user data
     return {
         **user.profile.__dict__,
-        "email": user.email,
+        "email": user.email,    
         "phone_number": user.phone_number
     }
 
