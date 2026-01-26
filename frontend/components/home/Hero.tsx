@@ -23,9 +23,9 @@ export function Hero() {
             </div>
             
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, duration: 0.7 }}
               className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 leading-[0.9] text-foreground drop-shadow-sm"
             >
               Master Your Exams<br />
@@ -37,7 +37,7 @@ export function Hero() {
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, duration: 0.7, delay: 0.2 }}
               className="text-xl md:text-2xl text-muted-foreground mb-14 max-w-2xl leading-relaxed font-normal text-balance"
             >
               The elite platform trusted by <span className="font-semibold text-foreground">50,000+ students</span>. 
@@ -47,7 +47,7 @@ export function Hero() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20, duration: 0.7, delay: 0.4 }}
               className="flex flex-col sm:flex-row items-center gap-5 w-full sm:w-auto"
             >
               <Button size="lg" className="h-16 px-10 text-lg font-bold rounded-full shadow-[0_4px_14px_0_rgba(99,102,241,0.39)] hover:shadow-[0_6px_20px_rgba(99,102,241,0.23)] hover:-translate-y-1 transition-all bg-primary hover:bg-primary/90 text-primary-foreground border-t border-white/20">
