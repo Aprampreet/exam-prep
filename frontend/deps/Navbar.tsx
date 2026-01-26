@@ -70,6 +70,9 @@ export function Navbar() {
                              <Link href="/about" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
                                 About
                              </Link>
+                             <Link href="/blog" className="flex items-center gap-3 text-lg font-medium text-muted-foreground hover:text-foreground hover:bg-muted w-full px-4 py-3 rounded-md transition-all">
+                                Blog
+                             </Link>
                         </nav>
                         
                         <div className="mt-auto border-t pt-6">
