@@ -13,15 +13,10 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         
-        {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 bg-foreground rounded-lg flex items-center justify-center">
-            <GraduationCap className="h-5 w-5 text-background" />
-          </div>
-          <span className="font-bold text-xl tracking-tight">ScribeMind.</span>
+        <div className="flex items-center justify-center mt-2 gap-2 overflow-visible">
+           <img src="/logo.png" alt="ScribeMind Logo" className="h-40 w-auto object-contain -ml-10" />
         </div>
         
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
           <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
           {user && (
@@ -35,12 +30,10 @@ export function Navbar() {
           <Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link>
         </nav>
 
-        {/* Desktop Auth */}
         <div className="hidden md:flex items-center gap-4">
           <AuthNav />
         </div>
 
-        {/* Mobile Sidebar (Sheet) */}
         <div className="md:hidden">
             <Sheet>
                 <SheetTrigger asChild>
@@ -51,11 +44,8 @@ export function Navbar() {
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[300px] sm:w-[400px] flex flex-col">
                     <SheetHeader className="text-left mb-6">
-                        <SheetTitle className="flex items-center gap-2">
-                            <div className="h-8 w-8 bg-foreground rounded-lg flex items-center justify-center">
-                                <GraduationCap className="h-5 w-5 text-background" />
-                            </div>
-                            <span className="font-bold text-xl">ScribeMind.</span>
+                        <SheetTitle className="flex items-center gap-2 overflow-visible">
+                             <img src="/logo.png" alt="ScribeMind Logo" className="h-40 w-auto object-contain -ml-10" />
                         </SheetTitle>
                     </SheetHeader>
                     

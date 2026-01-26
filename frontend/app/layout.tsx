@@ -5,6 +5,7 @@ import { AuthProvider } from "@/lib/context/AuthContext";
 import { Navbar } from "@/deps/Navbar";
 import {Footer} from "@/deps/footer"
 import { Analytics } from "@vercel/analytics/react";
+import ClickSpark from "@/components/ClickSpark";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -60,10 +61,16 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       "max-video-preview": -1,
-      "max-image-preview": "large",
       "max-snippet": -1,
     },
   },
+  icons: {
+  icon: {
+    url: "/icon.png?v=2",
+    type: "image/png",
+  },
+},
+
 };
 
 export default function RootLayout({
@@ -74,6 +81,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/icon.png?v=2" />
+  <link rel="shortcut icon" href="/icon.png?v=2" />
+        
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -110,6 +120,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col relative`}
       >
+        <ClickSpark
+          sparkColor="#ffffff"
+          sparkSize={10}
+          sparkRadius={15}
+          sparkCount={8}
+          duration={400}
+          easing="ease-out"
+          extraScale={1}
+        >
         <AuthProvider>
         <Navbar />
         <main className="flex-1 w-full">
@@ -118,6 +137,7 @@ export default function RootLayout({
         </AuthProvider>
         <Footer />
         <Analytics />
+        </ClickSpark>
       </body>
     </html>
   );

@@ -21,6 +21,7 @@ import {
     ShieldCheck
 } from "lucide-react";
 
+
 export default function FeaturesPage() {
   return (
     <div className="min-h-screen bg-background pb-20 overflow-x-hidden">
