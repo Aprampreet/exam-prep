@@ -18,11 +18,7 @@ from app.core.config import settings
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://exam-prep.vercel.app",
-        "https://exam-prep-sepia.vercel.app",
-    ],
+    allow_origins=settings.CORS_ORIGINS, 
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
