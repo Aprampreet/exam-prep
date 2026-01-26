@@ -18,7 +18,7 @@ gemini_llm = ChatGoogleGenerativeAI(
     api_key=settings.GOOGLE_API_KEY,
     model="gemini-2.5-flash-lite",
     temperature=0.2,
-    max_tokens=400,
+    max_tokens=None,
 )
 
 groq_llm = ChatGroq(
@@ -47,40 +47,45 @@ async def run_llm(prompt: str, primary: str, purpose: str = ""):
 
 
 async def generate_assessment(context: str) -> dict:
-    context = context[:3000]
 
     prompt = f"""
-You are an exam question generator.
+You are an expert academic examiner.
 
 TASK:
-- Generate EXACTLY 2 multiple choice questions (MCQs)
-- Generate EXACTLY 2 short-answer questions
-- Use ONLY the provided content
-- Do NOT add explanations
-- Do NOT add markdown
-- Do NOT add extra text
+- Generate EXACTLY 20 multiple choice questions (MCQs) covering the entire provided content.
+- Generate EXACTLY 10 detailed short-answer questions (worth 5 marks each).
+- Use ONLY the provided content.
 
 STRICT RULES:
-- MCQs must have EXACTLY 4 options
-- Only ONE option is correct
-- Short answers must be ONE sentence
-- Output MUST be valid JSON
-- If you cannot comply, still return valid JSON
+1. MCQs:
+   - Must have 4 options.
+   - Only 1 correct option.
+   - Questions MUST range in difficulty from Low to Hard (Progressive difficulty).
 
-RETURN FORMAT (JSON ONLY):
+2. Short Answer Questions (5 Marks type):
+   - Questions MUST range in difficulty from Low to Hard.
+   - The "answer" field MUST be a CONCISE "Ideal Answer".
+   - The Ideal Answer STRICT RULES:
+     * MAX 2-3 lines total.
+     * MUST contain specific "Keywords" and "Understandings".
+     * DO NOT write long paragraphs. Keep it dense and grading-focused.
+
+3. OUTPUT FORMAT (JSON ONLY):
 {{
   "mcq": [
     {{
-      "question": "Question text",
+      "question": "...",
       "options": ["A", "B", "C", "D"],
-      "correct_answer": "A"
-    }}
+      "correct_answer": "Option Text"
+    }},
+    ... (20 items)
   ],
   "short_answers": [
     {{
-      "question": "Question text",
-      "answer": "Answer text"
-    }}
+      "question": "Deep conceptual question...",
+      "answer": "Keywords: [key1, key2]. Understanding: [Core concept 1, Core concept 2]."
+    }},
+    ... (10 items)
   ]
 }}
 
@@ -108,9 +113,9 @@ CONTENT:
 
     if "mcq" not in data or "short_answers" not in data:
         raise ValueError("Missing mcq or short_answers keys")
-
-    if len(data["mcq"]) != 2 or len(data["short_answers"]) != 2:
-        raise ValueError("AI did not return exactly 2 MCQs and 2 short answers")
+    
+    if len(data["mcq"]) < 10 or len(data["short_answers"]) < 5:
+        raise ValueError(f"AI returned insufficient questions: {len(data.get('mcq', []))} MCQs, {len(data.get('short_answers', []))} Short Answers")
 
     for q in data["mcq"]:
         if (
@@ -119,7 +124,7 @@ CONTENT:
             or "correct_answer" not in q
             or len(q["options"]) != 4
         ):
-            raise ValueError("Invalid MCQ schema")
+            pass 
 
     for a in data["short_answers"]:
         if "question" not in a or "answer" not in a:
@@ -150,13 +155,13 @@ async def ensure_assessment_generated(
         select(DocumentChunk)
         .where(DocumentChunk.session_id == session.id)
         .order_by(DocumentChunk.chunk_index)
-        .limit(12)
     )
     chunks = result.scalars().all()
     if not chunks:
         raise ValueError("No chunks found")
 
-    context = "\n".join(c.content for c in chunks)
+    full_text = "\n".join(c.content for c in chunks)
+    context = full_text[:30000] 
 
     data = await generate_assessment(context)
 
@@ -300,9 +305,10 @@ GRADING RULES:
 - Be fair and strict
 
 TASK:
-1. Compare the student's answer with the correct answer
-2. Assign a score from 0 to 5
-3. Provide brief, constructive feedback (1–2 sentences max)
+1. Compare the student's answer against the Key Concepts and Understanding provided in the CORRECT ANSWER.
+2. Check if the 'Keywords' and 'Understandings' are present/explained in the student's answer.
+3. Assign a score from 0 to 5 based on how many key concepts were covered.
+4. Provide brief, constructive feedback (1–2 sentences max).
 
 STRICT OUTPUT RULES:
 - Return ONLY valid JSON

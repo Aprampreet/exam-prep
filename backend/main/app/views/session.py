@@ -89,6 +89,29 @@ async def get_all_sessions(
     return sessions
 
 
+@session_router.delete("/{session_id}")
+async def delete_session(
+    session_id: int,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    result = await db.execute(
+        select(Session).where(
+            Session.id == session_id,
+            Session.user_id == user.id
+        )
+    )
+    session = result.scalar_one_or_none()
+    
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+        
+    await db.delete(session)
+    await db.commit()
+    
+    return {"message": "Session deleted successfully"}
+
+
 @session_router.post("/{session_id}/mcq", response_model=MCQAttemptOut)
 async def create_mcq(
     request: Request,

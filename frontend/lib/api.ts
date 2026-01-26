@@ -68,6 +68,11 @@ export const getAllSessions = async () => {
   return res.data;
 }
 
+export const deleteSession = async (sessionId: number) => {
+  const res = await api.delete(`/session/${sessionId}`);
+  return res.data;
+}
+
 
 export const chatWithAI = async (sessionId: number, data?: any) => {
   const res = await api.post(`/session/${sessionId}/chat`, data || {});
