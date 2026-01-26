@@ -11,6 +11,13 @@ export function Hero() {
 
           <div className="container mx-auto px-4 flex flex-col items-center text-center max-w-5xl z-10 relative">
             
+            <motion.div 
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-primary/5 blur-[120px] rounded-full -z-10" 
+            />
+
             <div className="group relative inline-flex items-center rounded-full border border-primary/20 bg-background/50 px-6 py-2 text-sm font-medium text-foreground mb-10 overflow-hidden backdrop-blur-md hover:bg-primary/5 hover:border-primary/30 transition-all cursor-default">
               <span className="relative flex h-2 w-2 mr-3">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
