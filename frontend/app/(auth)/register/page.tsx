@@ -29,7 +29,8 @@ export default function RegisterPage() {
       router.push("/login");
     } catch (err: any) {
       console.error(err);
-      setError("Registration failed. Please check your details and try again.");
+      const errorMessage = err.response?.data?.detail || "Registration failed. Please check your details and try again.";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
