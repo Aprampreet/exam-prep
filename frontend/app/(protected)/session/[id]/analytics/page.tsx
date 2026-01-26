@@ -312,9 +312,7 @@ function StatCard({ title, value, subtitle, icon, trend }: { title: string, valu
 }
 
 function TypewriterEffect({ text }: { text: string }) {
-     // A simple unified rendering for now to ensure markdown parses correctly.
-     // If we want character-by-character + Markdown, it's very complex. 
-     // Instead, we fade in chunks.
+
      
      return (
          <div className="animate-in fade-in duration-1000 slide-in-from-bottom-2">
