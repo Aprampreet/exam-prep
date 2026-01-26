@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/context/AuthContext";
 import { Navbar } from "@/deps/Navbar";
 import {Footer} from "@/deps/footer"
+import { Analytics } from "@vercel/analytics/react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -116,6 +117,7 @@ export default function RootLayout({
         </main>
         </AuthProvider>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
