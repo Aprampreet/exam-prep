@@ -99,7 +99,7 @@ export default async function BlogPostPage({ params }: Props) {
                 <h3 className="text-2xl font-bold mb-4">Enjoyed this article?</h3>
                 <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Start applying these techniques today with ScribeMind's AI-powered study tools.</p>
                 <div className="flex justify-center gap-4">
-                     <Button size="lg" className="rounded-full px-8">Start Studying</Button>
+                     <Button size="lg" className="rounded-full px-8" >Start Studying</Button>
                      <Button variant="outline" size="lg" className="rounded-full px-8"><Share2 className="w-4 h-4 mr-2" /> Share Article</Button>
                 </div>
             </div>

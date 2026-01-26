@@ -52,7 +52,7 @@ export  function Footer (){
           </div>
           <Separator className="mb-8 bg-border/40" />
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-muted-foreground">
-            <p>© 2024 ScribeMind Inc. All rights reserved.</p>
+            <p>© 2026 ScribeMind Inc. All rights reserved.</p>
             <div className="flex gap-8 mt-4 md:mt-0">
               <Link href="#" className="hover:text-foreground transition-colors">Privacy</Link>
               <Link href="#" className="hover:text-foreground transition-colors">Terms</Link>
