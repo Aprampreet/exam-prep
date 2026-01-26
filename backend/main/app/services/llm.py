@@ -60,11 +60,13 @@ STRICT RULES:
 1. MCQs:
    - Must have 4 options.
    - Only 1 correct option.
+   - Questions should be of good quality and must be of good level.
    - Questions MUST range in difficulty from Low to Hard (Progressive difficulty).
 
 2. Short Answer Questions (5 Marks type):
    - Questions MUST range in difficulty from Low to Hard.
    - The "answer" field MUST be a CONCISE "Ideal Answer".
+   - Questions should be of good quality and must be of good level.
    - The Ideal Answer STRICT RULES:
      * MAX 2-3 lines total.
      * MUST contain specific "Keywords" and "Understandings".

@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, Calendar, Share2 } from "lucide-react";
 import { blogPosts } from "@/lib/blogData";
 
+import { BlogCTA } from "@/components/blog-cta";
+
 type Props = {
   params: Promise<{
     slug: string;
@@ -89,22 +91,18 @@ export default async function BlogPostPage({ params }: Props) {
                 {post.excerpt}
              </div>
              
-             {/* Creating HTML content safely */}
              <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </div>
 
-        {/* Footer CTA */}
         <div className="mt-20 pt-10 border-t border-border/50">
             <div className="bg-muted/30 rounded-2xl p-8 md:p-12 text-center border border-border">
                 <h3 className="text-2xl font-bold mb-4">Enjoyed this article?</h3>
                 <p className="text-muted-foreground mb-8 max-w-lg mx-auto">Start applying these techniques today with ScribeMind's AI-powered study tools.</p>
-                <div className="flex justify-center gap-4">
-                     <Button size="lg" className="rounded-full px-8" >Start Studying</Button>
-                     <Button variant="outline" size="lg" className="rounded-full px-8"><Share2 className="w-4 h-4 mr-2" /> Share Article</Button>
-                </div>
+                <BlogCTA />
             </div>
         </div>
       </div>
     </article>
   );
 }
+
