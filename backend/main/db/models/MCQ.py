@@ -29,5 +29,6 @@ class MCQAttempt(Base):
 
     questions: Mapped[list["MCQQuestion"]] = relationship(
         back_populates="attempt",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="MCQQuestion.id"
     )

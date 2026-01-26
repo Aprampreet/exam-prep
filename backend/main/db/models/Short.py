@@ -31,5 +31,6 @@ class ShortAnswerAttempt(Base):
 
     answers: Mapped[list["ShortAnswer"]] = relationship(
         back_populates="attempt",
-        cascade="all, delete-orphan"
+        cascade="all, delete-orphan",
+        order_by="ShortAnswer.id"
     )

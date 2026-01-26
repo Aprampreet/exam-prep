@@ -62,7 +62,7 @@ export default function ShortAnswerPage() {
     setIsSubmitting(true);
     try {
         const updatedAttempt = await checkShortAnswer(sessionId, {
-            question_id: currentQ.id,
+            question_id: Number(currentQ.id),
             answer: currentAnswer
         });
         setAttemptData(updatedAttempt);

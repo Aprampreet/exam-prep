@@ -23,7 +23,7 @@ from db.models.MCQans import MCQQuestion
 from sqlalchemy import desc
 from app.services.embeddings import EmbeddingService
 from app.services.analytics import *
-
+from sqlalchemy import func
 session_router = APIRouter(prefix="/session", tags=["session"])
 
 
@@ -275,6 +275,7 @@ async def check_short_answer(
     user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
+    # 1. Fetch Attempt
     result = await db.execute(
         select(ShortAnswerAttempt)
         .join(Session)
@@ -287,6 +288,7 @@ async def check_short_answer(
     if not attempt:
         raise HTTPException(status_code=404, detail="Short answer attempt not found")
 
+    # 2. Fetch Question
     result = await db.execute(
         select(ShortAnswer)
         .where(
@@ -298,46 +300,56 @@ async def check_short_answer(
     if not question:
         raise HTTPException(status_code=404, detail="Short answer question not found")
 
+    # 3. Prevent Duplicate Submission
     if question.score is not None:
+         # Optionally return the existing attempt if client retries?
+         # For now, stick to error to prevent Logic errors in UI
         raise HTTPException(
             status_code=400,
             detail="This question has already been evaluated"
         )
 
+    # 4. Validate Input
     if not payload.answer.strip():
-        raise HTTPException(
-            status_code=400,
-            detail="Answer cannot be empty"
-        )
+        raise HTTPException(status_code=400, detail="Answer cannot be empty")
 
+    # 5. Evaluate
     question.user_answer = payload.answer.strip()
-
+    
     evaluation = await evaluate_short_answer(
         question.question,
         question.correct_answer,
         question.user_answer,
     )
 
-    question.score = int(evaluation["score"])
-    question.feedback = evaluation["feedback"]
+    # 6. Update Question
+    question.score = int(evaluation.get("score", 0))
+    question.feedback = evaluation.get("feedback", "No feedback provided.")
+
+    # 7. Update Total Score (Flush to ensure question score is visible to query)
+    await db.flush() 
 
     result = await db.execute(
-        select(ShortAnswer)
+        select(func.sum(ShortAnswer.score))
         .where(
             ShortAnswer.attempt_id == attempt.id,
             ShortAnswer.score.isnot(None)
         )
     )
-    attempt.total_score = sum(q.score for q in result.scalars())
+    total_score = result.scalar() or 0
+    attempt.total_score = total_score
 
     await db.commit()
 
+    # 8. Return Updated Attempt
     result = await db.execute(
         select(ShortAnswerAttempt)
         .options(selectinload(ShortAnswerAttempt.answers))
         .where(ShortAnswerAttempt.id == attempt.id)
     )
     return result.scalar_one()
+
+
 
 
 

@@ -159,80 +159,62 @@ import { useAuth } from "@/lib/context/AuthContext";
              )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8">
-            {filteredSessions.map((session, index) => {
-                const gradients = [
-                    "from-blue-500/20 via-cyan-500/20 to-teal-500/20",
-                    "from-purple-500/20 via-pink-500/20 to-rose-500/20", 
-                    "from-amber-500/20 via-orange-500/20 to-yellow-500/20",
-                    "from-emerald-500/20 via-green-500/20 to-lime-500/20",
-                ];
-                const gradient = gradients[index % gradients.length];
-                
-                return (
-                <div key={session.id} className="group relative flex flex-col rounded-3xl bg-card border border-border/60 shadow-sm transition-all duration-300 hover:shadow-2xl hover:border-primary/20 hover:-translate-y-1 overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredSessions.map((session) => (
+                <div key={session.id} className="group relative flex flex-col bg-card rounded-2xl border border-border/60 hover:border-primary/50 transition-all duration-300 hover:shadow-lg overflow-hidden">
+                    <Link href={`/session/${session.id}`} className="absolute inset-0 z-0" aria-label={`Open session ${session.title}`} />
                     
-                    {/* Decorative Header */}
-                    <div className={`h-32 w-full bg-gradient-to-br ${gradient} relative`}>
-                        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-40 mix-blend-overlay"></div>
-                        <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                             <Button
-                                variant="destructive"
+                    {/* Card Header: Icon + Actions */}
+                    <div className="p-5 flex justify-between items-start">
+                        <div className={`h-12 w-12 rounded-xl flex items-center justify-center transition-colors duration-300 ${
+                            session.original_file_url ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
+                        }`}>
+                            {session.original_file_url ? <FileText className="h-6 w-6" /> : <BookOpen className="h-6 w-6" />}
+                        </div>
+                        
+                        <div className="flex items-center gap-2 relative z-10">
+                             <div className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
+                                session.status === 'completed' 
+                                ? 'bg-green-500/10 text-green-600 border-green-200' 
+                                : 'bg-secondary text-secondary-foreground border-border'
+                            }`}>
+                                {session.status === 'completed' ? 'Done' : 'Active'}
+                            </div>
+                            <Button
+                                variant="ghost"
                                 size="icon"
-                                className="h-9 w-9 rounded-full shadow-lg bg-white/20 hover:bg-red-500 hover:text-white backdrop-blur-md border border-white/10 text-destructive-foreground/70"
+                                className="h-7 w-7 text-muted-foreground hover:text-red-500 hover:bg-red-50 focus:bg-red-50 transition-colors"
                                 onClick={(e) => handleDelete(e, session.id)}
                                 title="Delete Session"
                             >
                                 <Trash2 className="h-4 w-4" />
                             </Button>
                         </div>
-                        <div className="absolute bottom-4 left-6">
-                            <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide border shadow-sm backdrop-blur-md ${
-                                session.status === 'completed' 
-                                ? 'bg-green-500/80 text-white border-green-400/50' 
-                                : 'bg-white/30 dark:bg-black/30 text-foreground border-white/20'
-                            }`}>
-                                {session.status === 'completed' ? 'Completed' : 'In Progress'}
-                            </span>
-                        </div>
                     </div>
 
-                    {/* Content Section */}
-                    <Link href={`/session/${session.id}`} className="flex-1 flex flex-col p-6 pt-10 relative">
-                        {/* Floating Icon */}
-                        <div className="absolute -top-10 left-6 h-16 w-16 rounded-2xl bg-background shadow-lg border border-border flex items-center justify-center p-3 group-hover:scale-105 transition-transform duration-300">
-                             {session.original_file_url ? (
-                                <FileText className="h-8 w-8 text-primary" />
-                             ) : (
-                                <BookOpen className="h-8 w-8 text-primary/50" />
-                             )}
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <h3 className="text-xl font-bold leading-tight line-clamp-2 pr-2" title={session.title}>
-                                    {session.title || "Untitled Session"}
-                                </h3>
-                                <p className="text-xs text-muted-foreground mt-2 flex items-center gap-2 font-medium">
-                                    <Clock className="h-3.5 w-3.5 opacity-70" />
-                                    Created on {new Date(session.created_at).toLocaleDateString(undefined, {
-                                        month: 'short', day: 'numeric', year: 'numeric'
-                                    })}
-                                </p>
-                            </div>
-                            
-                            <div className="pt-4 mt-auto border-t border-border/40 flex items-center justify-between">
-                                <span className="text-xs font-semibold text-muted-foreground group-hover:text-primary transition-colors">
-                                    Continue Learning
+                    {/* Card Body: Title + Info */}
+                    <div className="px-5 pb-5 flex-1 flex flex-col gap-3 pointer-events-none">
+                         <h3 className="text-lg font-bold leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                             {session.title || "Untitled Session"}
+                         </h3>
+                         <div className="flex items-center gap-3 text-xs text-muted-foreground mt-auto">
+                            <span className="flex items-center gap-1">
+                                <Clock className="h-3.5 w-3.5" />
+                                {new Date(session.created_at).toLocaleDateString()}
+                            </span>
+                            {session.original_file_url && (
+                                <span className="flex items-center gap-1">
+                                    <FileText className="h-3.5 w-3.5" />
+                                    Doc
                                 </span>
-                                <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                                    <ChevronRight className="h-4 w-4" />
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
+                            )}
+                         </div>
+                    </div>
+
+                    {/* Hover Footer (Visual cue) */}
+                    <div className="h-1 w-full bg-gradient-to-r from-transparent via-primary/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
                 </div>
-            )})}
+            ))}
         </div>
       )}
 
