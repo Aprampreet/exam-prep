@@ -22,18 +22,20 @@ class Settings(BaseSettings):
     @field_validator("CORS_ORIGINS", mode="before")
     @classmethod
     def assemble_cors_origins(cls, v: Any) -> List[str]:
+        if isinstance(v, list):
+            return v
         if isinstance(v, str):
+            v = v.strip()
+            if not v:
+                return []
             if v.startswith("[") and v.endswith("]"):
                 try:
-                    origins = json.loads(v)
+                    import json
+                    return json.loads(v)
                 except json.JSONDecodeError:
-                    origins = [i.strip() for i in v.split(",")]
-            else:
-                origins = [i.strip() for i in v.split(",")]
-            
-            return [url.rstrip("/") for url in origins]
-            
-        return v
+                    pass
+            return [i.strip() for i in v.split(",")]
+        return []
 
     class Config:
         env_file = ".env"
