@@ -26,3 +26,15 @@ class DocumentService:
         chunks = self.splitter.split_documents(documents)
 
         return [chunk.page_content for chunk in chunks]
+        if chunks:
+            return [chunk.page_content for chunk in chunks]
+
+        print("[OCR] No text found, running OCR...")
+
+        ocr_text = extract_text_with_ocr(file_path)
+
+        if not ocr_text or len(ocr_text) < 200:
+            raise ValueError("OCR failed or text too small")
+
+        ocr_chunks = self.splitter.split_text(ocr_text)
+        return ocr_chunks
