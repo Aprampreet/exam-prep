@@ -3,6 +3,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from pathlib import Path
 from typing import List
+from app.services.ocr_service import *
 
 
 class DocumentService:
