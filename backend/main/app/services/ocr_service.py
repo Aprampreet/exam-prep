@@ -1,89 +1,138 @@
 import cv2
 import pytesseract
 import numpy as np
-from pdf2image import convert_from_bytes
+import re
+from typing import List
+from pdf2image import convert_from_path
 
+
+# ---------------------------
+# Image preprocessing
+# ---------------------------
 
 def _preprocess(img: np.ndarray) -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    clahe = cv2.createCLAHE(clipLimit=2.5, tileGridSize=(8, 8))
     gray = clahe.apply(gray)
 
-    denoised = cv2.fastNlMeansDenoising(gray, None, 30, 7, 21)
+    gray = cv2.fastNlMeansDenoising(gray, None, 30, 7, 21)
+
     thresh = cv2.adaptiveThreshold(
-        denoised,
+        gray,
         255,
         cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
         cv2.THRESH_BINARY,
-        11,
-        2
+        15,
+        3,
     )
 
     return thresh
 
 
-PSMS = ["6", "11", "4"]  
+# ---------------------------
+# OCR ensemble
+# ---------------------------
+
+PSMS = ["6", "11", "4"]
 
 
 def _ocr_ensemble(img: np.ndarray) -> str:
     best_text = ""
-    best_len = 0
+    best_score = 0
 
     for psm in PSMS:
         text = pytesseract.image_to_string(
             img,
             lang="eng",
-            config=f"--oem 3 --psm {psm} -c preserve_interword_spaces=1"
+            config=f"--oem 3 --psm {psm}",
         )
 
-        if len(text) > best_len:
+        score = sum(c.isalpha() for c in text)
+        if score > best_score:
             best_text = text
-            best_len = len(text)
+            best_score = score
 
     return best_text
 
+
+# ---------------------------
+# Confidence-based OCR
+# ---------------------------
 
 def _confidence_filter(img: np.ndarray) -> str:
     data = pytesseract.image_to_data(
         img,
         lang="eng",
         output_type=pytesseract.Output.DICT,
-        config="--oem 3 --psm 6"
+        config=(
+            "--oem 3 --psm 6 "
+            "-c tessedit_char_whitelist=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        ),
     )
 
     words = []
     for i in range(len(data["text"])):
         try:
             conf = int(data["conf"][i])
-            if conf > 50 and data["text"][i].strip():
-                words.append(data["text"][i])
-        except ValueError:
-            pass
+            word = data["text"][i].strip()
+            if conf >= 50 and len(word) > 1:
+                words.append(word)
+        except Exception:
+            continue
 
     return " ".join(words)
 
 
-def _clean_text(text: str) -> str:
-    lines = [l.strip() for l in text.splitlines() if len(l.strip()) > 3]
-    text = "\n".join(lines)
+# ---------------------------
+# Text cleanup
+# ---------------------------
 
-    fixes = {
+def _clean_text(text: str) -> str:
+    text = re.sub(r"[^\x00-\x7F]+", " ", text)
+
+    replacements = {
         "|": "I",
-        "0": "O",
         "ﬁ": "fi",
         "ﬂ": "fl",
+        "—": "-",
+        "–": "-",
     }
-
-    for k, v in fixes.items():
+    for k, v in replacements.items():
         text = text.replace(k, v)
 
-    return text
+    text = re.sub(r"\d+\.\d+-\d+", "", text)
+
+    lines = [l.strip() for l in text.splitlines() if len(l.strip()) > 3]
+    text = " ".join(lines)
+    text = re.sub(r"\s+", " ", text)
+
+    return text.strip()
 
 
-def extract_text_with_ocr(pdf_bytes: bytes) -> str:
-    pages = convert_from_bytes(pdf_bytes, dpi=300)
-    full_text = []
+# ---------------------------
+# Garbage detection
+# ---------------------------
+
+def _is_garbage(text: str) -> bool:
+    if len(text) < 40:
+        return True
+    if sum(c.isalpha() for c in text) < 20:
+        return True
+    if text.count(" ") < 5:
+        return True
+    return False
+
+
+# ---------------------------
+# MAIN OCR FUNCTION
+# ---------------------------
+
+def extract_text_with_ocr(pdf_path: str) -> str:
+    pages = convert_from_path(pdf_path, dpi=300)
+    print("[OCR] Using OCR")
+
+    collected: List[str] = []
 
     for page in pages:
         img = np.array(page)
@@ -91,12 +140,12 @@ def extract_text_with_ocr(pdf_bytes: bytes) -> str:
 
         text = _ocr_ensemble(processed)
 
-        if len(text.strip()) < 50:
+        if len(text.strip()) < 80:
             text = _confidence_filter(processed)
 
         text = _clean_text(text)
 
-        if text:
-            full_text.append(text)
+        if text and not _is_garbage(text):
+            collected.append(text)
 
-    return "\n\n".join(full_text)
+    return "\n\n".join(collected)
