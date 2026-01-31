@@ -2,13 +2,9 @@ import cv2
 import pytesseract
 import numpy as np
 import re
+import fitz
 from typing import List
-from pdf2image import convert_from_path
 
-
-# ---------------------------
-# Image preprocessing
-# ---------------------------
 
 def _preprocess(img: np.ndarray) -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -30,9 +26,7 @@ def _preprocess(img: np.ndarray) -> np.ndarray:
     return thresh
 
 
-# ---------------------------
-# OCR ensemble
-# ---------------------------
+
 
 PSMS = ["6", "11", "4"]
 
@@ -56,9 +50,6 @@ def _ocr_ensemble(img: np.ndarray) -> str:
     return best_text
 
 
-# ---------------------------
-# Confidence-based OCR
-# ---------------------------
 
 def _confidence_filter(img: np.ndarray) -> str:
     data = pytesseract.image_to_data(
@@ -84,9 +75,6 @@ def _confidence_filter(img: np.ndarray) -> str:
     return " ".join(words)
 
 
-# ---------------------------
-# Text cleanup
-# ---------------------------
 
 def _clean_text(text: str) -> str:
     text = re.sub(r"[^\x00-\x7F]+", " ", text)
@@ -110,9 +98,6 @@ def _clean_text(text: str) -> str:
     return text.strip()
 
 
-# ---------------------------
-# Garbage detection
-# ---------------------------
 
 def _is_garbage(text: str) -> bool:
     if len(text) < 40:
@@ -124,24 +109,44 @@ def _is_garbage(text: str) -> bool:
     return False
 
 
-# ---------------------------
-# MAIN OCR FUNCTION
-# ---------------------------
 
-def extract_text_with_ocr(pdf_path: str) -> str:
-    pages = convert_from_path(pdf_path, dpi=300)
-    print("[OCR] Using OCR")
+
+def extract_text_from_pdf(pdf_path: str) -> str:
+    try:
+        doc = fitz.open(pdf_path)
+    except Exception as e:
+        print(f"[OCR] Failed to open PDF {pdf_path}: {e}")
+        return ""
+
+    print(f"[OCR] Processing {pdf_path} with PyMuPDF...")
 
     collected: List[str] = []
 
-    for page in pages:
-        img = np.array(page)
-        processed = _preprocess(img)
+    for i, page in enumerate(doc):
+        text = page.get_text()
+        
+        if len(text.strip()) < 50:
+            print(f"[OCR] Page {i+1} has little text ({len(text.strip())} chars). Attempting OCR...")
+            
+            pix = page.get_pixmap(matrix=fitz.Matrix(3, 3))
+            
+            img_data = np.frombuffer(pix.samples, dtype=np.uint8)
+            
+            if pix.n == 3: 
+                 img = img_data.reshape((pix.h, pix.w, 3))
+                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+            elif pix.n == 4: 
+                 img = img_data.reshape((pix.h, pix.w, 4))
+                 img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
+            else: 
+                 img = img_data.reshape((pix.h, pix.w))
+                 img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
 
-        text = _ocr_ensemble(processed)
-
-        if len(text.strip()) < 80:
-            text = _confidence_filter(processed)
+            processed = _preprocess(img)
+            ocr_text = _ocr_ensemble(processed)
+            
+            if len(ocr_text.strip()) > len(text.strip()):
+                text = ocr_text
 
         text = _clean_text(text)
 

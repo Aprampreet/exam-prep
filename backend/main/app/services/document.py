@@ -4,7 +4,7 @@ from typing import List
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from app.services.ocr_service import extract_text_with_ocr
+from app.services.ocr_service import extract_text_from_pdf
 
 
 class DocumentService:
@@ -28,12 +28,17 @@ class DocumentService:
 
         full_text = " ".join(d.page_content for d in documents)
 
+        if len(full_text.strip()) > 200:
+            chunks = self.splitter.split_documents(documents)
+            return [c.page_content for c in chunks]
+
        
 
         print("[OCR] No text found, running OCR...")
-        ocr_text = extract_text_with_ocr(file_path)
+        ocr_text = extract_text_from_pdf(file_path)
 
         if not ocr_text or len(ocr_text) < 200:
             raise ValueError("OCR failed or text too small")
+        print(ocr_text)
 
         return self.splitter.split_text(ocr_text)
