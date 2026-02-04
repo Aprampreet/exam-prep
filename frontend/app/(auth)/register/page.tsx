@@ -39,11 +39,11 @@ export default function RegisterPage() {
 
   return (
     <div className="flex flex-col space-y-6 animate-in slide-in-from-bottom-5 fade-in duration-500">
-      <div className="flex flex-col space-y-2 text-center lg:text-left">
-        <h1 className="text-3xl font-bold tracking-tight">
+      <div className="flex flex-col space-y-2 text-center">
+        <h1 className="text-3xl font-bold tracking-tight text-white">
           Create an account
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground/80">
           Enter your information to get started
         </p>
       </div>
@@ -52,8 +52,8 @@ export default function RegisterPage() {
         <form onSubmit={onSubmit}>
           <div className="grid gap-5">
             
-            <div className="grid gap-2">
-               <Label htmlFor="email" className={focusedInput === 'email' ? 'text-primary' : ''}>Email</Label>
+            <div className="grid gap-2 text-left">
+               <Label htmlFor="email" className={focusedInput === 'email' ? 'text-white' : 'text-muted-foreground'}>Email</Label>
                <div className="relative">
                   <Input 
                         id="email" 
@@ -67,7 +67,7 @@ export default function RegisterPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         onFocus={() => setFocusedInput('email')}
                         onBlur={() => setFocusedInput(null)}
-                        className="h-11 pl-10 bg-secondary/30 border-transparent focus:border-primary/50 focus:bg-background transition-all duration-300"
+                        className="h-11 pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-indigo-500/50 focus:bg-white/10 transition-all duration-300"
                         required
                     />
                     <div className="absolute left-3 top-3 text-muted-foreground pointer-events-none">
@@ -76,12 +76,12 @@ export default function RegisterPage() {
                </div>
             </div>
 
-            <div className="grid gap-2">
-               <Label htmlFor="phone" className={focusedInput === 'phone' ? 'text-primary' : ''}>Phone Number</Label>
+            <div className="grid gap-2 text-left">
+               <Label htmlFor="phone" className={focusedInput === 'phone' ? 'text-white' : 'text-muted-foreground'}>Phone Number</Label>
                <div className="relative">
                   <Input 
                         id="phone" 
-                        placeholder="+1 234 567 8900" 
+                        placeholder="+1 (555) 000-0000" 
                         type="tel" 
                         autoCapitalize="none" 
                         autoComplete="tel" 
@@ -91,7 +91,7 @@ export default function RegisterPage() {
                         onChange={(e) => setPhone(e.target.value)}
                         onFocus={() => setFocusedInput('phone')}
                         onBlur={() => setFocusedInput(null)}
-                        className="h-11 pl-10 bg-secondary/30 border-transparent focus:border-primary/50 focus:bg-background transition-all duration-300"
+                        className="h-11 pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-indigo-500/50 focus:bg-white/10 transition-all duration-300"
                         required
                     />
                     <div className="absolute left-3 top-3 text-muted-foreground pointer-events-none">
@@ -100,8 +100,8 @@ export default function RegisterPage() {
                </div>
             </div>
             
-            <div className="grid gap-2">
-               <Label htmlFor="password" className={focusedInput === 'password' ? 'text-primary' : ''}>Password</Label>
+            <div className="grid gap-2 text-left">
+               <Label htmlFor="password" className={focusedInput === 'password' ? 'text-white' : 'text-muted-foreground'}>Password</Label>
                <div className="relative">
                    <Input 
                         id="password" 
@@ -113,14 +113,14 @@ export default function RegisterPage() {
                         onChange={(e) => setPassword(e.target.value)}
                         onFocus={() => setFocusedInput('password')}
                         onBlur={() => setFocusedInput(null)}
-                        className="h-11 pl-10 bg-secondary/30 border-transparent focus:border-primary/50 focus:bg-background transition-all duration-300"
+                        className="h-11 pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-indigo-500/50 focus:bg-white/10 transition-all duration-300"
                         required
                     />
                      <div className="absolute left-3 top-3 text-muted-foreground pointer-events-none">
                         <Lock className="h-5 w-5 opacity-50" />
                     </div>
                </div>
-               <p className="text-[0.8rem] text-muted-foreground">
+               <p className="text-[0.8rem] text-muted-foreground/80">
                     Must be at least 8 characters long
                 </p>
             </div>

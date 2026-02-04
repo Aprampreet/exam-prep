@@ -51,11 +51,11 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col space-y-6 animate-in slide-in-from-bottom-5 fade-in duration-500">
-      <div className="flex flex-col space-y-2 text-center lg:text-left">
-        <h1 className="text-3xl font-bold tracking-tight">
+      <div className="flex flex-col space-y-2 text-center">
+        <h1 className="text-3xl font-bold tracking-tight text-white">
           Welcome back
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground/80">
           Enter your email to sign in to your account
         </p>
       </div>
@@ -63,8 +63,8 @@ export default function LoginPage() {
       <div className="grid gap-6">
         <form onSubmit={onSubmit}>
           <div className="grid gap-5">
-            <div className="grid gap-2">
-               <Label htmlFor="email" className={focusedInput === 'email' ? 'text-primary' : ''}>Email</Label>
+            <div className="grid gap-2 text-left">
+               <Label htmlFor="email" className={focusedInput === 'email' ? 'text-white' : 'text-muted-foreground'}>Email</Label>
                <div className="relative">
                   <Input 
                         id="email" 
@@ -78,7 +78,7 @@ export default function LoginPage() {
                         onChange={(e) => setEmail(e.target.value)}
                         onFocus={() => setFocusedInput('email')}
                         onBlur={() => setFocusedInput(null)}
-                        className="h-11 pl-10 bg-secondary/30 border-transparent focus:border-primary/50 focus:bg-background transition-all duration-300"
+                        className="h-11 pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-indigo-500/50 focus:bg-white/10 transition-all duration-300"
                     />
                     <div className="absolute left-3 top-3 text-muted-foreground pointer-events-none">
                         <Mail className="h-5 w-5 opacity-50" />
@@ -86,10 +86,10 @@ export default function LoginPage() {
                </div>
             </div>
             
-            <div className="grid gap-2">
+            <div className="grid gap-2 text-left">
                 <div className="flex items-center justify-between">
-                    <Label htmlFor="password" className={focusedInput === 'password' ? 'text-primary' : ''}>Password</Label>
-                    <Link href="/forgot-password" className="text-xs font-medium text-primary hover:text-primary/80 hover:underline">
+                    <Label htmlFor="password" className={focusedInput === 'password' ? 'text-white' : 'text-muted-foreground'}>Password</Label>
+                    <Link href="/forgot-password" className="text-xs font-medium text-indigo-400 hover:text-indigo-300 hover:underline">
                         Forgot password?
                     </Link>
                 </div>
@@ -103,7 +103,7 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={() => setFocusedInput('password')}
                     onBlur={() => setFocusedInput(null)}
-                    className="h-11 bg-secondary/30 border-transparent focus:border-primary/50 focus:bg-background transition-all duration-300"
+                    className="h-11 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-indigo-500/50 focus:bg-white/10 transition-all duration-300"
                 />
             </div>
 

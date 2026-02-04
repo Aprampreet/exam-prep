@@ -46,15 +46,15 @@ export default function LogoutPage() {
       </div>
       
       <div className="space-y-4 text-center max-w-sm">
-        <h1 className="text-3xl font-bold tracking-tight">Logged Out</h1>
-        <p className="text-muted-foreground text-lg">
+        <h1 className="text-3xl font-bold tracking-tight text-white">Logged Out</h1>
+        <p className="text-muted-foreground/80 text-lg">
           You have been successfully signed out. <br/> See you again soon!
         </p>
       </div>
 
-      <div className="mt-8 p-4 rounded-xl bg-secondary/30 border border-border/50 backdrop-blur-sm w-full max-w-[320px] text-center">
+      <div className="mt-8 p-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm w-full max-w-[320px] text-center">
          <p className="text-sm text-muted-foreground mb-1">Redirecting in</p>
-         <div className="text-4xl font-mono font-bold text-primary">00:0{countdown}</div>
+         <div className="text-4xl font-mono font-bold text-white">00:0{countdown}</div>
       </div>
 
       <div className="pt-8 w-full max-w-xs">
