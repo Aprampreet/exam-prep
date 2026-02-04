@@ -75,22 +75,35 @@ export function Hero() {
                 <div className="rounded-xl border border-white/10 bg-zinc-950/80 backdrop-blur-md p-2 shadow-2xl shadow-indigo-500/20 ring-1 ring-white/10">
                      <div className="rounded-lg overflow-hidden relative bg-zinc-950 aspect-[16/10] md:aspect-[21/9] flex">
                          <div className="w-12 md:w-20 border-r border-white/10 flex flex-col items-center py-6 gap-6 bg-zinc-900/50 flex-shrink-0">
-                             <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4"><Zap className="h-5 w-5" /></div>
-                             <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><BookOpen className="h-4 w-4" /></div>
-                             <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><TrendingUp className="h-4 w-4" /></div>
-                             <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center text-muted-foreground"><Target className="h-4 w-4" /></div>
+                             {[Zap, BookOpen, TrendingUp, Target].map((Icon, i) => (
+                                <motion.div 
+                                    key={i}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: 0.2 + (i * 0.1), duration: 0.3 }}
+                                    className={`h-8 w-8 rounded-lg flex items-center justify-center ${i === 0 ? 'bg-primary/20 text-primary rounded-full' : 'bg-white/5 text-muted-foreground'}`}
+                                >
+                                    <Icon className={`h-4 w-4 ${i === 0 ? 'h-5 w-5' : ''}`} />
+                                </motion.div>
+                             ))}
                          </div>
                          
                          <div className="flex-1 flex flex-col min-w-0">
                              <div className="h-16 border-b border-white/10 flex items-center justify-between px-4 md:px-6 bg-zinc-900/30">
                                  <div className="flex items-center gap-2">
-                                     <div className="h-3 w-3 rounded-full bg-red-500/80"></div>
-                                     <div className="h-3 w-3 rounded-full bg-yellow-500/80"></div>
-                                     <div className="h-3 w-3 rounded-full bg-green-500/80"></div>
+                                     {["red", "yellow", "green"].map((color, i) => (
+                                         <motion.div 
+                                            key={i}
+                                            initial={{ scale: 0 }} 
+                                            whileInView={{ scale: [0, 1.2, 1] }} 
+                                            transition={{ delay: 0.3 + (i * 0.1), duration: 0.4 }}
+                                            className={`h-3 w-3 rounded-full bg-${color}-500/80`} 
+                                         />
+                                     ))}
                                  </div>
                                  <div className="flex items-center gap-3">
-                                      <div className="h-8 w-8 rounded-full bg-white/10"></div>
-                                      <div className="h-8 w-8 rounded-full bg-primary/20"></div>
+                                      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.5 }} className="h-8 w-8 rounded-full bg-white/10"></motion.div>
+                                      <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ delay: 0.6 }} className="h-8 w-8 rounded-full bg-primary/20"></motion.div>
                                  </div>
                              </div>
                              
@@ -103,22 +116,59 @@ export function Hero() {
                                              { label: "Accuracy", val: "88%", color: "text-purple-400" },
                                              { label: "Streak", val: "12d", color: "text-orange-400" }
                                          ].map((s, i) => (
-                                             <div key={i} className="h-16 md:h-20 rounded-xl border border-white/5 bg-white/[0.02] p-3 flex flex-col justify-between">
+                                             <motion.div 
+                                                key={i} 
+                                                initial={{ opacity: 0, y: 20 }}
+                                                whileInView={{ opacity: 1, y: 0 }}
+                                                transition={{ delay: 0.7 + (i * 0.1), duration: 0.4 }}
+                                                className="h-16 md:h-20 rounded-xl border border-white/5 bg-white/[0.02] p-3 flex flex-col justify-between hover:bg-white/[0.04] transition-colors"
+                                             >
                                                  <div className="h-1.5 w-8 md:w-12 bg-white/10 rounded-full"></div>
                                                  <div className={`text-lg md:text-xl font-bold ${s.color}`}>{s.val}</div>
-                                             </div>
+                                             </motion.div>
                                          ))}
                                      </div>
                                      
                                      <div className="flex-1 flex flex-col md:grid md:grid-cols-2 gap-4 md:gap-6 min-h-0 overflow-y-auto md:overflow-hidden">
-                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 relative overflow-hidden flex flex-col h-32 md:h-auto">
+                                         <motion.div 
+                                             initial={{ opacity: 0, scale: 0.95 }}
+                                             whileInView={{ opacity: 1, scale: 1 }}
+                                             transition={{ delay: 1.0, duration: 0.4 }}
+                                             className="rounded-xl border border-white/5 bg-white/[0.02] p-4 relative overflow-hidden flex flex-col h-32 md:h-auto"
+                                         >
                                              <div className="flex justify-between items-center mb-4">
                                                  <div className="h-3 w-24 bg-white/10 rounded-full"></div>
                                              </div>
                                              <div className="flex-1 relative w-full">
                                                 <svg className="w-full h-full absolute bottom-0 left-0 overflow-visible" preserveAspectRatio="none">
-                                                    <path d="M0,80 C50,60 100,90 150,40 S250,50 300,20" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary" />
-                                                    <path d="M0,80 C50,60 100,90 150,40 S250,50 300,20 L300,100 L0,100 Z" fill="url(#gradient)" opacity="0.1" />
+                                                    <motion.path 
+                                                        d="M0,80 C50,60 100,90 150,40 S250,50 300,20" 
+                                                        fill="none" 
+                                                        stroke="currentColor" 
+                                                        strokeWidth="2" 
+                                                        className="text-primary"
+                                                        initial={{ pathLength: 0, opacity: 0.5 }}
+                                                        whileInView={{ pathLength: 1, opacity: 1 }}
+                                                        transition={{ 
+                                                            duration: 2, 
+                                                            ease: "easeInOut", 
+                                                            repeat: Infinity, 
+                                                            repeatType: "loop",
+                                                            repeatDelay: 1 
+                                                        }}
+                                                    />
+                                                    <motion.path 
+                                                        d="M0,80 C50,60 100,90 150,40 S250,50 300,20 L300,100 L0,100 Z" 
+                                                        fill="url(#gradient)" 
+                                                        initial={{ opacity: 0 }}
+                                                        whileInView={{ opacity: [0, 0.15, 0] }}
+                                                        transition={{ 
+                                                            duration: 2, 
+                                                            repeat: Infinity, 
+                                                            repeatType: "loop",
+                                                            repeatDelay: 1
+                                                        }}
+                                                    />
                                                     <defs>
                                                         <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
                                                             <stop offset="0%" stopColor="rgb(99 102 241)" />
@@ -127,33 +177,66 @@ export function Hero() {
                                                     </defs>
                                                 </svg>
                                              </div>
-                                         </div>
+                                         </motion.div>
 
-                                         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-4 flex flex-col h-32 md:h-auto">
+                                         <motion.div 
+                                            initial={{ opacity: 0, scale: 0.95 }}
+                                            whileInView={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: 1.1, duration: 0.4 }}
+                                            className="rounded-xl border border-white/5 bg-white/[0.02] p-4 flex flex-col h-32 md:h-auto"
+                                         >
                                             <div className="h-3 w-28 bg-white/10 rounded-full mb-4"></div>
                                             <div className="grid grid-cols-4 gap-2 flex-1">
                                                 {[...Array(16)].map((_, i) => (
-                                                    <div key={i} className={`rounded-md ${[2,5,11,14].includes(i) ? 'bg-red-500/20 border border-red-500/30' : 'bg-emerald-500/5 border border-emerald-500/10'}`}></div>
+                                                    <motion.div 
+                                                        key={i} 
+                                                        initial={{ opacity: 0.3 }}
+                                                        whileInView={{ opacity: [0.3, 1, 0.3] }}
+                                                        transition={{ 
+                                                            delay: i * 0.1, 
+                                                            duration: 2, 
+                                                            repeat: Infinity, 
+                                                            repeatType: "reverse" 
+                                                        }}
+                                                        className={`rounded-md ${[2,5,11,14].includes(i) ? 'bg-red-500/20 border border-red-500/30' : 'bg-emerald-500/5 border border-emerald-500/10'}`}
+                                                    ></motion.div>
                                                 ))}
                                             </div>
-                                         </div>
+                                         </motion.div>
                                      </div>
                                  </div>
                                  
                                  <div className="hidden md:flex md:col-span-4 border-l border-white/10 pl-6 flex-col gap-6">
-                                      <div className="h-28 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 p-4 flex flex-row items-center gap-4">
+                                      <motion.div 
+                                        initial={{ x: 20, opacity: 0 }}
+                                        whileInView={{ x: 0, opacity: 1 }}
+                                        transition={{ delay: 1.2, duration: 0.5 }}
+                                        className="h-28 rounded-xl bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 p-4 flex flex-row items-center gap-4"
+                                      >
                                             <div className="h-12 w-12 rounded-full bg-indigo-500 flex items-center justify-center shadow-lg shadow-indigo-500/40"><Trophy className="h-6 w-6 text-white" /></div>
                                             <div>
                                                 <div className="text-sm font-bold text-white">Top 10%</div>
                                                 <div className="text-xs text-indigo-300">Global Rank #402</div>
                                             </div>
-                                      </div>
+                                      </motion.div>
 
                                       <div className="space-y-4 flex-1">
                                           <div className="h-3 w-20 bg-white/10 rounded-full mb-2"></div>
                                           <div className="flex items-end justify-between h-32 px-2 pb-2 border-b border-white/10">
                                               {[40, 70, 45, 90, 60, 80].map((h, i) => (
-                                                  <div key={i} className="w-2 rounded-t-sm bg-primary/40 hover:bg-primary transition-colors cursor-pointer" style={{ height: `${h}%` }}></div>
+                                                  <motion.div 
+                                                    key={i} 
+                                                    initial={{ height: "10%" }}
+                                                    whileInView={{ height: [`${h}%`, `${h * 0.8}%`, `${h}%`] }}
+                                                    transition={{ 
+                                                        delay: 1.5 + (i * 0.1), 
+                                                        duration: 1.5, 
+                                                        repeat: Infinity, 
+                                                        repeatType: "reverse",
+                                                        ease: "easeInOut"
+                                                    }}
+                                                    className="w-2 rounded-t-sm bg-primary/40 hover:bg-primary transition-colors cursor-pointer"
+                                                  ></motion.div>
                                               ))}
                                           </div>
                                       </div>
