@@ -14,16 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { User, LogOut, Settings } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 
 export function AuthNav() {
   const { user, loading, logout } = useAuth();
-  const router = useRouter();
 
-  const handleLogout = () => {
-    logout();
-    router.push("/");
-  };
 
   if (loading) return null; 
 
@@ -80,9 +75,11 @@ export function AuthNav() {
           <span>Settings</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-500 focus:text-red-500">
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
+        <DropdownMenuItem asChild>
+          <Link href="/logout" className="cursor-pointer w-full flex items-center text-red-500 focus:text-red-500">
+             <LogOut className="mr-2 h-4 w-4" />
+             <span>Log out</span>
+          </Link>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
