@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { LogOut, CheckCircle2 } from "lucide-react";
+import { LogOut, CheckCircle2, ArrowRight } from "lucide-react";
 
 export default function LogoutPage() {
   const router = useRouter();
@@ -36,27 +36,32 @@ export default function LogoutPage() {
   }, [logout, router]);
 
   return (
-    <div className="flex flex-col items-center justify-center space-y-6 text-center animate-in fade-in zoom-in-95 duration-500">
-      <div className="h-20 w-20 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 mb-2 ring-1 ring-green-500/20">
-        <CheckCircle2 className="h-10 w-10" />
+    <div className="w-full flex flex-col items-center justify-center animate-in fade-in slide-in-from-bottom-5 duration-700">
+      
+      <div className="relative mb-8 group">
+          <div className="absolute inset-0 bg-green-500/20 rounded-full blur-xl group-hover:blur-2xl transition-all duration-500 opacity-50"></div>
+          <div className="h-24 w-24 bg-green-500/10 rounded-full flex items-center justify-center text-green-500 relative z-10 border border-green-500/20 shadow-xl">
+             <CheckCircle2 className="h-12 w-12" />
+          </div>
       </div>
       
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Successfully Logged Out</h1>
+      <div className="space-y-4 text-center max-w-sm">
+        <h1 className="text-3xl font-bold tracking-tight">Logged Out</h1>
         <p className="text-muted-foreground text-lg">
-          We hope to see you back soon!
+          You have been successfully signed out. <br/> See you again soon!
         </p>
       </div>
 
-      <div className="text-sm text-muted-foreground bg-secondary/50 px-4 py-2 rounded-full">
-         Redirecting to login in <span className="font-semibold text-foreground">{countdown}</span> seconds...
+      <div className="mt-8 p-4 rounded-xl bg-secondary/30 border border-border/50 backdrop-blur-sm w-full max-w-[320px] text-center">
+         <p className="text-sm text-muted-foreground mb-1">Redirecting in</p>
+         <div className="text-4xl font-mono font-bold text-primary">00:0{countdown}</div>
       </div>
 
-      <div className="pt-4 w-full">
-        <Button asChild className="w-full h-11" variant="outline">
+      <div className="pt-8 w-full max-w-xs">
+        <Button asChild className="w-full h-11 shadow-lg shadow-primary/10" variant="default">
           <Link href="/login">
-            <LogOut className="mr-2 h-4 w-4" />
             Sign In Now
+            <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
       </div>

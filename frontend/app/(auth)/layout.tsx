@@ -78,7 +78,7 @@ export default function AuthLayout({
                 <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-primary/5 rounded-full blur-[100px]" />
           </div>
           
-          <div className="w-full max-w-[420px] relative z-10">
+          <div className="w-full max-w-[450px] relative z-10">
               {/* Mobile Logo */}
               <div className="lg:hidden flex justify-center mb-8">
                 <div className="h-12 w-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary mb-2">
