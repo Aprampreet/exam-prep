@@ -334,7 +334,6 @@ async def check_short_answer(
 
     await db.commit()
 
-    # 8. Return Updated Attempt
     result = await db.execute(
         select(ShortAnswerAttempt)
         .options(selectinload(ShortAnswerAttempt.answers))
