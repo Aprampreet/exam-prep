@@ -24,15 +24,6 @@ app.add_middleware(
 
 
 
-
-
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
 @app.get("/me", response_model=UserOut)
 async def get_me(
     user: User = Depends(get_current_user),
