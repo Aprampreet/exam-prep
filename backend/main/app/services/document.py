@@ -21,7 +21,7 @@ class DocumentService:
     def load_document(self, file_path: str) -> List[str]:
         path = Path(file_path)
         if not path.exists():
-            raise FileNotFoundError(f"File not found: {file_path}")
+            raise FileNotFoundError(f"file not found: {file_path}")
 
         loader = PyPDFLoader(file_path)
         documents = loader.load()
@@ -34,7 +34,7 @@ class DocumentService:
 
        
 
-        print("[OCR] No text found, running OCR...")
+        print("[OCR] No text found, running ...")
         ocr_text = extract_text_from_pdf(file_path)
 
         if not ocr_text or len(ocr_text) < 200:
