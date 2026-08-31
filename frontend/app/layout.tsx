@@ -4,7 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/lib/context/AuthContext";
 import { Navbar } from "@/deps/Navbar";
 import {Footer} from "@/deps/footer"
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import ClickSpark from "@/components/ClickSpark";
 const geistSans = Geist({
   variable: "--font-geist-sans",
